@@ -1,0 +1,43 @@
+{
+  "name": "gherkin-preprocessor",
+  "version": "1.0.0",
+  "description": "Simple preprocessor for Gherkin feature files",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "mocha ./test/*.spec.js ./test/ast/*.spec.js",
+    "coverage": "istanbul cover --include-all-sources ./node_modules/mocha/bin/_mocha --root ./lib -- ./test/*.spec.js ./test/ast/*.spec.js",
+    "travis": "istanbul cover --include-all-sources ./node_modules/mocha/bin/_mocha --root ./lib --report lcovonly -- ./test/*.spec.js ./test/ast/*.spec.js -R spec && cat ./coverage/lcov.info | node ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage"
+  },
+  "preferGlobal": false,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/szikszail/gherkin-preprocessor.git"
+  },
+  "keywords": [
+    "gherkin",
+    "cucumber",
+    "feature file"
+  ],
+  "author": "Laszlo Szikszai <sziklaszlo@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/szikszail/gherkin-preprocessor/issues"
+  },
+  "engines": {
+    "node": ">=4.9.2",
+    "npm": ">=3.0.0"
+  },
+  "homepage": "https://github.com/szikszail/gherkin-preprocessor#readme",
+  "devDependencies": {
+    "chai": "^4.1.0",
+    "coveralls": "^2.13.1",
+    "deep-copy": "^1.2.0",
+    "istanbul": "^0.4.5",
+    "mocha": "^3.4.2"
+  },
+  "dependencies": {
+    "fs-extra": "^4.0.1",
+    "gherkin": "^4.1.3",
+    "gherkin-assembler": "^1.0.0"
+  }
+}
