@@ -1,0 +1,540 @@
+{
+  "type": "GherkinDocument",
+  "feature": {
+    "type": "Feature",
+    "tags": [
+      {
+        "type": "Tag",
+        "location": {
+          "line": 1,
+          "column": 1
+        },
+        "name": "@tag1"
+      },
+      {
+        "type": "Tag",
+        "location": {
+          "line": 1,
+          "column": 7
+        },
+        "name": "@tag2"
+      }
+    ],
+    "location": {
+      "line": 2,
+      "column": 1
+    },
+    "language": "en",
+    "keyword": "Feature",
+    "name": "Hello world",
+    "description": "    As a smth\n    I want to do smth\n    So that I am smth",
+    "children": [
+      {
+        "type": "Background",
+        "location": {
+          "line": 7,
+          "column": 5
+        },
+        "keyword": "Background",
+        "name": "",
+        "steps": [
+          {
+            "type": "Step",
+            "location": {
+              "line": 8,
+              "column": 9
+            },
+            "keyword": "Given ",
+            "text": "this is a given step"
+          },
+          {
+            "type": "Step",
+            "location": {
+              "line": 9,
+              "column": 9
+            },
+            "keyword": "And ",
+            "text": "this is a given step too"
+          },
+          {
+            "type": "Step",
+            "location": {
+              "line": 10,
+              "column": 9
+            },
+            "keyword": "When ",
+            "text": "this is a when step"
+          },
+          {
+            "type": "Step",
+            "location": {
+              "line": 11,
+              "column": 9
+            },
+            "keyword": "And ",
+            "text": "this is a when step too"
+          },
+          {
+            "type": "Step",
+            "location": {
+              "line": 12,
+              "column": 9
+            },
+            "keyword": "Then ",
+            "text": "it should be a then step"
+          },
+          {
+            "type": "Step",
+            "location": {
+              "line": 13,
+              "column": 9
+            },
+            "keyword": "And ",
+            "text": "it should be a then step too"
+          }
+        ]
+      },
+      {
+        "type": "Scenario",
+        "tags": [
+          {
+            "type": "Tag",
+            "location": {
+              "line": 15,
+              "column": 5
+            },
+            "name": "@tag2"
+          },
+          {
+            "type": "Tag",
+            "location": {
+              "line": 15,
+              "column": 11
+            },
+            "name": "@tag3"
+          }
+        ],
+        "location": {
+          "line": 16,
+          "column": 5
+        },
+        "keyword": "Scenario",
+        "name": "Name of scenario",
+        "description": "Description of the scenario",
+        "steps": [
+          {
+            "type": "Step",
+            "location": {
+              "line": 17,
+              "column": 9
+            },
+            "keyword": "Given ",
+            "text": "this is a given step"
+          },
+          {
+            "type": "Step",
+            "location": {
+              "line": 18,
+              "column": 9
+            },
+            "keyword": "And ",
+            "text": "this is a given step too"
+          },
+          {
+            "type": "Step",
+            "location": {
+              "line": 19,
+              "column": 9
+            },
+            "keyword": "When ",
+            "text": "this is a when step with data table",
+            "argument": {
+              "type": "DataTable",
+              "location": {
+                "line": 20,
+                "column": 13
+              },
+              "rows": [
+                {
+                  "type": "TableRow",
+                  "location": {
+                    "line": 20,
+                    "column": 13
+                  },
+                  "cells": [
+                    {
+                      "type": "TableCell",
+                      "location": {
+                        "line": 20,
+                        "column": 15
+                      },
+                      "value": "val1"
+                    }
+                  ]
+                },
+                {
+                  "type": "TableRow",
+                  "location": {
+                    "line": 21,
+                    "column": 13
+                  },
+                  "cells": [
+                    {
+                      "type": "TableCell",
+                      "location": {
+                        "line": 21,
+                        "column": 15
+                      },
+                      "value": "val2"
+                    }
+                  ]
+                },
+                {
+                  "type": "TableRow",
+                  "location": {
+                    "line": 22,
+                    "column": 13
+                  },
+                  "cells": [
+                    {
+                      "type": "TableCell",
+                      "location": {
+                        "line": 22,
+                        "column": 15
+                      },
+                      "value": "val3"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "type": "Step",
+            "location": {
+              "line": 23,
+              "column": 9
+            },
+            "keyword": "And ",
+            "text": "this is a when step with data table too",
+            "argument": {
+              "type": "DataTable",
+              "location": {
+                "line": 24,
+                "column": 13
+              },
+              "rows": [
+                {
+                  "type": "TableRow",
+                  "location": {
+                    "line": 24,
+                    "column": 13
+                  },
+                  "cells": [
+                    {
+                      "type": "TableCell",
+                      "location": {
+                        "line": 24,
+                        "column": 15
+                      },
+                      "value": "col1"
+                    },
+                    {
+                      "type": "TableCell",
+                      "location": {
+                        "line": 24,
+                        "column": 22
+                      },
+                      "value": "col2"
+                    }
+                  ]
+                },
+                {
+                  "type": "TableRow",
+                  "location": {
+                    "line": 25,
+                    "column": 13
+                  },
+                  "cells": [
+                    {
+                      "type": "TableCell",
+                      "location": {
+                        "line": 25,
+                        "column": 15
+                      },
+                      "value": "val1"
+                    },
+                    {
+                      "type": "TableCell",
+                      "location": {
+                        "line": 25,
+                        "column": 22
+                      },
+                      "value": "val2"
+                    }
+                  ]
+                },
+                {
+                  "type": "TableRow",
+                  "location": {
+                    "line": 26,
+                    "column": 13
+                  },
+                  "cells": [
+                    {
+                      "type": "TableCell",
+                      "location": {
+                        "line": 26,
+                        "column": 15
+                      },
+                      "value": "val3"
+                    },
+                    {
+                      "type": "TableCell",
+                      "location": {
+                        "line": 26,
+                        "column": 22
+                      },
+                      "value": "val4"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "type": "Step",
+            "location": {
+              "line": 27,
+              "column": 9
+            },
+            "keyword": "And ",
+            "text": "this is a when step with doc string",
+            "argument": {
+              "type": "DocString",
+              "location": {
+                "line": 28,
+                "column": 9
+              },
+              "content": "Hello world\nHello World\nhello World\nhello world"
+            }
+          },
+          {
+            "type": "Step",
+            "location": {
+              "line": 34,
+              "column": 9
+            },
+            "keyword": "Then ",
+            "text": "it should be a then step"
+          },
+          {
+            "type": "Step",
+            "location": {
+              "line": 35,
+              "column": 9
+            },
+            "keyword": "And ",
+            "text": "it should be a then step too"
+          }
+        ]
+      },
+      {
+        "type": "ScenarioOutline",
+        "tags": [
+          {
+            "type": "Tag",
+            "location": {
+              "line": 37,
+              "column": 5
+            },
+            "name": "@tag2"
+          },
+          {
+            "type": "Tag",
+            "location": {
+              "line": 37,
+              "column": 11
+            },
+            "name": "@tag(3)"
+          }
+        ],
+        "location": {
+          "line": 38,
+          "column": 5
+        },
+        "keyword": "Scenario Outline",
+        "name": "Name of background <key>",
+        "steps": [
+          {
+            "type": "Step",
+            "location": {
+              "line": 39,
+              "column": 9
+            },
+            "keyword": "Given ",
+            "text": "this is a given step"
+          },
+          {
+            "type": "Step",
+            "location": {
+              "line": 40,
+              "column": 9
+            },
+            "keyword": "And ",
+            "text": "this is a given step too"
+          },
+          {
+            "type": "Step",
+            "location": {
+              "line": 41,
+              "column": 9
+            },
+            "keyword": "When ",
+            "text": "this is a when step <key>"
+          },
+          {
+            "type": "Step",
+            "location": {
+              "line": 42,
+              "column": 9
+            },
+            "keyword": "And ",
+            "text": "this is a when step too"
+          },
+          {
+            "type": "Step",
+            "location": {
+              "line": 43,
+              "column": 9
+            },
+            "keyword": "Then ",
+            "text": "it should be a then step"
+          },
+          {
+            "type": "Step",
+            "location": {
+              "line": 44,
+              "column": 9
+            },
+            "keyword": "And ",
+            "text": "it should be a then step too"
+          }
+        ],
+        "examples": [
+          {
+            "type": "Examples",
+            "tags": [
+              {
+                "type": "Tag",
+                "location": {
+                  "line": 46,
+                  "column": 9
+                },
+                "name": "@tagE1"
+              }
+            ],
+            "location": {
+              "line": 47,
+              "column": 9
+            },
+            "keyword": "Examples",
+            "name": "First examples",
+            "tableHeader": {
+              "type": "TableRow",
+              "location": {
+                "line": 48,
+                "column": 13
+              },
+              "cells": [
+                {
+                  "type": "TableCell",
+                  "location": {
+                    "line": 48,
+                    "column": 15
+                  },
+                  "value": "key"
+                }
+              ]
+            },
+            "tableBody": [
+              {
+                "type": "TableRow",
+                "location": {
+                  "line": 49,
+                  "column": 13
+                },
+                "cells": [
+                  {
+                    "type": "TableCell",
+                    "location": {
+                      "line": 49,
+                      "column": 15
+                    },
+                    "value": "value1"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "Examples",
+            "tags": [
+              {
+                "type": "Tag",
+                "location": {
+                  "line": 51,
+                  "column": 9
+                },
+                "name": "@tagE2"
+              }
+            ],
+            "location": {
+              "line": 52,
+              "column": 9
+            },
+            "keyword": "Examples",
+            "name": "Second examples",
+            "tableHeader": {
+              "type": "TableRow",
+              "location": {
+                "line": 53,
+                "column": 13
+              },
+              "cells": [
+                {
+                  "type": "TableCell",
+                  "location": {
+                    "line": 53,
+                    "column": 15
+                  },
+                  "value": "key"
+                }
+              ]
+            },
+            "tableBody": [
+              {
+                "type": "TableRow",
+                "location": {
+                  "line": 54,
+                  "column": 13
+                },
+                "cells": [
+                  {
+                    "type": "TableCell",
+                    "location": {
+                      "line": 54,
+                      "column": 15
+                    },
+                    "value": "value2"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "comments": []
+}
