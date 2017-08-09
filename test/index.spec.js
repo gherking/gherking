@@ -39,7 +39,7 @@ describe('API', () => {
     });
 
     describe('.process()', () => {
-        it('should not do anything if no preprocessor provided', () => {
+        it('should not do anything if no pre-processor provided', () => {
             expect(API.process(ast)).to.equal(ast);
         });
 
