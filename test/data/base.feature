@@ -47,10 +47,14 @@ Feature: Hello world
 
   @tagE1 @tagE2
     Examples: First examples
-      | key    |
-      | value1 |
+      | key     |
+      | value1  |
+      | value12 |
+      | value13 |
 
   @tagE2
     Examples: Second examples
-      | key    |
-      | value2 |
+      | key     |
+      | value2  |
+      | value22 |
+      | value23 |

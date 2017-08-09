@@ -1,6 +1,8 @@
 'use strict';
 
 const path = require('path');
+const fs = require('fs-extra');
+const os = require('os');
 const API = require(path.resolve('lib/index.js'));
 const assembler = require('gherkin-assembler');
 
@@ -8,14 +10,31 @@ const expect = require('chai').expect;
 
 describe('API', () => {
     let ast;
+    const SOURCE_FILE = path.resolve('test/data/base.feature');
 
     before(() => {
-        ast = API.load(path.resolve('test/data/base.feature'));
+        ast = API.load(SOURCE_FILE);
     });
 
     describe('.load()', () => {
         it('should load a GherkinDocument', () => {
             expect(ast).to.be.instanceOf(assembler.AST.GherkinDocument);
+        });
+    });
+
+    describe('.save()', () => {
+        const TMP_FILE = path.resolve('test/data/save.feature');
+
+        before(() => fs.removeSync(TMP_FILE));
+        after(() => fs.removeSync(TMP_FILE));
+
+        it('should save to feature file', () => {
+            API.save(TMP_FILE, ast, {
+                lineBreak: os.platform() === 'win32' ? '\r\n' : '\n'
+            });
+
+            expect(fs.pathExistsSync(TMP_FILE)).to.be.true;
+            expect(fs.readFileSync(TMP_FILE, 'utf8')).to.equal(fs.readFileSync(SOURCE_FILE, 'utf8'));
         });
     });
 
@@ -235,7 +254,7 @@ describe('API', () => {
         describe('filters', () => {
             it('should support filtering of Tags', () => {
                 class TagProcessor extends API.PreProcessor {
-                    preFilterTag(tag, parent) {
+                    preFilterTag(tag) {
                         return /2$/.test(tag.name);
                     }
 
@@ -270,10 +289,10 @@ describe('API', () => {
 
             it('should support filtering Scenario-like elements', () => {
                 class ScenarioProcessor extends API.PreProcessor {
-                    preFilterScenario(scenario, parent) {
+                    preFilterScenario(scenario) {
                         return scenario.constructor.name !== 'ScenarioOutline';
                     }
-                    postFilterScenario(scenario, parent) {
+                    postFilterScenario(scenario) {
                         return scenario.constructor.name !== 'Scenario';
                     }
                 }
@@ -283,17 +302,65 @@ describe('API', () => {
                 expect(processed.feature.elements[0]).to.be.instanceOf(assembler.AST.Background);
             });
 
-            it('should not filter Background', () => {
-                class ScenarioProcessor extends API.PreProcessor {
-                    preFilterScenario(scenario, parent) {
-                        return scenario.constructor.name !== 'Background';
+            it('should support filtering Steps', () => {
+                class StepProcessor extends API.PreProcessor {
+                    preFilterStep(step, _, i) {
+                        step.text = '1';
+                        return i < 2;
+                    }
+
+                    postFilterStep(step, _, i) {
+                        step.text += '2';
+                        return i > 0;
                     }
                 }
 
-                const processed = API.process(ast, new ScenarioProcessor());
-                expect(processed.feature.elements.length).to.equal(3);
-                expect(processed.feature.elements[0]).to.be.instanceOf(assembler.AST.Background);
-            })
+                const processed = API.process(ast, new StepProcessor());
+                processed.feature.elements.forEach(element => {
+                    expect(element.steps.length).to.equal(1);
+                    expect(element.steps[0].text).to.equal('12');
+                });
+            });
+
+            it('should support filtering Rows of dataTables of examples', () => {
+                class RowProcessor extends API.PreProcessor {
+                    preFilterRow(row, _, i) {
+                        row.cells = row.cells.slice(0, 1);
+                        row.cells[0].value = '1';
+                        return i < 2;
+                    }
+
+                    postFilterRow(row, _, i) {
+                        row.cells[0].value += '2';
+                        return i > 0;
+                    }
+                }
+
+                const processed = API.process(ast, new RowProcessor());
+                processed.feature.elements[1].steps.slice(2, 4).forEach(step => {
+                    expect(step.argument.rows.length).to.equal(1);
+                    expect(step.argument.rows[0].cells[0].value).to.equal('12');
+                });
+                processed.feature.elements[2].examples.forEach(examples => {
+                    expect(examples.body.length).to.equal(1);
+                    expect(examples.body[0].cells[0].value).to.equal('12');
+                });
+            });
+
+            it('should support filtering Examples', () => {
+                class ExamplesProcessor extends API.PreProcessor {
+                    preFilterExamples(examples) {
+                        return examples.tags[0].name === '@tagE1';
+                    }
+
+                    postFilterExamples(examples) {
+                        return examples.tags[0].name === '@tagE2';
+                    }
+                }
+
+                const processed = API.process(ast, new ExamplesProcessor());
+                expect(processed.feature.elements[2].examples.length).to.equal(0);
+            });
         });
     });
 });
