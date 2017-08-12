@@ -57,7 +57,7 @@ Applies the given pre-processors to the given AST.
 **Params:**
 
  * `{GherkinDocument} ast` - the AST needs to be processed
- * `{...PreProcessor} pre-processors` - the pre-processors needs to be applied to the given AST
+ * `{...DefaultConfig|Object} pre-processors` - the pre-processors needs to be applied to the given AST
  
 **Returns:** `{GherkinDocument}` the processed AST
 
@@ -70,7 +70,7 @@ Formats the given `GherkinDocument` to text.
 
 Base class to create Gherkin feature file pre-processors.
 
-If you want to create own pre-processor, you only have to extends the `PreProcessor` class and override the filter and/or event methods, that you want to use.
+If you want to create own pre-processor, you only have to extends the `Default` class and override the filter and/or event methods, that you want to use or create and object with the desired methods.
 
 #### Event methods
 
@@ -81,17 +81,17 @@ Given that all event receives the given element as an `Object`, those can be eas
 
 The following methods are available, to see exact signature of the given method, click on the name of it:
 
- * [onFeature](lib/PreProcessor.js#13)
- * [onScenario](lib/PreProcessor.js#24)
- * [onBackground](lib/PreProcessor.js#35)
- * [onScenarioOutline](lib/PreProcessor.js#46) 
- * [onStep](lib/PreProcessor.js#57)
- * [onTag](lib/PreProcessor.js#68)
- * [onDocString](lib/PreProcessor.js#78)
- * [onDataTable](lib/PreProcessor.js#88) 
- * [onExamples](lib/PreProcessor.js#99) 
- * [onExampleHeader](lib/PreProcessor.js#109) 
- * [onExampleRow](lib/PreProcessor.js#120)
+ * [onFeature](lib/DefaultConfig.js#13)
+ * [onScenario](lib/DefaultConfig.js#25)
+ * [onBackground](lib/DefaultConfig.js#37)
+ * [onScenarioOutline](lib/DefaultConfig.js#49) 
+ * [onStep](lib/DefaultConfig.js#61)
+ * [onTag](lib/DefaultConfig.js#73)
+ * [onDocString](lib/DefaultConfig.js#84)
+ * [onDataTable](lib/DefaultConfig.js#95) 
+ * [onExamples](lib/DefaultConfig.js#107) 
+ * [onExampleHeader](lib/DefaultConfig.js#118) 
+ * [onExampleRow](lib/DefaultConfig.js#130)
  
 #### Filter methods
 
@@ -103,18 +103,8 @@ If the methods returns `false` the given element will be excluded from the final
 
 The following methods are available, to see exact signature of the given method, click on the name of it:
 
- * [preFilterScenario](lib/PreProcessor.js#134), [postFilterScenario](lib/PreProcessor.js#148)
- * [preFilterTag](lib/PreProcessor.js#162), [postFilterTag](lib/PreProcessor.js#176)
- * [preFilterStep](lib/PreProcessor.js#190), [postFilterStep](lib/PreProcessor.js#204)
- * [preFilterRow](lib/PreProcessor.js#218), [postFilterRow](lib/PreProcessor.js#232)
- * [preFilterExamples](lib/PreProcessor.js#245), [postFilterExamples](lib/PreProcessor.js#258)
- 
-#### Applying pre-processor
-
-A pre-processor can be applied to an AST, not just with the `process` method, but separately, using the `applyToAST` method of it.
-
-**Params:**
- 
- * `{GherkinDocument} ast` - the AST on which the pre-processor needs to be applied on
- 
-**Returns:** `{GherkinDocument}` the processed AST
+ * [preFilterScenario](lib/DefaultConfig.js#144), [postFilterScenario](lib/DefaultConfig.js#158)
+ * [preFilterTag](lib/DefaultConfig.js#172), [postFilterTag](lib/DefaultConfig.js#186)
+ * [preFilterStep](lib/DefaultConfig.js#200), [postFilterStep](lib/DefaultConfig.js#214)
+ * [preFilterRow](lib/DefaultConfig.js#228), [postFilterRow](lib/DefaultConfig.js#242)
+ * [preFilterExamples](lib/DefaultConfig.js#255), [postFilterExamples](lib/DefaultConfig.js#268)

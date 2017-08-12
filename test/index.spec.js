@@ -44,7 +44,7 @@ describe('API', () => {
         });
 
         it('should copy and not modify AST if base PreProcessor provided', () => {
-            const processed = API.process(ast, new API.PreProcessor());
+            const processed = API.process(ast, new API.DefaultConfig());
             expect(processed).to.not.equal(ast);
             expect(processed).to.eql(ast);
         });
@@ -53,7 +53,7 @@ describe('API', () => {
     describe('PreProcessor', () => {
         describe('processing events', () => {
             it('should support Feature processing', () => {
-                class FeatureProcessor extends API.PreProcessor {
+                class FeatureProcessor extends API.DefaultConfig {
                     onFeature(feature) {
                         feature.name = 'test';
                         feature.description = 'test';
@@ -67,7 +67,7 @@ describe('API', () => {
             });
 
             it('should support Background processing', () => {
-                class BackgroundProcessor extends API.PreProcessor {
+                class BackgroundProcessor extends API.DefaultConfig {
                     onBackground(background, feature) {
                         feature.name = 'test';
                         feature.description = 'test';
@@ -85,7 +85,7 @@ describe('API', () => {
             });
 
             it('should support Scenario processing', () => {
-                class ScenarioProcessor extends API.PreProcessor {
+                class ScenarioProcessor extends API.DefaultConfig {
                     onScenario(scenario, feature) {
                         feature.name = 'test';
                         feature.description = 'test';
@@ -103,7 +103,7 @@ describe('API', () => {
             });
 
             it('should support ScenarioOutline processing', () => {
-                class ScenarioOutlineProcessor extends API.PreProcessor {
+                class ScenarioOutlineProcessor extends API.DefaultConfig {
                     onScenarioOutline(scenario, feature) {
                         feature.name = 'test';
                         feature.description = 'test';
@@ -121,7 +121,7 @@ describe('API', () => {
             });
 
             it('should support Step processing', () => {
-                class StepProcessor extends API.PreProcessor {
+                class StepProcessor extends API.DefaultConfig {
                     onStep(step, parent) {
                         parent.name = 'test';
                         parent.description = 'test';
@@ -141,7 +141,7 @@ describe('API', () => {
             });
 
             it('should support Tag processing', () => {
-                class TagProcessor extends API.PreProcessor {
+                class TagProcessor extends API.DefaultConfig {
                     onTag(tag, parent) {
                         parent.name = 'test';
                         parent.description = 'test';
@@ -169,7 +169,7 @@ describe('API', () => {
             });
 
             it('should support Examples processing', () => {
-                class ExamplesProcessor extends API.PreProcessor {
+                class ExamplesProcessor extends API.DefaultConfig {
                     onExamples(examples, outline) {
                         outline.name = 'test';
                         outline.description = 'test';
@@ -187,7 +187,7 @@ describe('API', () => {
             });
 
             it('should support Examples header processing', () => {
-                class ExamplesProcessor extends API.PreProcessor {
+                class ExamplesProcessor extends API.DefaultConfig {
                     onExampleHeader(row, examples) {
                         examples.name = 'test';
                         row.cells.push(row.cells[0].clone());
@@ -203,7 +203,7 @@ describe('API', () => {
             });
 
             it('should support Examples row processing', () => {
-                class ExamplesProcessor extends API.PreProcessor {
+                class ExamplesProcessor extends API.DefaultConfig {
                     onExampleRow(row, examples) {
                         examples.name = 'test';
                         row.cells.push(row.cells[0].clone());
@@ -221,7 +221,7 @@ describe('API', () => {
             });
 
             it('should support DocString processing', () => {
-                class DocStringProcessor extends API.PreProcessor {
+                class DocStringProcessor extends API.DefaultConfig {
                     onDocString(docString, step) {
                         step.text = 'test';
                         docString.content = 'test';
@@ -236,7 +236,7 @@ describe('API', () => {
             });
 
             it('should support DataTable processing', () => {
-                class DataTableProcessor extends API.PreProcessor {
+                class DataTableProcessor extends API.DefaultConfig {
                     onDataTable(dataTable, step) {
                         step.text = 'test';
                         dataTable.rows.push(dataTable.rows[0].clone());
@@ -249,20 +249,62 @@ describe('API', () => {
                 expect(step.text).to.equal('test');
                 expect(step.argument.rows.length).to.equal(4);
             });
+
+            it('should support replacing simple values', () => {
+                class DocStringProcessor extends API.DefaultConfig {
+                    onDocString(docString) {
+                        const newDocString = docString.clone();
+                        newDocString.content = 'test';
+                        return newDocString;
+                    }
+                }
+
+                const processed = API.process(ast, new DocStringProcessor());
+                expect(processed).to.not.eql(ast);
+                const step = processed.feature.elements[1].steps[4];
+                expect(step.argument.content).to.equal('test');
+            });
+
+            it('should support replacing list values', () => {
+                class ScenarioProcessor extends API.DefaultConfig {
+                    onScenario(scenario) {
+                        const newScenario = scenario.clone();
+                        newScenario.name = 'test';
+                        newScenario.description = 'test';
+                        return newScenario;
+                    }
+                }
+
+                const processed = API.process(ast, new ScenarioProcessor());
+                expect(processed).to.not.eql(ast);
+                expect(processed.feature.elements[1].name).to.equal('test');
+                expect(processed.feature.elements[1].description).to.equal('test');
+            });
+
+            it('should support deleting list values', () => {
+                class ScenarioProcessor extends API.DefaultConfig {
+                    onScenario(scenario) {
+                        return null;
+                    }
+                }
+
+                const processed = API.process(ast, new ScenarioProcessor());
+                expect(processed).to.not.eql(ast);
+                expect(processed.feature.elements.length).to.equal(2);
+            });
         });
 
         describe('filters', () => {
             it('should support filtering of Tags', () => {
-                class TagProcessor extends API.PreProcessor {
+                class TagProcessor extends API.DefaultConfig {
                     preFilterTag(tag) {
                         return /2$/.test(tag.name);
                     }
 
-                    onTag(tag, parent) {
-                        parent.tags.push(tag.clone());
-                        parent.tags.push(tag.clone());
-                        parent.tags.push(tag.clone());
+                    onTag(tag) {
+                        const newTag = tag.clone();
                         tag.name = '@tagN';
+                        return [tag, newTag, newTag, newTag];
                     }
 
                     postFilterTag(tag, parent) {
@@ -288,7 +330,7 @@ describe('API', () => {
             });
 
             it('should support filtering Scenario-like elements', () => {
-                class ScenarioProcessor extends API.PreProcessor {
+                class ScenarioProcessor extends API.DefaultConfig {
                     preFilterScenario(scenario) {
                         return scenario.constructor.name !== 'ScenarioOutline';
                     }
@@ -303,7 +345,7 @@ describe('API', () => {
             });
 
             it('should support filtering Steps', () => {
-                class StepProcessor extends API.PreProcessor {
+                class StepProcessor extends API.DefaultConfig {
                     preFilterStep(step, _, i) {
                         step.text = '1';
                         return i < 2;
@@ -323,7 +365,7 @@ describe('API', () => {
             });
 
             it('should support filtering Rows of dataTables of examples', () => {
-                class RowProcessor extends API.PreProcessor {
+                class RowProcessor extends API.DefaultConfig {
                     preFilterRow(row, _, i) {
                         row.cells = row.cells.slice(0, 1);
                         row.cells[0].value = '1';
@@ -348,7 +390,7 @@ describe('API', () => {
             });
 
             it('should support filtering Examples', () => {
-                class ExamplesProcessor extends API.PreProcessor {
+                class ExamplesProcessor extends API.DefaultConfig {
                     preFilterExamples(examples) {
                         return examples.tags[0].name === '@tagE1';
                     }
@@ -361,6 +403,20 @@ describe('API', () => {
                 const processed = API.process(ast, new ExamplesProcessor());
                 expect(processed.feature.elements[2].examples.length).to.equal(0);
             });
+        });
+
+        it('should support Object configuration', () => {
+            const featureProcessor = {
+                onFeature(feature) {
+                    feature.name = 'test';
+                    feature.description = 'test';
+                }
+            };
+
+            const processed = API.process(ast, featureProcessor);
+            expect(processed).to.not.eql(ast);
+            expect(processed.feature.name).to.equal('test');
+            expect(processed.feature.description).to.equal('test');
         });
     });
 });
