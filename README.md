@@ -66,11 +66,9 @@ Applies the given pre-processors to the given AST.
 Formats the given `GherkinDocument` to text.
 *Equivalent of gherkin-assembler's `format` method. See API [here](https://github.com/szikszail/gherkin-assembler).*
 
-### `PreProcessor`
+### Configuration
 
-Base class to create Gherkin feature file pre-processors.
-
-If you want to create own pre-processor, you only have to extends the `Default` class and override the filter and/or event methods, that you want to use or create and object with the desired methods.
+If you want to create own pre-processor, you only have to extends the `Default` class and override the filter and/or event methods, that you want to use; or create and object with the desired methods.
 
 #### Event methods
 
