@@ -302,9 +302,12 @@ describe('API', () => {
                     }
 
                     onTag(tag) {
-                        const newTag = tag.clone();
-                        tag.name = '@tagN';
-                        return [tag, newTag, newTag, newTag];
+                        if (tag.name !== '@tagNew2') {
+                            const newTag = tag.clone();
+                            newTag.name = '@tagNew2';
+                            tag.name = '@tagN';
+                            return [tag, newTag, newTag, newTag];
+                        }
                     }
 
                     postFilterTag(tag, parent) {

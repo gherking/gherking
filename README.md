@@ -79,6 +79,11 @@ Every element can be modified by using it's correspondent event methods.
 All event methods (except `onFeature`) receives the given element, it's parent and - if applicable - the index of the element.
 Given that all event receives the given element as an `Object`, those can be easily modified by modifying the object itself.
 
+If you return
+ * `null`, then the given element will be deleted
+ * an element, then the original element will be replaced with the returned one
+ * an element array, in case of event which process list element (i.e. tag, scenario, examples, step, background, scenario outline), then the original element will be replaced with the returned list
+
 The following methods are available, to see exact signature of the given method, click on the name of it:
 
  * [onFeature](lib/DefaultConfig.js#13)
