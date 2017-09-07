@@ -6,14 +6,20 @@ Feature: Test feature file for login
 
   Scenario Outline: Login with <user> without logout
     And username is filled with <username>
-    And password is filled filth <password>
+    And password is filled with <password>
     And login button is clicked
     Then the profile page of <user> should be loaded
+    """
+    logout
+    """
+    And the following menu items should be displayed
+      | logout |
+
 
     Examples:
-      | user | username | password |
-      | {u1} | user1    | pwd1  |
-      | {u2} | user2    | pwd2  |
+      | user   | username | password |
+      | user_1 | user1    | pwd1     |
+      | user_2 | user2    | pwd2     |
 
   @logout
   Scenario: Testing logout
@@ -24,12 +30,4 @@ Feature: Test feature file for login
     When the sign out is clicked
     Then the user should be logged out
 
-  feature-login
-  u1-user_1
-  u2_user_2
-  feature2-logout
-  button-sign out
-  description-feature description
-  tag1-logout
-  pwd-password
 

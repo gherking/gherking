@@ -4,7 +4,7 @@
   "description": "Simple pre-processor for Gherkin feature files",
   "main": "lib/index.js",
   "scripts": {
-    "test": "mocha ./test/*.spec.js ./test/ast/*.spec.js",
+    "test": "mocha ./test/*.spec.js ./test/builtIn/*.spec.js",
     "coverage": "istanbul cover --include-all-sources ./node_modules/mocha/bin/_mocha --root ./lib -- ./test/*.spec.js ./test/builtIn/*.spec.js",
     "travis": "istanbul cover --include-all-sources ./node_modules/mocha/bin/_mocha --root ./lib --report lcovonly -- ./test/*.spec.js ./test/builtIn/*.spec.js -R spec && cat ./coverage/lcov.info | node ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage"
   },
