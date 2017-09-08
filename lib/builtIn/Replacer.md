@@ -1,3 +1,5 @@
+### Replacer for Gherkin preprocessor
+
 This Replacer is responsible for exchanging predefined strings in the
 feature files. It inserts the provided text in the place held for them.
 
@@ -14,15 +16,15 @@ feature.
 It can find and replace such strings in the following parts of a
 feature file:
 
-Feature: name, description
-Background: name, description
-Scenario Outline: name, decription
-Scenario: name, description
-Step: text
-Tag: name
-Examples: name
-Document string: content
-Data table: header name, cell values
+* Feature: name, description
+* Background: name, description
+* Scenario Outline: name, decription
+* Scenario: name, description
+* Step: text
+* Tag: name
+* Examples: name
+* Document string: content
+* Data table: header name, cell values
 
 See examples for the input files and an output in the test/data folder.
 
