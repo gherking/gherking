@@ -26,7 +26,10 @@ processor.save('./features/dist/login.feature', ast, {
 
 ### Built-in pre processors
 
- * [Replacer](lib/builtIn/Replacer.md) *TBD*
+ * [Replacer](lib/builtIn/Replacer.md)
+
+    Replaces keywords in the feature files.
+
 
 ## API
 
