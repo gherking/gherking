@@ -11,23 +11,23 @@
   "preferGlobal": false,
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/szikszail/gherkin-preprocessor.git"
+    "url": "git+https://github.com/judit-nahaj/gherkin-preprocessor.git"
   },
   "keywords": [
     "gherkin",
     "cucumber",
     "feature file"
   ],
-  "author": "Laszlo Szikszai <sziklaszlo@gmail.com>",
+  "author": "Judit Nahaj <n.juditt@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/szikszail/gherkin-preprocessor/issues"
+    "url": "https://github.com/judit-nahaj/gherkin-preprocessor/issues"
   },
   "engines": {
     "node": ">=4.9.2",
     "npm": ">=3.0.0"
   },
-  "homepage": "https://github.com/szikszail/gherkin-preprocessor#readme",
+  "homepage": "https://github.com/judit-nahaj/gherkin-preprocessor#readme",
   "devDependencies": {
     "chai": "^4.1.0",
     "coveralls": "^2.13.1",
