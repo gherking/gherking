@@ -19,6 +19,7 @@
     "feature file"
   ],
   "author": "Judit Nahaj <n.juditt@gmail.com>",
+  "contributors": ["Laszlo Szikszai <sziklaszlo@gmail.com>"],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/judit-nahaj/gherkin-preprocessor/issues"
