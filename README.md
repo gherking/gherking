@@ -1,6 +1,6 @@
 # gherkin-preprocessor
 
-[![Build Status](https://travis-ci.org/szikszail/gherkin-preprocessor.svg?branch=master)](https://travis-ci.org/szikszail/gherkin-preprocessor) [![dependency Status](https://david-dm.org/szikszail/gherkin-preprocessor.svg)](https://david-dm.org/szikszail/gherkin-preprocessor) [![devDependency Status](https://david-dm.org/szikszail/gherkin-preprocessor/dev-status.svg)](https://david-dm.org/szikszail/gherkin-preprocessor#info=devDependencies) [![Coverage Status](https://coveralls.io/repos/github/szikszail/gherkin-preprocessor/badge.svg?branch=master)](https://coveralls.io/github/szikszail/gherkin-preprocessor?branch=master)
+[![Build Status](https://travis-ci.org/judit-nahaj/gherkin-preprocessor.svg?branch=master)](https://travis-ci.org/judit-nahaj/gherkin-preprocessor) [![dependency Status](https://david-dm.org/judit-nahaj/gherkin-preprocessor.svg)](https://david-dm.org/judit-nahaj/gherkin-preprocessor) [![devDependency Status](https://david-dm.org/judit-nahaj/gherkin-preprocessor/dev-status.svg)](https://david-dm.org/judit-nahaj/gherkin-preprocessor#info=devDependencies) [![Coverage Status](https://coveralls.io/repos/github/judit-nahaj/gherkin-preprocessor/badge.svg?branch=master)](https://coveralls.io/github/judit-nahaj/gherkin-preprocessor?branch=master)
 
 Simple pre-processor for Gherkin feature files.
 
@@ -51,7 +51,7 @@ Saves the given AST ast feature file to the given path.
  
  * `{string} pathToFile` - the path of the feature file where the AST needs to be saved
  * `{GherkinDocument} ast` - the AST needs to be saved to the file
- * `{AssemblerConfig} [options]` - configuration of formatting, see [AssemblerConfig](https://github.com/szikszail/gherkin-assembler)
+ * `{AssemblerConfig} [options]` - configuration of formatting, see [AssemblerConfig](https://github.com/judit-nahaj/gherkin-assembler)
  
 ### `process`
 
@@ -67,7 +67,7 @@ Applies the given pre-processors to the given AST.
 ### `format`
 
 Formats the given `GherkinDocument` to text.
-*Equivalent of gherkin-assembler's `format` method. See API [here](https://github.com/szikszail/gherkin-assembler).*
+*Equivalent of gherkin-assembler's `format` method. See API [here](https://github.com/judit-nahaj/gherkin-assembler).*
 
 ### Configuration
 
