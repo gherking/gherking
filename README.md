@@ -10,7 +10,7 @@ It is based on the AST what is provided by [gherkin-assembler](https://www.npmjs
 
 ```javascript
 'use strict';
-const processor = require('gherkin-pre-processor');
+const processor = require('gherkin-preprocessor');
 
 let ast = processor.load('./features/src/login.feature');
 ast = processor.process(
