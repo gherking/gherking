@@ -43,14 +43,14 @@ describe('API', () => {
             expect(API.process(ast)).to.equal(ast);
         });
 
-        it('should copy and not modify AST if base PreProcessor provided', () => {
+        it('should copy and not modify AST if base PreCompiler provided', () => {
             const processed = API.process(ast, new API.DefaultConfig());
             expect(processed).to.not.equal(ast);
             expect(processed).to.eql(ast);
         });
     });
 
-    describe('PreProcessor', () => {
+    describe('PreCompiler', () => {
         describe('processing events', () => {
             it('should support Feature processing', () => {
                 class FeatureProcessor extends API.DefaultConfig {

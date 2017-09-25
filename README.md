@@ -1,6 +1,6 @@
-# gherkin-preprocessor
+# gherkin-precompiler
 
-[![Build Status](https://travis-ci.org/judit-nahaj/gherkin-preprocessor.svg?branch=master)](https://travis-ci.org/judit-nahaj/gherkin-preprocessor) [![dependency Status](https://david-dm.org/judit-nahaj/gherkin-preprocessor.svg)](https://david-dm.org/judit-nahaj/gherkin-preprocessor) [![devDependency Status](https://david-dm.org/judit-nahaj/gherkin-preprocessor/dev-status.svg)](https://david-dm.org/judit-nahaj/gherkin-preprocessor#info=devDependencies) [![Coverage Status](https://coveralls.io/repos/github/judit-nahaj/gherkin-preprocessor/badge.svg?branch=master)](https://coveralls.io/github/judit-nahaj/gherkin-preprocessor?branch=master)
+[![Build Status](https://travis-ci.org/judit-nahaj/gherkin-precompiler.svg?branch=master)](https://travis-ci.org/judit-nahaj/gherkin-precompiler) [![dependency Status](https://david-dm.org/judit-nahaj/gherkin-precompiler.svg)](https://david-dm.org/judit-nahaj/gherkin-precompiler) [![devDependency Status](https://david-dm.org/judit-nahaj/gherkin-precompiler/dev-status.svg)](https://david-dm.org/judit-nahaj/gherkin-precompiler#info=devDependencies) [![Coverage Status](https://coveralls.io/repos/github/judit-nahaj/gherkin-precompiler/badge.svg?branch=master)](https://coveralls.io/github/judit-nahaj/gherkin-precompiler?branch=master)
 
 Simple pre-processor for Gherkin feature files.
 
@@ -10,7 +10,7 @@ It is based on the AST what is provided by [gherkin-assembler](https://www.npmjs
 
 ```javascript
 'use strict';
-const processor = require('gherkin-preprocessor');
+const processor = require('gherkin-precompiler');
 
 let ast = processor.load('./features/src/login.feature');
 ast = processor.process(
