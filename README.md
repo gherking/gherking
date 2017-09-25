@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/judit-nahaj/gherkin-precompiler.svg?branch=master)](https://travis-ci.org/judit-nahaj/gherkin-precompiler) [![dependency Status](https://david-dm.org/judit-nahaj/gherkin-precompiler.svg)](https://david-dm.org/judit-nahaj/gherkin-precompiler) [![devDependency Status](https://david-dm.org/judit-nahaj/gherkin-precompiler/dev-status.svg)](https://david-dm.org/judit-nahaj/gherkin-precompiler#info=devDependencies) [![Coverage Status](https://coveralls.io/repos/github/judit-nahaj/gherkin-precompiler/badge.svg?branch=master)](https://coveralls.io/github/judit-nahaj/gherkin-precompiler?branch=master)
 
-Simple pre-processor for Gherkin feature files.
+Simple pre-compiler for Gherkin feature files.
 
 It is based on the AST what is provided by [gherkin-assembler](https://www.npmjs.com/package/gherkin-assembler).
 
@@ -10,21 +10,21 @@ It is based on the AST what is provided by [gherkin-assembler](https://www.npmjs
 
 ```javascript
 'use strict';
-const processor = require('gherkin-precompiler');
+const compiler = require('gherkin-precompiler');
 
-let ast = processor.load('./features/src/login.feature');
-ast = processor.process(
+let ast = compiler.load('./features/src/login.feature');
+ast = compiler.process(
     ast,
-    new processor.builtIn.Replacer({
+    new compiler.builtIn.Replacer({
         name: 'Hello'
     })
 );
-processor.save('./features/dist/login.feature', ast, {
+compiler.save('./features/dist/login.feature', ast, {
     lineBreak: '\r\n'
 });
 ```
 
-### Built-in pre processors
+### Built-in pre compilers
 
  * [Replacer](lib/builtIn/Replacer.md)
 
@@ -55,12 +55,12 @@ Saves the given AST ast feature file to the given path.
  
 ### `process`
 
-Applies the given pre-processors to the given AST.
+Applies the given pre-compilers to the given AST.
 
 **Params:**
 
  * `{GherkinDocument} ast` - the AST needs to be processed
- * `{...DefaultConfig|Object} pre-processors` - the pre-processors needs to be applied to the given AST
+ * `{...DefaultConfig|Object} pre-compilers` - the pre-compilers needs to be applied to the given AST
  
 **Returns:** `{GherkinDocument}` the processed AST
 
@@ -71,7 +71,7 @@ Formats the given `GherkinDocument` to text.
 
 ### Configuration
 
-If you want to create own pre-processor, you only have to extends the `Default` class and override the filter and/or event methods, that you want to use; or create and object with the desired methods.
+If you want to create own pre-compiler, you only have to extends the `Default` class and override the filter and/or event methods, that you want to use; or create and object with the desired methods.
 
 #### Event methods
 

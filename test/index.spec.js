@@ -39,7 +39,7 @@ describe('API', () => {
     });
 
     describe('.process()', () => {
-        it('should not do anything if no pre-processor provided', () => {
+        it('should not do anything if no pre-compiler provided', () => {
             expect(API.process(ast)).to.equal(ast);
         });
 
@@ -53,21 +53,21 @@ describe('API', () => {
     describe('PreCompiler', () => {
         describe('processing events', () => {
             it('should support Feature processing', () => {
-                class FeatureProcessor extends API.DefaultConfig {
+                class Featurecompiler extends API.DefaultConfig {
                     onFeature(feature) {
                         feature.name = 'test';
                         feature.description = 'test';
                     }
                 }
 
-                const processed = API.process(ast, new FeatureProcessor());
+                const processed = API.process(ast, new Featurecompiler());
                 expect(processed).to.not.eql(ast);
                 expect(processed.feature.name).to.equal('test');
                 expect(processed.feature.description).to.equal('test');
             });
 
             it('should support Background processing', () => {
-                class BackgroundProcessor extends API.DefaultConfig {
+                class Backgroundcompiler extends API.DefaultConfig {
                     onBackground(background, feature) {
                         feature.name = 'test';
                         feature.description = 'test';
@@ -76,7 +76,7 @@ describe('API', () => {
                     }
                 }
 
-                const processed = API.process(ast, new BackgroundProcessor());
+                const processed = API.process(ast, new Backgroundcompiler());
                 expect(processed).to.not.eql(ast);
                 expect(processed.feature.name).to.equal('test');
                 expect(processed.feature.description).to.equal('test');
@@ -85,7 +85,7 @@ describe('API', () => {
             });
 
             it('should support Scenario processing', () => {
-                class ScenarioProcessor extends API.DefaultConfig {
+                class Scenariocompiler extends API.DefaultConfig {
                     onScenario(scenario, feature) {
                         feature.name = 'test';
                         feature.description = 'test';
@@ -94,7 +94,7 @@ describe('API', () => {
                     }
                 }
 
-                const processed = API.process(ast, new ScenarioProcessor());
+                const processed = API.process(ast, new Scenariocompiler());
                 expect(processed).to.not.eql(ast);
                 expect(processed.feature.name).to.equal('test');
                 expect(processed.feature.description).to.equal('test');
@@ -103,7 +103,7 @@ describe('API', () => {
             });
 
             it('should support ScenarioOutline processing', () => {
-                class ScenarioOutlineProcessor extends API.DefaultConfig {
+                class ScenarioOutlinecompiler extends API.DefaultConfig {
                     onScenarioOutline(scenario, feature) {
                         feature.name = 'test';
                         feature.description = 'test';
@@ -112,7 +112,7 @@ describe('API', () => {
                     }
                 }
 
-                const processed = API.process(ast, new ScenarioOutlineProcessor());
+                const processed = API.process(ast, new ScenarioOutlinecompiler());
                 expect(processed).to.not.eql(ast);
                 expect(processed.feature.name).to.equal('test');
                 expect(processed.feature.description).to.equal('test');
@@ -121,7 +121,7 @@ describe('API', () => {
             });
 
             it('should support Step processing', () => {
-                class StepProcessor extends API.DefaultConfig {
+                class Stepcompiler extends API.DefaultConfig {
                     onStep(step, parent) {
                         parent.name = 'test';
                         parent.description = 'test';
@@ -129,7 +129,7 @@ describe('API', () => {
                     }
                 }
 
-                const processed = API.process(ast, new StepProcessor());
+                const processed = API.process(ast, new Stepcompiler());
                 expect(processed).to.not.eql(ast);
                 processed.feature.elements.forEach(element => {
                     expect(element.name).to.equal('test');
@@ -141,7 +141,7 @@ describe('API', () => {
             });
 
             it('should support Tag processing', () => {
-                class TagProcessor extends API.DefaultConfig {
+                class Tagcompiler extends API.DefaultConfig {
                     onTag(tag, parent) {
                         parent.name = 'test';
                         parent.description = 'test';
@@ -149,7 +149,7 @@ describe('API', () => {
                     }
                 }
 
-                const processed = API.process(ast, new TagProcessor());
+                const processed = API.process(ast, new Tagcompiler());
                 expect(processed).to.not.eql(ast);
                 expect(processed.feature.elements[0].name).to.not.equal('test');
                 expect(processed.feature.elements[0].description).to.not.equal('test');
@@ -169,7 +169,7 @@ describe('API', () => {
             });
 
             it('should support Examples processing', () => {
-                class ExamplesProcessor extends API.DefaultConfig {
+                class Examplescompiler extends API.DefaultConfig {
                     onExamples(examples, outline) {
                         outline.name = 'test';
                         outline.description = 'test';
@@ -177,7 +177,7 @@ describe('API', () => {
                     }
                 }
 
-                const processed = API.process(ast, new ExamplesProcessor());
+                const processed = API.process(ast, new Examplescompiler());
                 expect(processed).to.not.eql(ast);
                 expect(processed.feature.elements[2].name).to.equal('test');
                 expect(processed.feature.elements[2].description).to.equal('test');
@@ -187,14 +187,14 @@ describe('API', () => {
             });
 
             it('should support Examples header processing', () => {
-                class ExamplesProcessor extends API.DefaultConfig {
+                class Examplescompiler extends API.DefaultConfig {
                     onExampleHeader(row, examples) {
                         examples.name = 'test';
                         row.cells.push(row.cells[0].clone());
                     }
                 }
 
-                const processed = API.process(ast, new ExamplesProcessor());
+                const processed = API.process(ast, new Examplescompiler());
                 expect(processed).to.not.eql(ast);
                 processed.feature.elements[2].examples.forEach(examples => {
                     expect(examples.name).to.equal('test');
@@ -203,14 +203,14 @@ describe('API', () => {
             });
 
             it('should support Examples row processing', () => {
-                class ExamplesProcessor extends API.DefaultConfig {
+                class Examplescompiler extends API.DefaultConfig {
                     onExampleRow(row, examples) {
                         examples.name = 'test';
                         row.cells.push(row.cells[0].clone());
                     }
                 }
 
-                const processed = API.process(ast, new ExamplesProcessor());
+                const processed = API.process(ast, new Examplescompiler());
                 expect(processed).to.not.eql(ast);
                 processed.feature.elements[2].examples.forEach(examples => {
                     expect(examples.name).to.equal('test');
@@ -221,14 +221,14 @@ describe('API', () => {
             });
 
             it('should support DocString processing', () => {
-                class DocStringProcessor extends API.DefaultConfig {
+                class DocStringcompiler extends API.DefaultConfig {
                     onDocString(docString, step) {
                         step.text = 'test';
                         docString.content = 'test';
                     }
                 }
 
-                const processed = API.process(ast, new DocStringProcessor());
+                const processed = API.process(ast, new DocStringcompiler());
                 expect(processed).to.not.eql(ast);
                 const step = processed.feature.elements[1].steps[4];
                 expect(step.text).to.equal('test');
@@ -236,14 +236,14 @@ describe('API', () => {
             });
 
             it('should support DataTable processing', () => {
-                class DataTableProcessor extends API.DefaultConfig {
+                class DataTablecompiler extends API.DefaultConfig {
                     onDataTable(dataTable, step) {
                         step.text = 'test';
                         dataTable.rows.push(dataTable.rows[0].clone());
                     }
                 }
 
-                const processed = API.process(ast, new DataTableProcessor());
+                const processed = API.process(ast, new DataTablecompiler());
                 expect(processed).to.not.eql(ast);
                 const step = processed.feature.elements[1].steps[3];
                 expect(step.text).to.equal('test');
@@ -251,7 +251,7 @@ describe('API', () => {
             });
 
             it('should support replacing simple values', () => {
-                class DocStringProcessor extends API.DefaultConfig {
+                class DocStringcompiler extends API.DefaultConfig {
                     onDocString(docString) {
                         const newDocString = docString.clone();
                         newDocString.content = 'test';
@@ -259,14 +259,14 @@ describe('API', () => {
                     }
                 }
 
-                const processed = API.process(ast, new DocStringProcessor());
+                const processed = API.process(ast, new DocStringcompiler());
                 expect(processed).to.not.eql(ast);
                 const step = processed.feature.elements[1].steps[4];
                 expect(step.argument.content).to.equal('test');
             });
 
             it('should support replacing list values', () => {
-                class ScenarioProcessor extends API.DefaultConfig {
+                class Scenariocompiler extends API.DefaultConfig {
                     onScenario(scenario) {
                         const newScenario = scenario.clone();
                         newScenario.name = 'test';
@@ -275,20 +275,20 @@ describe('API', () => {
                     }
                 }
 
-                const processed = API.process(ast, new ScenarioProcessor());
+                const processed = API.process(ast, new Scenariocompiler());
                 expect(processed).to.not.eql(ast);
                 expect(processed.feature.elements[1].name).to.equal('test');
                 expect(processed.feature.elements[1].description).to.equal('test');
             });
 
             it('should support deleting list values', () => {
-                class ScenarioProcessor extends API.DefaultConfig {
+                class Scenariocompiler extends API.DefaultConfig {
                     onScenario(scenario) {
                         return null;
                     }
                 }
 
-                const processed = API.process(ast, new ScenarioProcessor());
+                const processed = API.process(ast, new Scenariocompiler());
                 expect(processed).to.not.eql(ast);
                 expect(processed.feature.elements.length).to.equal(2);
             });
@@ -296,7 +296,7 @@ describe('API', () => {
 
         describe('filters', () => {
             it('should support filtering of Tags', () => {
-                class TagProcessor extends API.DefaultConfig {
+                class Tagcompiler extends API.DefaultConfig {
                     preFilterTag(tag) {
                         return /2$/.test(tag.name);
                     }
@@ -315,7 +315,7 @@ describe('API', () => {
                     }
                 }
 
-                const processed = API.process(ast, new TagProcessor());
+                const processed = API.process(ast, new Tagcompiler());
 
                 expect(processed.feature.tags.length).to.equal(3);
                 processed.feature.elements.slice(1).forEach(element => {
@@ -333,7 +333,7 @@ describe('API', () => {
             });
 
             it('should support filtering Scenario-like elements', () => {
-                class ScenarioProcessor extends API.DefaultConfig {
+                class Scenariocompiler extends API.DefaultConfig {
                     preFilterScenario(scenario) {
                         return scenario.constructor.name !== 'ScenarioOutline';
                     }
@@ -342,13 +342,13 @@ describe('API', () => {
                     }
                 }
 
-                const processed = API.process(ast, new ScenarioProcessor());
+                const processed = API.process(ast, new Scenariocompiler());
                 expect(processed.feature.elements.length).to.equal(1);
                 expect(processed.feature.elements[0]).to.be.instanceOf(assembler.AST.Background);
             });
 
             it('should support filtering Steps', () => {
-                class StepProcessor extends API.DefaultConfig {
+                class Stepcompiler extends API.DefaultConfig {
                     preFilterStep(step, _, i) {
                         step.text = '1';
                         return i < 2;
@@ -360,7 +360,7 @@ describe('API', () => {
                     }
                 }
 
-                const processed = API.process(ast, new StepProcessor());
+                const processed = API.process(ast, new Stepcompiler());
                 processed.feature.elements.forEach(element => {
                     expect(element.steps.length).to.equal(1);
                     expect(element.steps[0].text).to.equal('12');
@@ -368,7 +368,7 @@ describe('API', () => {
             });
 
             it('should support filtering Rows of dataTables of examples', () => {
-                class RowProcessor extends API.DefaultConfig {
+                class Rowcompiler extends API.DefaultConfig {
                     preFilterRow(row, _, i) {
                         row.cells = row.cells.slice(0, 1);
                         row.cells[0].value = '1';
@@ -381,7 +381,7 @@ describe('API', () => {
                     }
                 }
 
-                const processed = API.process(ast, new RowProcessor());
+                const processed = API.process(ast, new Rowcompiler());
                 processed.feature.elements[1].steps.slice(2, 4).forEach(step => {
                     expect(step.argument.rows.length).to.equal(1);
                     expect(step.argument.rows[0].cells[0].value).to.equal('12');
@@ -393,7 +393,7 @@ describe('API', () => {
             });
 
             it('should support filtering Examples', () => {
-                class ExamplesProcessor extends API.DefaultConfig {
+                class Examplescompiler extends API.DefaultConfig {
                     preFilterExamples(examples) {
                         return examples.tags[0].name === '@tagE1';
                     }
@@ -403,20 +403,20 @@ describe('API', () => {
                     }
                 }
 
-                const processed = API.process(ast, new ExamplesProcessor());
+                const processed = API.process(ast, new Examplescompiler());
                 expect(processed.feature.elements[2].examples.length).to.equal(0);
             });
         });
 
         it('should support Object configuration', () => {
-            const featureProcessor = {
+            const featurecompiler = {
                 onFeature(feature) {
                     feature.name = 'test';
                     feature.description = 'test';
                 }
             };
 
-            const processed = API.process(ast, featureProcessor);
+            const processed = API.process(ast, featurecompiler);
             expect(processed).to.not.eql(ast);
             expect(processed.feature.name).to.equal('test');
             expect(processed.feature.description).to.equal('test');

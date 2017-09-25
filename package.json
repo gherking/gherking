@@ -1,7 +1,7 @@
 {
   "name": "gherkin-precompiler",
   "version": "1.0.0",
-  "description": "Simple pre-processor for Gherkin feature files",
+  "description": "Simple pre-compiler for Gherkin feature files",
   "main": "lib/index.js",
   "scripts": {
     "test": "mocha ./test/*.spec.js ./test/builtIn/*.spec.js",

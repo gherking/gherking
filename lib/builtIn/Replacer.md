@@ -1,4 +1,4 @@
-### Replacer for Gherkin preprocessor
+### Replacer for Gherkin precompiler
 
 This Replacer is responsible for exchanging predefined strings in the
 feature files. It inserts the provided text in the place held for them.
