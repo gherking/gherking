@@ -15,7 +15,6 @@ Feature: Test feature file for login
     And the following menu items should be displayed
       | logout |
 
-
     Examples:
       | user   | username | password |
       | user_1 | user1    | pwd1     |
