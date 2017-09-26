@@ -9,9 +9,9 @@ Feature: Test feature file for login
     And password is filled with <password>
     And login button is clicked
     Then the profile page of <user> should be loaded
-    """
-    logout
-    """
+      """
+      logout
+      """
     And the following menu items should be displayed
       | logout |
 
@@ -29,5 +29,3 @@ Feature: Test feature file for login
     Then the profile page of <user> should be loaded
     When the sign out is clicked
     Then the user should be logged out
-
-
