@@ -22,9 +22,5 @@ class BufferCompiler {
     compileBuffer(buffer) {
         return new Buffer(this._compile(String(buffer)));
     }
-
-    stream() {
-        return () => {};
-    }
 }
 module.exports = BufferCompiler;

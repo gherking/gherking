@@ -30,6 +30,28 @@ compiler.save('./features/dist/login.feature', ast, {
 
     Replaces keywords in the feature files.
 
+## Gulp
+
+```javascript
+//gulpfile.js
+//...
+const compiler = require('gherkin-precompiler');
+const gulpCompiler = compiler.gulp;
+const compilers = [
+    new compiler.builtIn.Replacer({
+        name: 'Hello'
+    })
+];
+const compilerFormat = {
+    lineBreak: '\r\n'
+};
+
+gulp.task('precompile', () => {
+    return gulp.src('./features/**/*.feature')
+        .pipe(gulpCompiler(compilers, compilerFormat))
+        .pipe(gulp.dest('./dist/features'));
+});
+```
 
 ## API
 

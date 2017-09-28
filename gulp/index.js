@@ -16,17 +16,23 @@ function preCompiler(configs, formatOptions) {
         configs = [configs];
     }
     const compiler = new Compiler(configs, formatOptions);
+
     return through.obj((file, enc, cb) => {
-        if (file.isNull() || file.isStream()) {
+        try {
+            if (!file.isNull() && /\.feature$/i.test(file.path)) {
+                if (file.isBuffer()) {
+                    file.contents = compiler.compileBuffer(file.contents);
+                }
+                if (file.isStream()) {
+                    file.contents = file.contents.pipe(through((chunk, enc, cb) => {
+                        cb(null, compiler.compileBuffer(chunk));
+                    }));
+                }
+            }
             cb(null, file);
+        } catch (e) {
+            cb(e, file);
         }
-        if (file.isBuffer()) {
-            file.contents = compiler.compileBuffer(file.contents);
-        }
-        //if (file.isStream()) {
-        //    file.contents = file.contents.pipe(compiler.stream());
-        //}
-        cb(null, file);
     });
 }
 
