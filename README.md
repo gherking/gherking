@@ -26,9 +26,7 @@ compiler.save('./features/dist/login.feature', ast, {
 
 ### Built-in pre compilers
 
- * [Replacer](lib/builtIn/Replacer.md)
-
-    Replaces keywords in the feature files.
+ * [Replacer](lib/builtIn/Replacer.md) - Replaces keywords in the feature files.
 
 ## Gulp
 
