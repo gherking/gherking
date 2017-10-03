@@ -19,7 +19,9 @@
     "feature file"
   ],
   "author": "Judit Nahaj <n.juditt@gmail.com>",
-  "contributors": ["Laszlo Szikszai <sziklaszlo@gmail.com>"],
+  "contributors": [
+    "Laszlo Szikszai <sziklaszlo@gmail.com>"
+  ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/judit-nahaj/gherkin-precompiler/issues"
@@ -31,13 +33,17 @@
   "homepage": "https://github.com/judit-nahaj/gherkin-precompiler#readme",
   "devDependencies": {
     "chai": "^4.1.0",
+    "concat-stream": "^1.6.0",
     "coveralls": "^2.13.1",
     "istanbul": "^0.4.5",
-    "mocha": "^3.4.2"
+    "mocha": "^3.4.2",
+    "vinyl": "^2.1.0"
   },
   "dependencies": {
     "fs-extra": "^4.0.1",
     "gherkin": "^4.1.3",
-    "gherkin-assembler": "^1.0.0"
+    "gherkin-assembler": "^1.0.0",
+    "gulp-util": "^3.0.8",
+    "through2": "^2.0.3"
   }
 }

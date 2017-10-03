@@ -28,4 +28,3 @@ Feature: Test feature file for ${feature}
     Then the profile page of <user> should be loaded
     When the ${button} is clicked
     Then the user should be logged out
-
