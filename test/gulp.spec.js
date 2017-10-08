@@ -22,8 +22,8 @@ describe('Gulp plugin', () => {
         beforeEach(() => {
             file = new File({
                 base: 'test/data/',
-                path: 'test/data/test_input_replacer.feature',
-                contents: fs.createReadStream('test/data/test_input_replacer.feature') 
+                path: 'test/data/input/replacer.feature',
+                contents: fs.createReadStream('test/data/input/replacer.feature') 
             });
 
             check = (stream, done, cb) => {
@@ -43,11 +43,11 @@ describe('Gulp plugin', () => {
         });
 
         it('should not apply replacer to non-feature files', done => {
-            file.path = 'test/data/test_input_replacer.txt';
+            file.path = 'test/data/input/replacer.txt';
             const stream = plugin(replacer);
             check(stream, done, data => {
                 expect(toLines(data)).to.not.eql(
-                    toLines(fs.readFileSync('test/data/test_output_replacer.feature', 'utf8'))
+                    toLines(fs.readFileSync('test/data/output/replacer.feature', 'utf8'))
                 );
             });
         });
@@ -56,7 +56,7 @@ describe('Gulp plugin', () => {
             const stream = plugin(replacer);
             check(stream, done, data => {
                 expect(toLines(data)).to.eql(
-                    toLines(fs.readFileSync('test/data/test_output_replacer.feature', 'utf8'))
+                    toLines(fs.readFileSync('test/data/output/replacer.feature', 'utf8'))
                 );
             });
         });
@@ -67,8 +67,8 @@ describe('Gulp plugin', () => {
 
         beforeEach(() => {
             file = new File({
-                path: 'test/data/test_input_replacer.feature',
-                contents: fs.readFileSync('test/data/test_input_replacer.feature') 
+                path: 'test/data/input/replacer.feature',
+                contents: fs.readFileSync('test/data/input/replacer.feature') 
             });
 
             check = (stream, done, cb, err) => {
@@ -92,7 +92,7 @@ describe('Gulp plugin', () => {
                 expect(
                     toLines(String(newFile.contents))
                 ).to.eql(
-                    toLines(fs.readFileSync('test/data/test_output_replacer.feature', 'utf8'))
+                    toLines(fs.readFileSync('test/data/output/replacer.feature', 'utf8'))
                 );
             });
         });

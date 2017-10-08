@@ -11,8 +11,8 @@ describe('builtIn.Replacer', () => {
         expect(API.builtIn.Replacer).to.equal(Replacer);
     });
     it('should replace given values', () => {
-        const baseAst = API.load('test/data/test_input_replacer.feature');
-        const expectedAst = API.load('test/data/test_output_replacer.feature');
+        const baseAst = API.load('test/data/input/replacer.feature');
+        const expectedAst = API.load('test/data/output/replacer.feature');
         const resultAst = API.process(baseAst, new Replacer(CONFIG));
 
         expect(resultAst).to.eql(expectedAst);

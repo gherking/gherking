@@ -10,8 +10,8 @@ describe('builtIn.ScenarioOutlineNumbering', () => {
     });
 
     it('should add order of example row', () => {
-        const baseAst = API.load('test/data/test_input_scenarioOutlineNumbering.feature');
-        const expectedAst = API.load('test/data/test_output_scenarioOutlineNumbering.1.feature');
+        const baseAst = API.load('test/data/input/scenarioOutlineNumbering.feature');
+        const expectedAst = API.load('test/data/output/scenarioOutlineNumbering.1.feature');
         const resultAst = API.process(baseAst, new ScenarioOutlineNumbering({
             addNumbering: true,
             addParameters: false
@@ -21,8 +21,8 @@ describe('builtIn.ScenarioOutlineNumbering', () => {
     });
     
     it('should add variables of example table', () => {
-        const baseAst = API.load('test/data/test_input_scenarioOutlineNumbering.feature');
-        const expectedAst = API.load('test/data/test_output_scenarioOutlineNumbering.2.feature');
+        const baseAst = API.load('test/data/input/scenarioOutlineNumbering.feature');
+        const expectedAst = API.load('test/data/output/scenarioOutlineNumbering.2.feature');
         const resultAst = API.process(baseAst, new ScenarioOutlineNumbering({
             addNumbering: false,
             addParameters: true
@@ -32,8 +32,8 @@ describe('builtIn.ScenarioOutlineNumbering', () => {
     });
     
     it('should support custom configuration', () => {
-        const baseAst = API.load('test/data/test_input_scenarioOutlineNumbering.feature');
-        const expectedAst = API.load('test/data/test_output_scenarioOutlineNumbering.3.feature');
+        const baseAst = API.load('test/data/input/scenarioOutlineNumbering.feature');
+        const expectedAst = API.load('test/data/output/scenarioOutlineNumbering.3.feature');
         const resultAst = API.process(baseAst, new ScenarioOutlineNumbering({
             addNumbering: true,
             numberingFormat: '${name} / ${i}',
