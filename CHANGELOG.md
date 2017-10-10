@@ -5,6 +5,8 @@
 ### Added
 
 - Added Gulp plugin ([#3](https://github.com/judit-nahaj/gherkin-precompiler/issues/3))
+- Added predefined precompiler: scenarioOutlineNumbering ([#5](https://github.com/judit-nahaj/gherkin-precompiler/issues/5))
+
 
 ## 1.0.0 - 2017-09-25
 

@@ -1,4 +1,4 @@
-### Replacer for Gherkin precompiler
+# Replacer for Gherkin precompiler
 
 This Replacer is responsible for exchanging predefined strings in the
 feature files. It inserts the provided text in the place held for them.
@@ -27,7 +27,3 @@ feature file:
 * Data table: header name, cell values
 
 See examples for the input files and an output in the test/data folder.
-
-
-
-
