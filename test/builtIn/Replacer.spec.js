@@ -2,7 +2,7 @@
 const path = require('path');
 const Replacer = require(path.resolve('lib/builtIn/Replacer.js'));
 const expect = require('chai').expect;
-const CONFIG = require('../data/replacer.json');
+const CONFIG = require('../data/config/replacer.json');
 const API = require(path.resolve('lib'));
 
 
