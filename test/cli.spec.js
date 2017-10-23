@@ -1,6 +1,8 @@
 'use strict';
 
+const sinon = require('sinon');
 const { exec } = require('child_process');
+const { ensureDirSync } = require('fs-extra');
 const expect = require('chai').expect;
 const cli = require('../lib/cli');
 const fail = e => expect(e).to.be.undefined;
@@ -116,8 +118,7 @@ describe('CLI', function () {
     it('should set missing configurations if only source directory provided', () => {
         return run(
             '--config', 'test/data/config/cli/no-compiler.json',
-            '--source', 'test/data/config',
-            '--debug'
+            '--source', 'test/data/config'
         ).then(cli => {
             expect(cli.config.source).to.match(/config[\\\/]+\*\*[\\\/]+\*\.feature$/);
             expect(cli.config.base).to.match(/config$/);
@@ -125,15 +126,38 @@ describe('CLI', function () {
         }, fail);
     });
 
+    it('should set missing configurations if only source file provided', () => {
+        return run(
+            '--config', 'test/data/config/cli/no-compiler.json',
+            '--source', 'test/data/input/replacer.feature'
+        ).then(cli => {
+            expect(cli.config.source).to.match(/input[\\\/]+replacer\.feature$/);
+            expect(cli.config.base).to.match(/input$/);
+            expect(cli.config.destination).to.match(/input[\\\/]+dist$/);
+        }, fail);
+    });
+
     it('should set missing configurations if only base directory provided', () => {
         return run(
             '--config', 'test/data/config/cli/no-compiler.json',
-            '--base', 'test/data/config',
-            '--debug'
+            '--base', 'test/data/config'
         ).then(cli => {
             expect(cli.config.source).to.match(/config[\\\/]+\*\*[\\\/]+\*\.feature$/);
             expect(cli.config.base).to.match(/config$/);
             expect(cli.config.destination).to.match(/config[\\\/]+dist$/);
         }, fail);
-    })
+    });
+
+    it('should print out information in verbose mode', () => {
+        ensureDirSync('test/data/output/dist');
+        return run(
+            '--config', 'test/data/config/cli/no-compiler.json',
+            '--source', 'test/data/input/*.feature',
+            '--base', 'test/data/input',
+            '--destination', 'test/data/output/dist',
+            '--verbose'
+        ).then(cli => {
+            expect(cli.sources.length).to.equal(2);
+        }, fail);
+    });
 });
