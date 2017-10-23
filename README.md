@@ -34,8 +34,8 @@ compiler.save('./features/dist/login.feature', ast, {
 ```javascript
 //gulpfile.js
 //...
+const gulpCompiler = require('gherkin-precompiler/gulp'); 
 const compiler = require('gherkin-precompiler');
-const gulpCompiler = compiler.gulp;
 const compilers = [
     new compiler.builtIn.Replacer({
         name: 'Hello'
