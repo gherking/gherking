@@ -29,6 +29,71 @@ compiler.save('./features/dist/login.feature', ast, {
  * [Replacer](lib/builtIn/Replacer.md) - Replaces keywords in the feature files.
  * [ScenarioOutlineNumbering](lib/builtIn/ScenarioOutlineNumbering.md) - Makes all scenario, generated from scenario outlines unique.
 
+## CLI
+
+The package provides a command line interface to be able to easily precompile feature files.
+
+```bash
+# install package globally
+npm install -g gherkin-precompiler
+
+# use precompile or gherkin-precompiler commands
+precompile --config precompiler.json --base e2e/features/src --destination e2e/features/dist
+```
+
+### Arguments
+
+| Argument | Description | Example |
+|:---------|:------------|:--------|
+| `--config`, `-c` | **Mandatory**, The location of the configuration which contains the precompiler configuration and could contain all the other configuration options as well. | `precompiler.json` |
+| `--source`, `-s` | The source glob pattern or a folder path where the source feature files are located. | `e2e/features/src/**/*.feature` |
+| `--base`, `-b` | The base directory or the feature files/precompile process. The location in the desctination directory of each precompiled feature file is determined by the base directory. | `e2e/features/src` |
+| `--desctination`, `-d` | The destination directory where the precompiled feature files should be stored. | `e2e/features/dist` |
+| `--verbose` | If set, precompiler prints out the final configuration and the status of the process. | |
+| `--help` | If set, no precompile process is applied, only the usage guidelines are printed out. | |
+
+#### Important
+
+* `config` is a mandatory option, since that is the only way to specify the precompilers
+* either a **source directory** or **base directory** must be specified either by command line of by configuration
+* if one of the location configurations is missing, it is set based on the given other locations, for example
+  * if only `base: "e2e/features"` set, then `source` will be `e2e/features/**/*.feature` and `destination` will be `e2e/features/dist`
+  * if only `source` directory is set, then `base` will be the source directory, `destination` will be `{source}/dist` and `source` will be modified to a glob pattern: `{source}/**/*.feature`
+
+### Configuration
+
+The configuration **must** contain the precompilers configuration and optionally all options which could be specified by command line arguments. It can be a JSON file of a JS file
+
+```js
+// precompiler.json
+{
+    // compilers should be an array of precompiler configurations
+    "compilers": [
+        // one option is to set built-in precompilers,
+        {
+            // by setting the type of it
+            "type": "Replacer",
+            // any by setting the configuration which
+            // is passed to the constructor
+            "configuration": {
+                "user": "ta.user1@example.com"
+            }
+        },
+        // other option is to set precompiler object
+        {
+            // by setting the path to the JS file
+            "path": "e2e/utils/myCompiler.js"
+        }
+    ],
+    // source can also be set here
+    "source": "e2e/features/src/**/*.feature",
+    // base can also be set here
+    "base": "e2e/features/src",
+    // destination can also be set here
+    "destination": "e2e/features/dist"
+}
+```
+
 ## Gulp
 
 ```javascript
