@@ -45,10 +45,10 @@ precompile --config precompiler.json --base e2e/features/src --destination e2e/f
 
 | Argument | Description | Example |
 |:---------|:------------|:--------|
-| `--config`, `-c` | **Mandatory**, The location of the configuration which contains the precompiler configuration and could contain all the other configuration options as well. | `precompiler.json` |
-| `--source`, `-s` | The source glob pattern or a folder path where the source feature files are located. | `e2e/features/src/**/*.feature` |
-| `--base`, `-b` | The base directory or the feature files/precompile process. The location in the desctination directory of each precompiled feature file is determined by the base directory. | `e2e/features/src` |
-| `--desctination`, `-d` | The destination directory where the precompiled feature files should be stored. | `e2e/features/dist` |
+| `--config`<br>`-c` | **Mandatory**, The location of the configuration which contains the precompiler configuration and could contain all the other configuration options as well. | `precompiler.json` |
+| `--source`<br>`-s` | The source glob pattern or a folder path where the source feature files are located. | `e2e/features/src/**/*.feature` |
+| `--base`<br>`-b` | The base directory or the feature files/precompile process. The location in the desctination directory of each precompiled feature file is determined by the base directory. | `e2e/features/src` |
+| `--destination`<br>`-d` | The destination directory where the precompiled feature files should be stored. | `e2e/features/dist` |
 | `--verbose` | If set, precompiler prints out the final configuration and the status of the process. | |
 | `--help` | If set, no precompile process is applied, only the usage guidelines are printed out. | |
 
@@ -64,7 +64,7 @@ precompile --config precompiler.json --base e2e/features/src --destination e2e/f
 
 The configuration **must** contain the precompilers configuration and optionally all options which could be specified by command line arguments. It can be a JSON file of a JS file
 
-```js
+```json
 // precompiler.json
 {
     // compilers should be an array of precompiler configurations
