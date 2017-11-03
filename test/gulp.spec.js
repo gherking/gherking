@@ -4,7 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const plugin = require(path.resolve('gulp'));
 const Replacer = require(path.resolve('lib/builtIn/Replacer'));
-const CONFIG = require('./data/replacer.json');
+const CONFIG = require('./data/config/replacer.json');
 const File = require('vinyl');
 const concatStream = require('concat-stream');
 

@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "description": "Simple pre-compiler for Gherkin feature files",
   "main": "lib/index.js",
+  "bin": {
+    "gherkin-precompiler": "bin/precompile.js",
+    "precompile": "bin/precompile.js"
+  },
   "scripts": {
     "test": "mocha ./test/*.spec.js ./test/builtIn/*.spec.js",
     "coverage": "istanbul cover --include-all-sources ./node_modules/mocha/bin/_mocha --root ./lib -- ./test/*.spec.js ./test/builtIn/*.spec.js",
@@ -27,23 +31,27 @@
     "url": "https://github.com/judit-nahaj/gherkin-precompiler/issues"
   },
   "engines": {
-    "node": ">=4.9.2",
+    "node": ">=6.0.0",
     "npm": ">=3.0.0"
   },
   "homepage": "https://github.com/judit-nahaj/gherkin-precompiler#readme",
   "devDependencies": {
-    "chai": "^4.1.0",
+    "chai": "^4.1.2",
     "concat-stream": "^1.6.0",
     "coveralls": "^3.0.0",
     "istanbul": "^0.4.5",
     "mocha": "^4.0.1",
+    "proxyquire": "^1.8.0",
+    "sinon": "^4.0.1",
     "vinyl": "^2.1.0"
   },
   "dependencies": {
-    "fs-extra": "^4.0.1",
-    "gherkin": "^4.1.3",
+    "fs-extra": "^4.0.2",
+    "gherkin": "^5.0.1",
     "gherkin-assembler": "^1.0.0",
+    "glob": "^7.1.2",
     "gulp-util": "^3.0.8",
-    "through2": "^2.0.3"
+    "through2": "^2.0.3",
+    "yargs": "^10.0.1"
   }
 }
