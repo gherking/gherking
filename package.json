@@ -31,7 +31,7 @@
     "url": "https://github.com/judit-nahaj/gherkin-precompiler/issues"
   },
   "engines": {
-    "node": ">=4.9.2",
+    "node": ">=6.0.0",
     "npm": ">=3.0.0"
   },
   "homepage": "https://github.com/judit-nahaj/gherkin-precompiler#readme",
