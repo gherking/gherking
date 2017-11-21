@@ -1,0 +1,7 @@
+{
+    "compilers": [
+        {
+            "type": "NoTypeLikeThis"
+        }
+    ]
+}
