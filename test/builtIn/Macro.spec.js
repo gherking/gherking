@@ -6,7 +6,7 @@ const API = require(path.resolve('lib'));
 const assembler = require('gherkin-assembler');
 
 
-describe.only('builtIn.Macro', () => {
+describe('builtIn.Macro', () => {
     let macro;
     beforeEach(() => {
         macro = new Macro();
@@ -113,7 +113,6 @@ describe.only('builtIn.Macro', () => {
         const resultAst = API.process(baseAst, macro);
 
         expect(resultAst).to.eql(expectedAst);
-
     });
 
 });
