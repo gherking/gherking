@@ -33,10 +33,15 @@ describe.only('builtIn.ForLoop', () => {
         loop.onScenario(42);
         expect(loop.looper.calledWith(42)).to.be.true;
     });
-    it('should process scenario outlines');
+    it('should process scenario outlines', () => {
+        const loop = new ForLoop();
+        loop.looper = sinon.spy();
+        loop.onScenarioOutline(42);
+        expect(loop.looper.calledWith(42)).to.be.true;
+    });
     it('should filter out loop tags');
     it('should not filter out non loop tags');
-    it('should worj with feature files');
+    it('should work with feature files');
     it('should be available through API', () => {
         expect(API.builtIn.ForLoop).to.equal(ForLoop);
     });
