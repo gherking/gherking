@@ -1,14 +1,17 @@
 # Macro for Gherkin precompiler
 
-This Macro is responsible for defining macros in feature files and then
-using them
+This pre-processor is responsible for defining macros in feature files and then executing them.
 
-To use it a @macro(${macroName}) tag must be added to a scenario. This
-scenario will not run on its own, it is only for defining the macro.
-In another scenario when a step "macro ${macroName} is executed" is used
-the steps of the macro with the same name will be executed.
 
-Restrictions: Macro definition scenario cannot contain a macro executing
-step.
+Usage:
+1. Defining a macro by creating  macro scenario. Using @macro(${macroName}) tag on the scenario defines a macro with the provided name and steps that are included.
+
+Note: this scenario will not be run during test execution, it is removed during pre-processing. The definition cannot contain macro execution step (see next step).
+
+Errors are thrown when no name or steps are included in the definition, or when defining a macro with an already existing name.
+
+2. Executing the macro. In another scenario using step 'macro ${macroName} is executed' will replace this step with the steps in the definition of ${macroName} macro.
+
+Throws error when no ${macroName} is provided in the step, or when no macro is defined by name provided.
 
 See examples for the input files and an output in the test/data folder.
