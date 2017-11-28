@@ -11,6 +11,11 @@ describe('builtIn.Macro', () => {
     beforeEach(() => {
         macro = new Macro();
     });
+
+    it('should be available through API', () => {
+        expect(API.builtIn.Macro).to.equal(Macro);
+    });
+
     it('should store macros', () => {
         expect(macro.macros).to.eql({});
     });
