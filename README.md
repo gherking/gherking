@@ -29,6 +29,7 @@ compiler.save('./features/dist/login.feature', ast, {
  * [Replacer](lib/builtIn/Replacer.md) - Replaces keywords in the feature files.
  * [ScenarioOutlineNumbering](lib/builtIn/ScenarioOutlineNumbering.md) - Makes all scenario, generated from scenario outlines unique.
 
+
 ## CLI
 
 The package provides a command line interface to be able to easily precompile feature files.
