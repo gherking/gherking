@@ -9,9 +9,36 @@ const assembler = require('gherkin-assembler');
 
 describe.only('builtIn.ForLoop', () => {
     describe('configuration', () => {
-        it('should use default config when no configuration is provided');
-        it('should use the provided configutation if available');
-        it('should set regex based on the provided value');
+        it('should use default config when no configuration is provided', () => {
+            const baseAst = API.load('test/data/input/forLoop.feature');
+            const expectedAst = API.load('test/data/output/forLoop.1.feature');
+            const resultAst = API.process(baseAst, new ForLoop());
+
+            expect(resultAst).to.eql(expectedAst);
+        });
+
+        it('should use the provided configutation if available', () => {
+            const baseAst = API.load('test/data/input/forLoop.2.feature');
+            const expectedAst = API.load('test/data/output/forLoop.2.feature');
+            const resultAst = API.process(baseAst, new ForLoop({
+                tagName: 'repeat',
+                format: '${name} - ${i}',
+                maxValue: 11
+            }));
+
+            expect(resultAst).to.eql(expectedAst);
+        });
+
+        it('should set regex based on the provided value', () => {
+            const baseAst = API.load('test/data/input/forLoop.1.feature');
+            const expectedAst = API.load('test/data/output/forLoop.feature');
+            const resultAst = API.process(baseAst, new ForLoop({
+                tagName: 'repeat',
+                format: '${name} - ${i}'
+            }));
+
+            expect(resultAst).to.eql(expectedAst);
+        });
     });
 
     describe('getIterationNumber', () => {
@@ -28,7 +55,7 @@ describe.only('builtIn.ForLoop', () => {
             const tag = new assembler.AST.Tag('@loop(42)');
             scenario.tags.push(tag);
 
-            expect( () => loop.getIterationNumber(scenario)).to.throw(Error);
+            expect(() => loop.getIterationNumber(scenario)).to.throw(Error);
         });
 
         it('should return the correct iterator', () => {
