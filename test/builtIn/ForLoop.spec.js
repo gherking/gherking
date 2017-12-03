@@ -15,33 +15,59 @@ describe.only('builtIn.ForLoop', () => {
     });
 
     describe('getIterationNumber', () => {
-        it('should return 0 when there is no loop tag');
-        it('should throw an error when provided iterator exceeds maximum');
-        it('should return the correct iterator');
+        it('should return 0 when there is no loop tag', () => {
+            const loop = new ForLoop();
+            const scenario = new assembler.AST.Scenario('Scenario', 'Scenario name');
+
+            expect(loop.getIterationNumber(scenario)).to.eql(0);
+        });
+
+        it('should throw an error when provided iterator exceeds maximum', () => {
+            const loop = new ForLoop();
+            const scenario = new assembler.AST.Scenario('Scenario', 'Scenario name');
+            const tag = new assembler.AST.Tag('@loop(42)');
+            scenario.tags.push(tag);
+
+            expect( () => loop.getIterationNumber(scenario)).to.throw(Error);
+        });
+
+        it('should return the correct iterator', () => {
+            const loop = new ForLoop();
+            const scenario = new assembler.AST.Scenario('Scenario', 'Scenario name');
+            const tag = new assembler.AST.Tag('@loop(4)');
+            scenario.tags.push(tag);
+
+            expect(loop.getIterationNumber(scenario)).to.eql(4);
+        });
     });
 
     describe('looper', () => {
         it('should not repeat scenarios without loop tag', () => {
             const loop = new ForLoop();
             loop.getIterationNumber = sinon.stub().returns(0);
+
             expect(loop.looper(42)).to.be.undefined;
             expect(loop.getIterationNumber.calledWith(42)).to.be.true;
         });
+
         it('should repeat scenarios for the correct times', () => {
             const loop = new ForLoop();
             const scenario = new assembler.AST.Scenario('Scenario', 'Scenario name');
             loop.getIterationNumber = sinon.stub().returns(3);
             const result = loop.looper(scenario);
+
             expect(result).to.have.lengthOf(3);
             expect(loop.getIterationNumber.calledWith(scenario)).to.be.true;
         });
+
         it('should process scenario names', () => {
             const loop = new ForLoop();
             const scenario = new assembler.AST.Scenario('Scenario', 'Scenario name');
             loop.getIterationNumber = sinon.stub().returns(3);
             const result = loop.looper(scenario);
+
             result.forEach((scenario, i) => {
-                expect(scenario.name).to.eql('Scenario name (' + (i+1) + ')');
+                expect(scenario.name).to.eql('Scenario name (' + (i + 1) + ')');
             })
         });
     });
@@ -50,6 +76,7 @@ describe.only('builtIn.ForLoop', () => {
         const loop = new ForLoop();
         loop.looper = sinon.spy();
         loop.onScenario(42);
+
         expect(loop.looper.calledWith(42)).to.be.true;
     });
 
@@ -57,18 +84,21 @@ describe.only('builtIn.ForLoop', () => {
         const loop = new ForLoop();
         loop.looper = sinon.spy();
         loop.onScenarioOutline(42);
+
         expect(loop.looper.calledWith(42)).to.be.true;
     });
 
     it('should filter out loop tags', () => {
         const loop = new ForLoop();
         const tag = new assembler.AST.Tag('@loop(2)');
+
         expect(loop.preFilterTag(tag)).to.be.false;
     });
 
     it('should not filter out non loop tags', () => {
         const loop = new ForLoop();
         const tag = new assembler.AST.Tag('@not_loop(2)');
+
         expect(loop.preFilterTag(tag)).to.be.true;
     });
 
