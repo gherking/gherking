@@ -11,6 +11,7 @@ Identify scenario or scenario outline to be repeated and mark it with `${loopTag
 The precompiler will then repeat this scenario or scenario outline for `${i}` times, modifying its name according to the format.
 
 Configurable variables and their default options:
+
 | Option | Default | Description |
 |:------:|:-------:|:------------|
 | maxValue | 10 | Maximum value of iteration |
