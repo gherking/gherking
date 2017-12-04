@@ -11,6 +11,11 @@ describe('builtIn.Macro', () => {
     beforeEach(() => {
         macro = new Macro();
     });
+
+    it('should be available through API', () => {
+        expect(API.builtIn.Macro).to.equal(Macro);
+    });
+
     it('should store macros', () => {
         expect(macro.macros).to.eql({});
     });
@@ -24,97 +29,95 @@ describe('builtIn.Macro', () => {
     });
 
     it('should throw an error when no name is provided for macro', () => {
-        expect(() => {
-            const scenario = new assembler.AST.Scenario();
-            const tag = new assembler.AST.Tag('@macro()');
+        const scenario = new assembler.AST.Scenario();
+        const tag = new assembler.AST.Tag('@macro()');
 
-            scenario.tags.push(tag);
-            macro.preFilterScenario(scenario);
-        }).to.throw(Error)
-
+        scenario.tags.push(tag);
+        expect(() => macro.preFilterScenario(scenario)).to.throw(Error)
     });
 
     it('should throw an error when a macro name is already defined', () => {
-        expect(() => {
-            const scenario = new assembler.AST.Scenario();
-            const scenario_2 = new assembler.AST.Scenario();
-            const tag = new assembler.AST.Tag('@macro(testname)');
+        const scenario = new assembler.AST.Scenario();
+        const scenario_2 = new assembler.AST.Scenario();
+        const tag = new assembler.AST.Tag('@macro(testname)');
+        const step = new assembler.AST.Step('Given', 'step');
 
-            scenario.tags.push(tag);
-            scenario_2.tags.push(tag);
+        scenario.tags.push(tag);
+        scenario_2.tags.push(tag);
+        scenario.steps.push(step);
 
-            macro.preFilterScenario(scenario);
-            macro.preFilterScenario(scenario_2);
-        }).to.throw(Error);
+        macro.macros.testname = scenario;
+
+        expect(() => macro.preFilterScenario(scenario_2)).to.throw(Error);
     });
 
     it('should throw an error when a macro does not contain any steps', () => {
-        expect(() => {
-            const scenario = new assembler.AST.Scenario();
-            const tag = new assembler.AST.Tag('@macro(test)');
+        const scenario = new assembler.AST.Scenario();
+        const tag = new assembler.AST.Tag('@macro(test)');
 
-            scenario.tags.push(tag);
-            macro.preFilterScenario(scenario);
-        }).to.throw(Error)
+        scenario.tags.push(tag);
+        expect(() => macro.preFilterScenario(scenario)).to.throw(Error)
     });
 
     it('should throw an error when a macro contains a macro step', () => {
-        expect(() => {
-            const scenario = new assembler.AST.Scenario();
-            const tag = new assembler.AST.Tag('@macro(test)');
-            const step = new assembler.AST.Step('And', 'macro test is executed');
+        const scenario = new assembler.AST.Scenario();
+        const tag = new assembler.AST.Tag('@macro(test)');
+        const step = new assembler.AST.Step('And', 'macro test is executed');
 
-            scenario.tags.push(tag);
-            scenario.steps.push(step);
-            macro.preFilterScenario(scenario);
-        }).to.throw(Error)
+        scenario.tags.push(tag);
+        scenario.steps.push(step);
+        expect(() => macro.preFilterScenario(scenario)).to.throw(Error)
     });
 
-    it('should process macro scenarios');
+    it('should process macro scenarios', () => {
+        const scenario = new assembler.AST.Scenario();
+        const tag = new assembler.AST.Tag('@macro(test_tag)');
+        const step = new assembler.AST.Step('Given', 'random step');
 
-    it('should not change non macro steps');
+        scenario.tags.push(tag);
+        scenario.steps.push(step);
+
+        macro.preFilterScenario(scenario);
+
+        expect(macro.macros.test_tag.steps).to.be.eql(scenario.steps);
+    });
+
+    it('should not change non macro steps', () => {
+        const step = new assembler.AST.Step('Given', 'random step');
+        expect(macro.onStep(step)).to.eql(undefined);
+    });
 
     it('should throw an error when name is not provided for macro', () => {
+        const step = new assembler.AST.Step('And', 'macro is executed');
         expect(() => {
-            const scenario = new assembler.AST.Scenario();
-            const scenario_2 = new assembler.AST.Scenario();
-            const tag = new assembler.AST.Tag('@macro(test)');
-            const step = new assembler.AST.Step('And', 'macro is executed');
-
-            scenario.tags.push(tag);
-            scenario_2.steps.push(step);
-            macro.onStep(scenario.steps[1]);
+            macro.onStep(step);
         }).to.throw(Error)
     });
 
-    // it('should throw an error when there is no macro by name provided', () => {
-    //     expect(() => {
-    //         const scenario = new assembler.AST.Scenario();
-    //         const scenario_2 = new assembler.AST.Scenario();
-    //         const tag = new assembler.AST.Tag('@macro(test)');
-    //         const step = new assembler.AST.Step('And', 'macro test2 is executed');
-    //
-    //         scenario.tags.push(tag);
-    //         scenario_2.steps.push(step);
-    //         macro.onStep(scenario_2.steps[0]);
-    //     }).to.throw(Error)
-    // });
+    it('should throw an error when there is no macro by name provided', () => {
+        const step = new assembler.AST.Step('And', 'macro test2 is executed');
+        expect(() => macro.onStep(step)).to.throw(Error)
+    });
 
-    // it('should process macro steps', () => {
-    //     const scenario_macro = new assembler.AST.Scenario();
-    //     const scenario_test = new assembler.AST.Scenario();
-    //     const tag = new assembler.AST.Tag('@macro(test)');
-    //     const step_macro = new assembler.AST.Step('When','test step');
-    //     const step_test = new assembler.AST.Step('And', 'macro test is executed');
-    //
-    //     scenario_macro.tags.push(tag);
-    //     scenario_macro.steps.push(step_macro);
-    //     scenario_test.steps.push(step_test);
-    //
-    //     macro.preFilterScenario(scenario_macro);
-    //
-    //     console.log(macro.onStep(scenario_test.));
-    //     expect(macro.onStep(scenario_test.steps[0])).to.eql(scenario_macro.steps);
-    // });
+    it('should process macro steps', () => {
+        const scenario_macro = new assembler.AST.Scenario();
+        const tag = new assembler.AST.Tag('@macro(test)');
+        const step_macro = new assembler.AST.Step('When', 'test step');
+        const step_test = new assembler.AST.Step('And', 'macro test is executed');
+
+        scenario_macro.tags.push(tag);
+        scenario_macro.steps.push(step_macro);
+
+        macro.preFilterScenario(scenario_macro);
+        expect(macro.onStep(step_test)).to.eql(scenario_macro.steps);
+    });
+
+    it('should process macros', () => {
+        const baseAst = API.load('test/data/input/macro.feature');
+        const expectedAst = API.load('test/data/output/macro.feature');
+        const resultAst = API.process(baseAst, macro);
+
+        expect(resultAst).to.eql(expectedAst);
+    });
 
 });
