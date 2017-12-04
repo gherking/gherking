@@ -4,17 +4,17 @@ This precompiler is responsible for repeating selected scenarios or scenario out
 In case of scenario outlines it copies all rows of examples, resulting iterator*rows number of scenarios when tests are run.
 
 
+## Usage:
 
+Identify scenario or scenario outline to be repeated and mark it with `${loopTag}(${i})` e.g. `@loop(4)`.
 
-
-Usage:{
-1. Identify scenario or scenario outline to be repeated with ${loopTag}(${i}). The default value for the tag is @loop(${i}), and the default limit for ${i} is 10.
-
-The procompiler will then copy this scenario or scenario outline for ${i} times, modifying it name to '&{originaName} ($@{i})' by default, and removes the loop tag.
+The precompiler will then repeat this scenario or scenario outline for `${i}` times, modifying its name according to the format.
 
 Configurable variables and their default options:
-1. maxValue: 10,
-2. tagName: 'loop',
-3. format: '${name} (${i})'
+| Option | Default | Description |
+|:------:|:-------:|:------------|
+| maxValue | 10 | Maximum value of iteration |
+| tagName | `'loop'` | Tag used to mark scenarios or outlines to be repeated |
+| format | `'${name} (${i})'` | Format of the scenario or outline name after repeating |
 
 See examples for the input files and an output in the test/data folder.
