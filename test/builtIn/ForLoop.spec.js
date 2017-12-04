@@ -7,37 +7,38 @@ const sinon = require('sinon');
 const assembler = require('gherkin-assembler');
 
 
-describe.only('builtIn.ForLoop', () => {
+describe('builtIn.ForLoop', () => {
     describe('configuration', () => {
         it('should use default config when no configuration is provided', () => {
-            const baseAst = API.load('test/data/input/forLoop.feature');
-            const expectedAst = API.load('test/data/output/forLoop.1.feature');
-            const resultAst = API.process(baseAst, new ForLoop());
-
-            expect(resultAst).to.eql(expectedAst);
+            const loop =  new ForLoop();
+            // maxValue: 10,
+            //     tagName: 'loop',
+            //     format: '${name} (${i})'
+            expect(loop.config).to.not.be.undefined;
+            expect(loop.config.format).to.eql('${name} (${i})');
+            expect(loop.config.maxValue).to.eql(10);
+            expect(loop.config.tagName).to.eql('loop');
         });
 
         it('should use the provided configutation if available', () => {
-            const baseAst = API.load('test/data/input/forLoop.2.feature');
-            const expectedAst = API.load('test/data/output/forLoop.2.feature');
-            const resultAst = API.process(baseAst, new ForLoop({
+            const loop =  new ForLoop({
                 tagName: 'repeat',
                 format: '${name} - ${i}',
                 maxValue: 11
-            }));
+            });
 
-            expect(resultAst).to.eql(expectedAst);
+            expect(loop.config).to.not.be.undefined;
+            expect(loop.config.format).to.eql('${name} - ${i}');
+            expect(loop.config.maxValue).to.eql(11);
+            expect(loop.config.tagName).to.eql('repeat');
         });
 
         it('should set regex based on the provided value', () => {
-            const baseAst = API.load('test/data/input/forLoop.1.feature');
-            const expectedAst = API.load('test/data/output/forLoop.feature');
-            const resultAst = API.process(baseAst, new ForLoop({
+            const loop =  new ForLoop({
                 tagName: 'repeat',
-                format: '${name} - ${i}'
-            }));
+            });
 
-            expect(resultAst).to.eql(expectedAst);
+            expect(loop._looptag).to.eql(/^@repeat\((\d+)\)/);
         });
     });
 
