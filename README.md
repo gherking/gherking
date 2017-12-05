@@ -28,7 +28,8 @@ compiler.save('./features/dist/login.feature', ast, {
 
  * [Replacer](lib/builtIn/Replacer.md) - Replaces keywords in the feature files.
  * [ScenarioOutlineNumbering](lib/builtIn/ScenarioOutlineNumbering.md) - Makes all scenario, generated from scenario outlines unique.
- * [ScenarioOutlineNumbering](lib/builtIn/Macro.md) - Enables the user to create and execute macros.
+ * [Macro](lib/builtIn/Macro.md) - Enables the user to create and execute macros.
+ * [ForLoop](lib/builtIn/ForLoop.md) - Enables the user to loop scenarios and scenario outlines in order to repeat them.
 
 ## CLI
 
