@@ -1,5 +1,3 @@
-#! /user/bin/env node
-
+#!/usr/bin/env node
 const cli = require('../lib/cli');
-
 cli.run();
