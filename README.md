@@ -26,10 +26,11 @@ compiler.save('./features/dist/login.feature', ast, {
 
 ### Built-in pre compilers
 
+ * [ForLoop](lib/builtIn/ForLoop.md) - Enables the user to loop scenarios and scenario outlines in order to repeat them.
+ * [Macro](lib/builtIn/Macro.md) - Enables the user to create and execute macros.
+ * [RemoveDuplicates](lib/builtIn/RemoveDuplicates.md) - Removes duplicated tags or example data table rows.
  * [Replacer](lib/builtIn/Replacer.md) - Replaces keywords in the feature files.
  * [ScenarioOutlineNumbering](lib/builtIn/ScenarioOutlineNumbering.md) - Makes all scenario, generated from scenario outlines unique.
- * [Macro](lib/builtIn/Macro.md) - Enables the user to create and execute macros.
- * [ForLoop](lib/builtIn/ForLoop.md) - Enables the user to loop scenarios and scenario outlines in order to repeat them.
 
 ## CLI
 
