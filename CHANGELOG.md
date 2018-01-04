@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+
+- CLI commands are not working ([#19](http://github.com/judit-nahaj/gherkin-precompiler/issues/19))
+
 ## 1.1.0 - 2017-12-04
 
 ### Added
