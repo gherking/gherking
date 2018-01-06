@@ -24,6 +24,24 @@ describe('builtIn.RemoveDuplicates', () => {
 
     describe('example rows', () => {
         it('should remove duplicate rows', () => {
+            const compiler = new RemoveDuplicates({
+                processRows: true
+            });
+            const examples = new Examples();
+            const row = new TableRow();
+            row.cells.push(new TableCell('hello'));
+            row.cells.push(new TableCell('world'));
+            examples.body.push(row);
+            examples.body.push(row.clone());
+
+            expect(examples.body).to.have.lengthOf(2);
+
+            compiler._filterRows(examples, {}, {});
+
+            expect(examples.body).to.have.lengthOf(1);
+        });
+
+        it('should not remove duplicate rows if it is turned off', () => {
             const compiler = new RemoveDuplicates();
             const examples = new Examples();
             const row = new TableRow();
@@ -34,9 +52,58 @@ describe('builtIn.RemoveDuplicates', () => {
 
             expect(examples.body).to.have.lengthOf(2);
 
-            compiler._filterRows(examples);
+            compiler._filterRows(examples, {}, {});
 
-            expect(examples.body).to.have.lengthOf(1);
+            expect(examples.body).to.have.lengthOf(2);
+        });
+
+        describe('logging', () => {
+            it('should display warning if duplicate row found, but won\'t be removed', () => {
+                const compiler = new RemoveDuplicates();
+                const examples = new Examples();
+                const row = new TableRow();
+                row.cells.push(new TableCell('hello'));
+                row.cells.push(new TableCell('world'));
+                examples.body.push(row);
+                examples.body.push(row.clone());
+                compiler._filterRows(examples, {}, {});
+                
+                expect(console.log.called, 'console.log called instead of console.warn').to.be.false;
+                expect(console.warn.called, 'console.warn is not called').to.be.true;
+            });
+        
+            it('should display info message if duplicate row found and will be removed', () => {
+                const compiler = new RemoveDuplicates({
+                    processRows: true
+                });
+                const examples = new Examples();
+                const row = new TableRow();
+                row.cells.push(new TableCell('hello'));
+                row.cells.push(new TableCell('world'));
+                examples.body.push(row);
+                examples.body.push(row.clone());
+                compiler._filterRows(examples, {}, {});
+
+                expect(console.warn.called, 'console.warn called instead of console.log').to.be.false;
+                expect(console.log.called, 'console.log is not called').to.be.true;
+            });
+
+            it('should not display anything if verbose turned off even if duplicate row found', () => {
+                const compiler = new RemoveDuplicates({
+                    processRows: true,
+                    verbose: false
+                });
+                const examples = new Examples();
+                const row = new TableRow();
+                row.cells.push(new TableCell('hello'));
+                row.cells.push(new TableCell('world'));
+                examples.body.push(row);
+                examples.body.push(row.clone());
+                compiler._filterRows(examples, {}, {});
+
+                expect(console.log.called, 'console.log is called').to.be.false;
+                expect(console.warn.called, 'console.warn is called').to.be.false;
+            })
         });
     });
 
