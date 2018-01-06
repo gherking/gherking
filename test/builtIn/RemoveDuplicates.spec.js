@@ -7,7 +7,7 @@ const API = require(resolve('lib'));
 const expect = require('chai').expect;
 const sinon = require('sinon');
 
-describe.only('builtIn.RemoveDuplicates', () => {
+describe('builtIn.RemoveDuplicates', () => {
     it('should be available through API', () => {
         expect(API.builtIn.RemoveDuplicates).to.equal(RemoveDuplicates);
     });
