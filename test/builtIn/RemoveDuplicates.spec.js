@@ -1,13 +1,13 @@
 'use strict';
 
 const {resolve} = require('path');
-const {Tag} = require('gherkin-assembler').AST;
+const {Tag, Examples, TableRow, TableCell} = require('gherkin-assembler').AST;
 const RemoveDuplicates = require(resolve('lib/builtIn/RemoveDuplicates.js'));
 const API = require(resolve('lib'));
 const expect = require('chai').expect;
 const sinon = require('sinon');
 
-describe('builtIn.RemoveDuplicates', () => {
+describe.only('builtIn.RemoveDuplicates', () => {
     it('should be available through API', () => {
         expect(API.builtIn.RemoveDuplicates).to.equal(RemoveDuplicates);
     });
@@ -20,6 +20,24 @@ describe('builtIn.RemoveDuplicates', () => {
     afterEach(() => {
         console.log.restore();
         console.warn.restore();
+    });
+
+    describe('example rows', () => {
+        it('should remove duplicate rows', () => {
+            const compiler = new RemoveDuplicates();
+            const examples = new Examples();
+            const row = new TableRow();
+            row.cells.push(new TableCell('hello'));
+            row.cells.push(new TableCell('world'));
+            examples.body.push(row);
+            examples.body.push(row.clone());
+
+            expect(examples.body).to.have.lengthOf(2);
+
+            compiler._filterRows(examples);
+
+            expect(examples.body).to.have.lengthOf(1);
+        });
     });
 
     describe('tag inheritance', () => {
@@ -164,6 +182,46 @@ describe('builtIn.RemoveDuplicates', () => {
             expect(element.tags).to.have.length(2);
             expect(element.tags[0].name).to.equal('@duplicate');
             expect(element.tags[1].name).to.equal('@notDuplicate');
+        });
+    });
+
+    describe('handlers', () => {
+        it('should process tags in case of Scenarios', () => {
+            const compiler = new RemoveDuplicates();
+            sinon.spy(compiler, '_filterTags');
+
+            compiler.onScenario('Scenario', 'Parent');
+            expect(compiler._filterTags.calledWith('Scenario', 'Parent')).to.be.true;
+        });
+
+        it('should process tags in case of ScenarioOutlines', () => {
+            const compiler = new RemoveDuplicates();
+            sinon.spy(compiler, '_filterTags');
+
+            compiler.onScenarioOutline('Scenario', 'Parent');
+            expect(compiler._filterTags.calledWith('Scenario', 'Parent')).to.be.true;
+        });
+
+        it('should process tags of examples of ScenarioOoutlines', () => {
+            const compiler = new RemoveDuplicates();
+            sinon.spy(compiler, '_filterTags');
+
+            compiler.onScenarioOutline({
+                examples: ['Example1', 'Example2']
+            });
+            expect(compiler._filterTags.calledWith('Example1')).to.be.true;
+            expect(compiler._filterTags.calledWith('Example2')).to.be.true;
+        });
+
+        it('should process example rows', () => {
+            const compiler = new RemoveDuplicates();
+            sinon.spy(compiler, '_filterRows');
+
+            compiler.onScenarioOutline({
+                examples: ['Example1', 'Example2']
+            });
+            expect(compiler._filterRows.calledWith('Example1')).to.be.true;
+            expect(compiler._filterRows.calledWith('Example2')).to.be.true;
         });
     });
 });
