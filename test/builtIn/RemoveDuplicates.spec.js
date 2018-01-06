@@ -253,6 +253,14 @@ describe('builtIn.RemoveDuplicates', () => {
     });
 
     describe('handlers', () => {
+        it('should process tags in case of Feature', () => {
+            const compiler = new RemoveDuplicates();
+            sinon.spy(compiler, '_filterTags');
+
+            compiler.onFeature('Feature');
+            expect(compiler._filterTags.calledWith('Feature')).to.be.true;
+        });
+
         it('should process tags in case of Scenarios', () => {
             const compiler = new RemoveDuplicates();
             sinon.spy(compiler, '_filterTags');
