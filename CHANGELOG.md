@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Added
+
+- Added predefined precompiler: removeDuplicates ([#10](https://github.com/judit-nahaj/gherkin-precompiler/issues/10))
+
 ### Fixed
 
 - CLI commands are not working ([#19](http://github.com/judit-nahaj/gherkin-precompiler/issues/19))

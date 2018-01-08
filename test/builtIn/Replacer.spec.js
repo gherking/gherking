@@ -5,7 +5,6 @@ const expect = require('chai').expect;
 const CONFIG = require('../data/config/replacer.json');
 const API = require(path.resolve('lib'));
 
-
 describe('builtIn.Replacer', () => {
     it('should be available through API', () => {
         expect(API.builtIn.Replacer).to.equal(Replacer);

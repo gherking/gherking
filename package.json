@@ -51,6 +51,7 @@
     "gherkin-assembler": "^1.0.0",
     "glob": "^7.1.2",
     "gulp-util": "^3.0.8",
+    "object-set-type": "^1.0.1",
     "through2": "^2.0.3",
     "yargs": "^10.0.1"
   }
