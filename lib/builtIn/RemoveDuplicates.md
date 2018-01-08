@@ -3,7 +3,7 @@
 The RemoveDuplicates precompiler is responsible to have only reasonable amount of tags and/or rows in each feature file.
 
 It can proceed the following actions:
-1. Removes tags from Scenario/ScenarioOutline which exists on Feature too.
+1. Removes tags from Scenario/ScenarioOutline/Examples which exists on Feature too.
 1. Removes duplicate tags from Scenario/ScearioOutline/Feature/Examples.
 1. Removes duplicate rows from Examples.
 
