@@ -5,6 +5,7 @@
 ### Added
 
 - Added predefined precompiler: removeDuplicates ([#10](https://github.com/judit-nahaj/gherkin-precompiler/issues/10))
+- Added predefined precompiler: scenarioNumbering ([#6](https://github.com/judit-nahaj/gherkin-precompiler/issues/6))
 
 ### Fixed
 
