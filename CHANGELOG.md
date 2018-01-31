@@ -7,6 +7,7 @@
 - Added predefined precompiler: removeDuplicates ([#10](https://github.com/judit-nahaj/gherkin-precompiler/issues/10))
 - Added predefined precompiler: scenarioNumbering ([#6](https://github.com/judit-nahaj/gherkin-precompiler/issues/6))
 - Added predefined precompiler: stepGroups ([#7](https://github.com/judit-nahaj/gherkin-precompiler/issues/7))
+- Added method to create macro step ([#18](https://github.com/judit-nahaj/gherkin-precompiler/issues/18))
 
 ### Fixed
 

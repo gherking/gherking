@@ -120,4 +120,10 @@ describe('builtIn.Macro', () => {
         expect(resultAst).to.eql(expectedAst);
     });
 
+    it('should have a method to create a macro step', () => {
+        const step = Macro.createStep("TestMacro");
+        expect(step).to.be.instanceOf(assembler.AST.Step);
+        expect(step.toString()).to.equal("When macro TestMacro is executed");
+    })
+
 });
