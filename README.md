@@ -30,6 +30,7 @@ compiler.save('./features/dist/login.feature', ast, {
  * [Macro](lib/builtIn/Macro.md) - Enables the user to create and execute macros.
  * [RemoveDuplicates](lib/builtIn/RemoveDuplicates.md) - Removes duplicated tags or example data table rows.
  * [Replacer](lib/builtIn/Replacer.md) - Replaces keywords in the feature files.
+ * [ScenarioNumbering](lib/builtIn/ScenarioNumbering.md) - Adds an index to all scenario and scenario outline's name.
  * [ScenarioOutlineNumbering](lib/builtIn/ScenarioOutlineNumbering.md) - Makes all scenario, generated from scenario outlines unique.
 
 ## CLI
