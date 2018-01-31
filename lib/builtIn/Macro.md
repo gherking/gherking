@@ -15,3 +15,12 @@ Usage:
     Throws error when no ${macroName} is provided in the step, or when no macro is defined by name provided.
 
 See examples for the input files and an output in the test/data folder.
+
+## API
+
+### `Macro.createStep(name)`
+
+**Params**:
+- `{String} name` - The name of the macro
+
+**Returns**: `{Step}` - A macro step for the given macro.
