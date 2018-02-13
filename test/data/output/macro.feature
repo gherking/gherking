@@ -1,5 +1,8 @@
 Feature: Test for macro
 
+  Background: Background
+    Given step
+
   Scenario: Logging in
     Given the Login pages is opened
     When the username field is filled with the username of user_1

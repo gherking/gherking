@@ -1,5 +1,8 @@
 Feature: Test for macro
 
+  Background: Background
+    Given step
+
   @macro(not_used_macro)
   Scenario: Macro not used
     Given the Index pages is opened
