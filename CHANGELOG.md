@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.2.1 - 2018-02-14
+
+### Fixed
+
+- Fixed macro precompiler issue on backgrounds ([#27](http://github.com/judit-nahaj/gherkin-precompiler/issues/27))
+
 ## 1.2.0 - 2018-01-31
 
 ### Added
