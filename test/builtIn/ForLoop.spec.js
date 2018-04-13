@@ -4,7 +4,7 @@ const ForLoop = require(path.resolve('lib/builtIn/ForLoop.js'));
 const expect = require('chai').expect;
 const API = require(path.resolve('lib'));
 const sinon = require('sinon');
-const assembler = require('gherkin-assembler');
+const {Scenario, Tag} = require('gherkin-ast');
 
 
 describe('builtIn.ForLoop', () => {
@@ -45,15 +45,15 @@ describe('builtIn.ForLoop', () => {
     describe('getIterationNumber', () => {
         it('should return 0 when there is no loop tag', () => {
             const loop = new ForLoop();
-            const scenario = new assembler.AST.Scenario('Scenario', 'Scenario name');
+            const scenario = new Scenario('Scenario', 'Scenario name');
 
             expect(loop.getIterationNumber(scenario)).to.eql(0);
         });
 
         it('should throw an error when provided iterator exceeds maximum', () => {
             const loop = new ForLoop();
-            const scenario = new assembler.AST.Scenario('Scenario', 'Scenario name');
-            const tag = new assembler.AST.Tag('@loop(42)');
+            const scenario = new Scenario('Scenario', 'Scenario name');
+            const tag = new Tag('@loop(42)');
             scenario.tags.push(tag);
 
             expect(() => loop.getIterationNumber(scenario)).to.throw(Error);
@@ -61,8 +61,8 @@ describe('builtIn.ForLoop', () => {
 
         it('should return the correct iterator', () => {
             const loop = new ForLoop();
-            const scenario = new assembler.AST.Scenario('Scenario', 'Scenario name');
-            const tag = new assembler.AST.Tag('@loop(4)');
+            const scenario = new Scenario('Scenario', 'Scenario name');
+            const tag = new Tag('@loop(4)');
             scenario.tags.push(tag);
 
             expect(loop.getIterationNumber(scenario)).to.eql(4);
@@ -80,7 +80,7 @@ describe('builtIn.ForLoop', () => {
 
         it('should repeat scenarios for the correct times', () => {
             const loop = new ForLoop();
-            const scenario = new assembler.AST.Scenario('Scenario', 'Scenario name');
+            const scenario = new Scenario('Scenario', 'Scenario name');
             loop.getIterationNumber = sinon.stub().returns(3);
             const result = loop.looper(scenario);
 
@@ -90,7 +90,7 @@ describe('builtIn.ForLoop', () => {
 
         it('should process scenario names', () => {
             const loop = new ForLoop();
-            const scenario = new assembler.AST.Scenario('Scenario', 'Scenario name');
+            const scenario = new Scenario('Scenario', 'Scenario name');
             loop.getIterationNumber = sinon.stub().returns(3);
             const result = loop.looper(scenario);
 
@@ -118,14 +118,14 @@ describe('builtIn.ForLoop', () => {
 
     it('should filter out loop tags', () => {
         const loop = new ForLoop();
-        const tag = new assembler.AST.Tag('@loop(2)');
+        const tag = new Tag('@loop(2)');
 
         expect(loop.preFilterTag(tag)).to.be.false;
     });
 
     it('should not filter out non loop tags', () => {
         const loop = new ForLoop();
-        const tag = new assembler.AST.Tag('@not_loop(2)');
+        const tag = new Tag('@not_loop(2)');
 
         expect(loop.preFilterTag(tag)).to.be.true;
     });
