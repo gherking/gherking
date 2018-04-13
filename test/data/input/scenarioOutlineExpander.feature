@@ -3,6 +3,14 @@ Feature: ScenariosOutlineExpander
   I want to expand ScenarioOutlines to Scenarios
   So that I can see final result/run them separately
 
+  Scenario Outline: Test without tag(<language>)
+  Given I am on Home page (<language>) user
+  Then I should be on Home page
+
+  Examples:
+    | language | title |
+    | EN | Welcome |
+
   @tag1 @expand
   Scenario Outline: Test language (<language>)
     Given I am on Home page <language> user
