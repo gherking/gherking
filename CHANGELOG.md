@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.3.0 - 2018-04-19
+
+### Added
+
+- Added predefined precompiler: scenarioOutlineExpander ([#29]
+(https://github.com/judit-nahaj/gherkin-precompiler/issues/29))
+
+### Changeed
+
+- Upgraded for gherkin-assembler @2 and gherkin-ast
+
 ## 1.2.1 - 2018-02-14
 
 ### Fixed

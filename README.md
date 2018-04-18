@@ -31,6 +31,7 @@ compiler.save('./features/dist/login.feature', ast, {
  * [RemoveDuplicates](lib/builtIn/RemoveDuplicates.md) - Removes duplicated tags or example data table rows.
  * [Replacer](lib/builtIn/Replacer.md) - Replaces keywords in the feature files.
  * [ScenarioNumbering](lib/builtIn/ScenarioNumbering.md) - Adds an index to all scenario and scenario outline's name.
+ * [ScenarioOutlineExpander](lib/builtIn/ScenarioOutlineExpander.md) - Expand the Scenario Outlines to actual scenarios.
  * [ScenarioOutlineNumbering](lib/builtIn/ScenarioOutlineNumbering.md) - Makes all scenario, generated from scenario outlines unique.
  * [SteoGroups](lib/builtIn/StepGroups.md) - Corrects the gherkin keywords of steps to make the tests more readable.
 
