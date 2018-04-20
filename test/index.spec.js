@@ -4,7 +4,7 @@ const path = require('path');
 const fs = require('fs-extra');
 const os = require('os');
 const API = require(path.resolve('lib/index.js'));
-const assembler = require('gherkin-assembler');
+const {GherkinDocument, Background} = require('gherkin-ast');
 
 const expect = require('chai').expect;
 
@@ -18,7 +18,7 @@ describe('API', () => {
 
     describe('.load()', () => {
         it('should load a GherkinDocument', () => {
-            expect(ast).to.be.instanceOf(assembler.AST.GherkinDocument);
+            expect(ast).to.be.instanceOf(GherkinDocument);
         });
     });
 
@@ -344,7 +344,7 @@ describe('API', () => {
 
                 const processed = API.process(ast, new Scenariocompiler());
                 expect(processed.feature.elements.length).to.equal(1);
-                expect(processed.feature.elements[0]).to.be.instanceOf(assembler.AST.Background);
+                expect(processed.feature.elements[0]).to.be.instanceOf(Background);
             });
 
             it('should support filtering Steps', () => {
