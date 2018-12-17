@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.3.1 - 2018-12-17
+
+### Fixed
+
+- Fixed bin EOL issue
+
 ## 1.3.0 - 2018-04-19
 
 ### Added
