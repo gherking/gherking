@@ -4,8 +4,8 @@
   "description": "Simple pre-compiler for Gherkin feature files",
   "main": "lib/index.js",
   "bin": {
-    "gherkin-precompiler": "bin/precompile.js",
-    "precompile": "bin/precompile.js"
+    "gherkin-precompiler": "bin/precompiler.js",
+    "precompile": "bin/precompiler.js"
   },
   "scripts": {
     "test": "mocha ./test/*.spec.js ./test/builtIn/*.spec.js",
