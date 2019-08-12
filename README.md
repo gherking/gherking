@@ -1,6 +1,6 @@
-# gherkin-precompiler
+# gherking
 
-[![Build Status](https://travis-ci.org/judit-nahaj/gherkin-precompiler.svg?branch=master)](https://travis-ci.org/judit-nahaj/gherkin-precompiler) [![dependency Status](https://david-dm.org/judit-nahaj/gherkin-precompiler.svg)](https://david-dm.org/judit-nahaj/gherkin-precompiler) [![devDependency Status](https://david-dm.org/judit-nahaj/gherkin-precompiler/dev-status.svg)](https://david-dm.org/judit-nahaj/gherkin-precompiler#info=devDependencies) [![Coverage Status](https://coveralls.io/repos/github/judit-nahaj/gherkin-precompiler/badge.svg?branch=master)](https://coveralls.io/github/judit-nahaj/gherkin-precompiler?branch=master)
+[![Build Status](https://travis-ci.org/gherking/gherking.svg?branch=master)](https://travis-ci.org/gherking/gherking) [![dependency Status](https://david-dm.org/gherking/gherking.svg)](https://david-dm.org/gherking/gherking) [![devDependency Status](https://david-dm.org/gherking/gherking/dev-status.svg)](https://david-dm.org/gherking/gherking#info=devDependencies) [![Coverage Status](https://coveralls.io/repos/github/gherking/gherking/badge.svg?branch=master)](https://coveralls.io/github/gherking/gherking?branch=master)
 
 Simple pre-compiler for Gherkin feature files.
 
@@ -24,7 +24,7 @@ compiler.save('./features/dist/login.feature', ast, {
 });
 ```
 
-### Built-in pre compilers
+### Pre-compilers
 
  * [ForLoop](lib/builtIn/ForLoop.md) - Enables the user to loop scenarios and scenario outlines in order to repeat them.
  * [Macro](lib/builtIn/Macro.md) - Enables the user to create and execute macros.
@@ -33,7 +33,7 @@ compiler.save('./features/dist/login.feature', ast, {
  * [ScenarioNumbering](lib/builtIn/ScenarioNumbering.md) - Adds an index to all scenario and scenario outline's name.
  * [ScenarioOutlineExpander](lib/builtIn/ScenarioOutlineExpander.md) - Expand the Scenario Outlines to actual scenarios.
  * [ScenarioOutlineNumbering](lib/builtIn/ScenarioOutlineNumbering.md) - Makes all scenario, generated from scenario outlines unique.
- * [SteoGroups](lib/builtIn/StepGroups.md) - Corrects the gherkin keywords of steps to make the tests more readable.
+ * [StepGroups](lib/builtIn/StepGroups.md) - Corrects the gherkin keywords of steps to make the tests more readable.
 
 ## CLI
 
@@ -100,29 +100,6 @@ The configuration **must** contain the precompilers configuration and optionally
 }
 ```
 
-## Gulp
-
-```javascript
-//gulpfile.js
-//...
-const gulpCompiler = require('gherkin-precompiler/gulp'); 
-const compiler = require('gherkin-precompiler');
-const compilers = [
-    new compiler.builtIn.Replacer({
-        name: 'Hello'
-    })
-];
-const compilerFormat = {
-    lineBreak: '\r\n'
-};
-
-gulp.task('precompile', () => {
-    return gulp.src('./features/**/*.feature')
-        .pipe(gulpCompiler(compilers, compilerFormat))
-        .pipe(gulp.dest('./dist/features'));
-});
-```
-
 ## API
 
 ### `load`
@@ -143,7 +120,7 @@ Saves the given AST ast feature file to the given path.
  
  * `{string} pathToFile` - the path of the feature file where the AST needs to be saved
  * `{GherkinDocument} ast` - the AST needs to be saved to the file
- * `{AssemblerConfig} [options]` - configuration of formatting, see [AssemblerConfig](https://github.com/judit-nahaj/gherkin-assembler)
+ * `{AssemblerConfig} [options]` - configuration of formatting, see [AssemblerConfig](https://github.com/gherking/gherkin-assembler)
  
 ### `process`
 
@@ -159,7 +136,7 @@ Applies the given pre-compilers to the given AST.
 ### `format`
 
 Formats the given `GherkinDocument` to text.
-*Equivalent of gherkin-assembler's `format` method. See API [here](https://github.com/judit-nahaj/gherkin-assembler).*
+*Equivalent of gherkin-assembler's `format` method. See API [here](https://github.com/gherking/gherkin-assembler).*
 
 ### Configuration
 
