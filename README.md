@@ -1,11 +1,5 @@
 # gherking
 
-TODO:
-1. how to handle rules ?
-1. load/save to be deleted? moved to io ??? in one place, or separate
-1. base logic?
-1. should support precompiler that creates multiple feature files from 1 +
-
 [![Build Status](https://travis-ci.org/gherking/gherking.svg?branch=master)](https://travis-ci.org/gherking/gherking) [![dependency Status](https://david-dm.org/gherking/gherking.svg)](https://david-dm.org/gherking/gherking) [![devDependency Status](https://david-dm.org/gherking/gherking/dev-status.svg)](https://david-dm.org/gherking/gherking#info=devDependencies) [![Coverage Status](https://coveralls.io/repos/github/gherking/gherking/badge.svg?branch=master)](https://coveralls.io/github/gherking/gherking?branch=master)
 
 Simple pre-compiler for Gherkin feature files.
