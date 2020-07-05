@@ -1,4 +1,6 @@
 'use strict';
+import { GherkinDocument } from 'gherkin-ast';
+import { DefaultConfig } from "./DefaultConfig";
 
 const METHODS = {
     FILTER: {
@@ -42,12 +44,11 @@ const METHODS = {
  * Gherkin feature file pre-compilers.
  * @class
  */
-class PreCompiler {
-    /**
-     * @param {Object|DefaultConfig} config
-     * @param config
-     */
-    constructor(config) {
+export class PreCompiler {
+    /** Config of the precompiler */
+    public config: Object|DefaultConfig;
+
+    constructor(config: Object) {
         this.config = config || {};
     }
 
@@ -57,8 +58,8 @@ class PreCompiler {
      * @param {GherkinDocument} ast
      * @returns {GherkinDocument}
      */
-    applyToAST(ast) {
-        const result = ast.clone();
+    public applyToAST(ast: GherkinDocument): GherkinDocument {
+        const result: GherkinDocument = ast.clone();
         this._applyToFeature(result.feature, result);
         return result;
     }
@@ -72,7 +73,7 @@ class PreCompiler {
      * @returns {Array}
      * @private
      */
-    _filter(list, parent, method) {
+    _filter(list: Array<any>, parent: Object, method: string): Array<any> {
         if (!this.config[method]) {
             return list;
         }
@@ -88,9 +89,9 @@ class PreCompiler {
      * @param {string} method
      * @private
      */
-    _handleEvent(parent, key, method) {
+    _handleEvent(parent: Object, key:string, method:string): void {
         if (this.config[method]) {
-            const result = this.config[method](parent[key], parent);
+            const result: Object = this.config[method](parent[key], parent);
             if (result !== undefined) {
                 parent[key] = result;
             }
@@ -279,5 +280,3 @@ class PreCompiler {
         examples.body = this._filter(examples.body, examples, METHODS.FILTER.ROW.POST);
     }
 }
-
-module.exports = PreCompiler;

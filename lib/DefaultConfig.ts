@@ -1,16 +1,30 @@
 'use strict';
+
+import {
+    Background,
+    DataTable,
+    DocString,
+    Examples,
+    Feature,
+    Scenario,
+    ScenarioOutline,
+    Step,
+    TableRow,
+    Tag
+} from 'gherkin-ast';
+
 /**
  * Base class to create Gherkin feature file pre-compilers.
  * @class
  */
-class DefaultConfig {
+export class DefaultConfig {
     /**
      * Event to process a Feature.
      *
      * @param {Feature} feature The feature to be processed.
      * @return {null|undefined|Feature}
      */
-    onFeature(feature) {
+    onFeature(feature: Feature): null | undefined | Feature {
 
     }
 
@@ -22,7 +36,7 @@ class DefaultConfig {
      * @param {number} i The index of the current element.
      * @return {null|undefined|Scenario|Array.<Scenario>}
      */
-    onScenario(scenario, parent, i) {
+    onScenario(scenario: Scenario, parent: Feature, i: number): null | undefined | Scenario | Array<Scenario> {
 
     }
 
@@ -34,7 +48,7 @@ class DefaultConfig {
      * @param {number} i The index of the current element.
      * @return {null|undefined|Background|Array.<Background>}
      */
-    onBackground(background, parent, i) {
+    onBackground(background: Background, parent: Feature, i: number): null | undefined | Background | Array<Background> {
 
     }
 
@@ -46,7 +60,7 @@ class DefaultConfig {
      * @param {number} i The index of the current element.
      * @return {null|undefined|ScenarioOutline|Array.<ScenarioOutline>}
      */
-    onScenarioOutline(scenarioOutline, parent, i) {
+    onScenarioOutline(scenarioOutline: ScenarioOutline, parent: Feature, i: number): null | undefined | ScenarioOutline | Array<ScenarioOutline> {
 
     }
 
@@ -58,7 +72,7 @@ class DefaultConfig {
      * @param {number} i The index of the current element.
      * @return {null|undefined|Step|Array.<Step>}
      */
-    onStep(step, parent, i) {
+    onStep(step: Step, parent: Scenario | ScenarioOutline | Background, i: number): null | undefined | Step | Array<Step> {
 
     }
 
@@ -70,7 +84,7 @@ class DefaultConfig {
      * @param {number} i The index of the current element.
      * @return {null|undefined|Tag|Array.<Tag>}
      */
-    onTag(tag, parent, i) {
+    onTag(tag: Tag, parent: Feature | Scenario | ScenarioOutline | Examples, i: number): null | undefined | Tag | Array<Tag> {
 
     }
 
@@ -81,7 +95,7 @@ class DefaultConfig {
      * @param {Step} parent The parent step of the docString.
      * @return {null|undefined|DocString}
      */
-    onDocString(docString, parent) {
+    onDocString(docString: DocString, parent: Step): null | undefined | DocString {
 
     }
 
@@ -92,7 +106,7 @@ class DefaultConfig {
      * @param {Step} parent The parent step of the dataTable.
      * @return {null|undefined|DataTable}
      */
-    onDataTable(dataTable, parent) {
+    onDataTable(dataTable: DataTable, parent: Step): null | undefined | DataTable {
 
     }
 
@@ -104,7 +118,7 @@ class DefaultConfig {
      * @param {number} i The index of the current element.
      * @return {null|undefined|Tag|Array.<Tag>}
      */
-    onExamples(examples, parent, i) {
+    onExamples(examples: Examples, parent: ScenarioOutline, i: number): null | undefined | Tag | Array<Tag> {
 
     }
 
@@ -115,7 +129,7 @@ class DefaultConfig {
      * @param {Examples} parent The parent examples table of the header row.
      * @return {null|undefined|Tag|Array.<Tag>}
      */
-    onExampleHeader(header, parent) {
+    onExampleHeader(header: TableRow, parent: Examples): null | undefined | Tag | Array<Tag> {
 
     }
 
@@ -127,7 +141,7 @@ class DefaultConfig {
      * @param {number} i The index of the current element.
      * @return {null|undefined|TableRow|Array.<TableRow>}
      */
-    onExampleRow(row, parent, i) {
+    onExampleRow(row: TableRow, parent: Examples, i: number): null | undefined | TableRow | Array<TableRow> {
 
     }
 
@@ -141,7 +155,7 @@ class DefaultConfig {
      * @param {number} i The index of the current element.
      * @returns {boolean|*} FALSE if the given element should be filtered out.
      */
-    preFilterScenario(scenario, parent, i) {
+    preFilterScenario(scenario: Scenario | ScenarioOutline, parent: Feature, i: number): boolean | any {
 
     }
 
@@ -155,7 +169,7 @@ class DefaultConfig {
      * @param {number} i The index of the current element.
      * @returns {boolean|*} FALSE if the given element should be filtered out.
      */
-    postFilterScenario(scenario, parent, i) {
+    postFilterScenario(scenario: Scenario | ScenarioOutline, parent: Feature, i: number): boolean | any {
 
     }
 
@@ -169,7 +183,7 @@ class DefaultConfig {
      * @param {number} i The index of the current element.
      * @return {boolean|*} FALSE if the given tag should be filtered out.
      */
-    preFilterTag(tag, parent, i) {
+    preFilterTag(tag: Tag, parent: Feature | Scenario | ScenarioOutline | Examples, i: number): boolean | any {
 
     }
 
@@ -183,7 +197,7 @@ class DefaultConfig {
      * @param {number} i The index of the current element.
      * @return {boolean|*} FALSE if the given tag should be filtered out.
      */
-    postFilterTag(tag, parent, i) {
+    postFilterTag(tag: Tag, parent: Feature | Scenario | ScenarioOutline | Examples, i: number): boolean | any {
 
     }
 
@@ -197,7 +211,7 @@ class DefaultConfig {
      * @param {number} i The index of the current element.
      * @return {boolean|*} FALSE if the given tag should be filtered out.
      */
-    preFilterStep(step, parent, i) {
+    preFilterStep(step: Step, parent: Background | Scenario | ScenarioOutline, i: number): boolean | any {
 
     }
 
@@ -211,7 +225,7 @@ class DefaultConfig {
      * @param {number} i The index of the current element.
      * @return {boolean|*} FALSE if the given tag should be filtered out.
      */
-    postFilterStep(step, parent, i) {
+    postFilterStep(step: Step, parent: Background | Scenario | ScenarioOutline, i: number): boolean | any {
 
     }
 
@@ -225,7 +239,7 @@ class DefaultConfig {
      * @param {number} i The index of the current element.
      * @return {boolean|*} FALSE if the given row should be filtered out.
      */
-    preFilterRow(row, parent, i) {
+    preFilterRow(row: TableRow, parent: DataTable | Examples, i: number): boolean | any {
 
     }
 
@@ -239,7 +253,7 @@ class DefaultConfig {
      * @param {number} i The index of the current element.
      * @return {boolean|*} FALSE if the given row should be filtered out.
      */
-    postFilterRow(row, parent, i) {
+    postFilterRow(row: TableRow, parent: DataTable | Examples, i: number): boolean | any {
 
     }
 
@@ -252,7 +266,7 @@ class DefaultConfig {
      * @param {number} i The index of the current element.
      * @return {boolean|*} FALSE if the given examples table should be filtered out.
      */
-    preFilterExamples(examples, parent, i) {
+    preFilterExamples(examples: Examples, parent: ScenarioOutline, i: number): boolean | any {
 
     }
 
@@ -265,9 +279,7 @@ class DefaultConfig {
      * @param {number} i The index of the current element.
      * @return {boolean|*} FALSE if the given examples table should be filtered out.
      */
-    postFilterExamples(examples, parent, i) {
+    postFilterExamples(examples: Examples, parent: ScenarioOutline, i: number): boolean | any {
 
     }
 }
-
-module.exports = DefaultConfig;
