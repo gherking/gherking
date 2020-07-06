@@ -1,6 +1,18 @@
 'use strict';
-import { GherkinDocument } from 'gherkin-ast';
-import { DefaultConfig } from "./DefaultConfig";
+import {
+    Background,
+    DataTable,
+    DocString,
+    Examples,
+    Feature,
+    GherkinDocument,
+    Scenario,
+    ScenarioOutline,
+    Step,
+    TableRow,
+    Tag
+} from 'gherkin-ast';
+import {DefaultConfig} from "./DefaultConfig";
 
 const METHODS = {
     FILTER: {
@@ -46,7 +58,7 @@ const METHODS = {
  */
 export class PreCompiler {
     /** Config of the precompiler */
-    public config: Object|DefaultConfig;
+    public config: Object | DefaultConfig;
 
     constructor(config: Object) {
         this.config = config || {};
@@ -89,7 +101,7 @@ export class PreCompiler {
      * @param {string} method
      * @private
      */
-    _handleEvent(parent: Object, key:string, method:string): void {
+    _handleEvent(parent: Object, key: string, method: string): void {
         if (this.config[method]) {
             const result: Object = this.config[method](parent[key], parent);
             if (result !== undefined) {
@@ -108,9 +120,9 @@ export class PreCompiler {
      * @param {string} method
      * @private
      */
-    _handleListEvent(list, parent, i, method) {
+    _handleListEvent(list: Array<any>, parent: Object, i: number, method: string): void {
         if (this.config[method]) {
-            const result = this.config[method](list[i], parent, i);
+            const result: Object | DefaultConfig = this.config[method](list[i], parent, i);
             if (result === null) {
                 list.splice(i, 1);
             } else if (Array.isArray(result)) {
@@ -128,7 +140,7 @@ export class PreCompiler {
      * @param {Feature|Scenario|ScenarioOutline|Background|Examples} parent
      * @private
      */
-    _applyToTags(tags, parent) {
+    _applyToTags(tags: Array<Tag>, parent: Feature | Scenario | ScenarioOutline | Background | Examples): void {
         for (let i = 0; i < tags.length; ++i) {
             this._handleListEvent(tags, parent, i, METHODS.EVENT.TAG);
         }
@@ -141,7 +153,7 @@ export class PreCompiler {
      * @param {GherkinDocument} doc
      * @private
      */
-    _applyToFeature(feature, doc) {
+    _applyToFeature(feature: Feature, doc: GherkinDocument): void {
         this._handleEvent(doc, 'feature', METHODS.EVENT.FEATURE);
 
         feature.tags = this._filter(feature.tags, feature, METHODS.FILTER.TAG.PRE);
@@ -150,7 +162,7 @@ export class PreCompiler {
 
         feature.elements = this._filter(feature.elements, feature, METHODS.FILTER.SCENARIO.PRE);
         for (let i = 0; i < feature.elements.length; ++i) {
-            const element = feature.elements[i];
+            const element: Scenario | ScenarioOutline | Background = feature.elements[i];
             switch (element.constructor.name) {
                 case 'Scenario':
                     this._applyToScenario(element, feature, i);
@@ -174,7 +186,7 @@ export class PreCompiler {
      * @param {number} i
      * @private
      */
-    _applyToScenario(scenario, feature, i) {
+    _applyToScenario(scenario: Scenario, feature: Feature, i: number): void {
         this._handleListEvent(feature.elements, feature, i, 'onScenario');
 
         scenario.tags = this._filter(scenario.tags, scenario, METHODS.FILTER.TAG.PRE);
@@ -196,7 +208,7 @@ export class PreCompiler {
      * @param {number} i
      * @private
      */
-    _applyToScenarioOutline(scenarioOutline, feature, i) {
+    _applyToScenarioOutline(scenarioOutline: ScenarioOutline, feature: Feature, i: number): void {
         this._handleListEvent(feature.elements, feature, i, METHODS.EVENT.SCENARIO_OUTLINE);
 
         scenarioOutline.tags = this._filter(scenarioOutline.tags, scenarioOutline, METHODS.FILTER.TAG.PRE);
@@ -224,7 +236,7 @@ export class PreCompiler {
      * @param {number} i
      * @private
      */
-    _applyToBackground(background, feature, i) {
+    _applyToBackground(background: Background, feature: Feature, i: number): void {
         this._handleListEvent(feature.elements, feature, i, METHODS.EVENT.BACKGROUND);
 
         background.steps = this._filter(background.steps, background, METHODS.FILTER.STEP.PRE);
@@ -242,7 +254,7 @@ export class PreCompiler {
      * @param {number} i
      * @private
      */
-    _applyToStep(step, parent, i) {
+    _applyToStep(step: Step, parent: Background | Scenario | ScenarioOutline, i: number): void {
         this._handleListEvent(parent.steps, parent, i, METHODS.EVENT.STEP);
         if (step.argument) {
             switch (step.argument.constructor.name) {
@@ -265,7 +277,7 @@ export class PreCompiler {
      * @param {number} i
      * @private
      */
-    _applyToExamples(examples, scenarioOutline, i) {
+    _applyToExamples(examples: Examples, scenarioOutline: ScenarioOutline, i: number): void {
         this._handleListEvent(scenarioOutline.examples, scenarioOutline, i, METHODS.EVENT.EXAMPLES);
         this._handleEvent(examples, 'header', METHODS.EVENT.EXAMPLE_HEADER);
 
@@ -274,7 +286,7 @@ export class PreCompiler {
         examples.tags = this._filter(examples.tags, examples, METHODS.FILTER.TAG.POST);
 
         examples.body = this._filter(examples.body, examples, METHODS.FILTER.ROW.PRE);
-        for(let i = 0; i < examples.body.length; ++i) {
+        for (let i = 0; i < examples.body.length; ++i) {
             this._handleListEvent(examples.body, examples, i, METHODS.EVENT.EXAMPLE_ROW);
         }
         examples.body = this._filter(examples.body, examples, METHODS.FILTER.ROW.POST);
