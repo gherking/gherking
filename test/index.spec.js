@@ -3,7 +3,7 @@
 const path = require('path');
 const fs = require('fs-extra');
 const os = require('os');
-const API = require(path.resolve('lib/index.js'));
+const API = require(path.resolve('lib/index.ts'));
 const {GherkinDocument, Background} = require('gherkin-ast');
 
 const expect = require('chai').expect;
