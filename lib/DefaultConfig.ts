@@ -6,6 +6,7 @@ import {
     DocString,
     Examples,
     Feature,
+    Rule,
     Scenario,
     ScenarioOutline,
     Step,
@@ -25,7 +26,18 @@ export class DefaultConfig {
      * @return {null|undefined|Feature}
      */
     onFeature(feature: Feature): null | undefined | Feature {
+        return null;
+    }
 
+    /**
+     *
+     * @param {Rule} rule The rule to be processed
+     * @param {Feature} parent The parent feature of the rule
+     * @param {number} i The index of the current element
+     * @return {null|undefined|Scenario|Array.<Rule>}
+     */
+    onRule(rule: Rule, parent: Feature, i: number): null | undefined | Rule | Array<Rule> {
+        return null;
     }
 
     /**
@@ -36,20 +48,20 @@ export class DefaultConfig {
      * @param {number} i The index of the current element.
      * @return {null|undefined|Scenario|Array.<Scenario>}
      */
-    onScenario(scenario: Scenario, parent: Feature, i: number): null | undefined | Scenario | Array<Scenario> {
-
+    onScenario(scenario: Scenario, parent: Feature | Rule, i: number): null | undefined | Scenario | Array<Scenario> {
+        return null;
     }
 
     /**
      * Event to process a Background.
      *
      * @param {Background} background The background to be processed.
-     * @param {Feature} parent The parent feature of the background.
+     * @param {Feature | Rule} parent The parent feature of the background.
      * @param {number} i The index of the current element.
      * @return {null|undefined|Background|Array.<Background>}
      */
-    onBackground(background: Background, parent: Feature, i: number): null | undefined | Background | Array<Background> {
-
+    onBackground(background: Background, parent: Feature | Rule, i: number): null | undefined | Background | Array<Background> {
+        return null;
     }
 
     /**
@@ -61,7 +73,7 @@ export class DefaultConfig {
      * @return {null|undefined|ScenarioOutline|Array.<ScenarioOutline>}
      */
     onScenarioOutline(scenarioOutline: ScenarioOutline, parent: Feature, i: number): null | undefined | ScenarioOutline | Array<ScenarioOutline> {
-
+        return null;
     }
 
     /**
@@ -73,7 +85,7 @@ export class DefaultConfig {
      * @return {null|undefined|Step|Array.<Step>}
      */
     onStep(step: Step, parent: Scenario | ScenarioOutline | Background, i: number): null | undefined | Step | Array<Step> {
-
+        return null;
     }
 
     /**
@@ -85,7 +97,7 @@ export class DefaultConfig {
      * @return {null|undefined|Tag|Array.<Tag>}
      */
     onTag(tag: Tag, parent: Feature | Scenario | ScenarioOutline | Examples, i: number): null | undefined | Tag | Array<Tag> {
-
+        return null;
     }
 
     /**
@@ -96,7 +108,7 @@ export class DefaultConfig {
      * @return {null|undefined|DocString}
      */
     onDocString(docString: DocString, parent: Step): null | undefined | DocString {
-
+        return null;
     }
 
     /**
@@ -107,7 +119,7 @@ export class DefaultConfig {
      * @return {null|undefined|DataTable}
      */
     onDataTable(dataTable: DataTable, parent: Step): null | undefined | DataTable {
-
+        return null;
     }
 
     /**
@@ -119,7 +131,7 @@ export class DefaultConfig {
      * @return {null|undefined|Tag|Array.<Tag>}
      */
     onExamples(examples: Examples, parent: ScenarioOutline, i: number): null | undefined | Tag | Array<Tag> {
-
+        return null;
     }
 
     /**
@@ -130,7 +142,7 @@ export class DefaultConfig {
      * @return {null|undefined|Tag|Array.<Tag>}
      */
     onExampleHeader(header: TableRow, parent: Examples): null | undefined | Tag | Array<Tag> {
-
+        return null;
     }
 
     /**
@@ -142,7 +154,35 @@ export class DefaultConfig {
      * @return {null|undefined|TableRow|Array.<TableRow>}
      */
     onExampleRow(row: TableRow, parent: Examples, i: number): null | undefined | TableRow | Array<TableRow> {
+        return null;
+    }
 
+    /**
+     * Function to filter out rules of a feature
+     * before they are processed.
+     * Return FALSE if the given element should be filtered out. Otherwise it won't be.
+     *
+     * @param {Rule} rule The rule to be tested.
+     * @param {Feature} parent The parent feature of the scenario.
+     * @param {number} i The index of the current element.
+     * @returns {boolean|*} FALSE if the given element should be filtered out.
+     */
+    preFilterRule(rule: Rule, parent: Feature, i: number): boolean | any {
+        return null;
+    }
+
+    /**
+     * Function to filter out scenarios of a rule
+     * after they are processed.
+     * Return FALSE if the given element should be filtered out. Otherwise it won't be.
+     *
+     * @param {Rule} rule The rule to be tested.
+     * @param {Feature} parent The parent feature of the scenario.
+     * @param {number} i The index of the current element.
+     * @returns {boolean|*} FALSE if the given element should be filtered out.
+     */
+    postFilterRule(rule: Rule, parent: Feature, i: number): boolean | any {
+        return null;
     }
 
     /**
@@ -155,8 +195,8 @@ export class DefaultConfig {
      * @param {number} i The index of the current element.
      * @returns {boolean|*} FALSE if the given element should be filtered out.
      */
-    preFilterScenario(scenario: Scenario | ScenarioOutline, parent: Feature, i: number): boolean | any {
-
+    preFilterScenario(scenario: Scenario | ScenarioOutline, parent: Feature | Rule, i: number): boolean | any {
+        return null;
     }
 
     /**
@@ -169,8 +209,8 @@ export class DefaultConfig {
      * @param {number} i The index of the current element.
      * @returns {boolean|*} FALSE if the given element should be filtered out.
      */
-    postFilterScenario(scenario: Scenario | ScenarioOutline, parent: Feature, i: number): boolean | any {
-
+    postFilterScenario(scenario: Scenario | ScenarioOutline, parent: Feature | Rule, i: number): boolean | any {
+        return null;
     }
 
     /**
@@ -184,7 +224,7 @@ export class DefaultConfig {
      * @return {boolean|*} FALSE if the given tag should be filtered out.
      */
     preFilterTag(tag: Tag, parent: Feature | Scenario | ScenarioOutline | Examples, i: number): boolean | any {
-
+        return null;
     }
 
     /**
@@ -198,7 +238,7 @@ export class DefaultConfig {
      * @return {boolean|*} FALSE if the given tag should be filtered out.
      */
     postFilterTag(tag: Tag, parent: Feature | Scenario | ScenarioOutline | Examples, i: number): boolean | any {
-
+        return null;
     }
 
     /**
@@ -212,7 +252,7 @@ export class DefaultConfig {
      * @return {boolean|*} FALSE if the given tag should be filtered out.
      */
     preFilterStep(step: Step, parent: Background | Scenario | ScenarioOutline, i: number): boolean | any {
-
+        return null;
     }
 
     /**
@@ -226,7 +266,7 @@ export class DefaultConfig {
      * @return {boolean|*} FALSE if the given tag should be filtered out.
      */
     postFilterStep(step: Step, parent: Background | Scenario | ScenarioOutline, i: number): boolean | any {
-
+        return null;
     }
 
     /**
@@ -240,7 +280,7 @@ export class DefaultConfig {
      * @return {boolean|*} FALSE if the given row should be filtered out.
      */
     preFilterRow(row: TableRow, parent: DataTable | Examples, i: number): boolean | any {
-
+        return null;
     }
 
     /**
@@ -254,7 +294,7 @@ export class DefaultConfig {
      * @return {boolean|*} FALSE if the given row should be filtered out.
      */
     postFilterRow(row: TableRow, parent: DataTable | Examples, i: number): boolean | any {
-
+        return null;
     }
 
     /**
@@ -267,7 +307,7 @@ export class DefaultConfig {
      * @return {boolean|*} FALSE if the given examples table should be filtered out.
      */
     preFilterExamples(examples: Examples, parent: ScenarioOutline, i: number): boolean | any {
-
+        return null;
     }
 
     /**
@@ -280,6 +320,6 @@ export class DefaultConfig {
      * @return {boolean|*} FALSE if the given examples table should be filtered out.
      */
     postFilterExamples(examples: Examples, parent: ScenarioOutline, i: number): boolean | any {
-
+        return null;
     }
 }

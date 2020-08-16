@@ -1,8 +1,8 @@
 'use strict';
-import fs from "fs-extra";
+import * as fs from "fs-extra";
 import assembler from "gherkin-assembler";
 import {Parser} from "gherkin";
-import {AssemblerConfig, GherkinDocument} from 'gherkin-ast';
+import {Document, GherkinDocument} from 'gherkin-ast';
 import {DefaultConfig} from "./DefaultConfig";
 import {PreCompiler} from "./PreCompiler";
 
@@ -15,7 +15,7 @@ export class API {
      * @param {string} pathToFile Path to feature file.
      * @returns {GherkinDocument}
      */
-    load:GherkinDocument = (pathToFile:string) => {
+    load = (pathToFile:string): GherkinDocument => {
         const parser = new Parser();
         const document = parser.parse(fs.readFileSync(pathToFile, 'utf8'));
         return assembler.objectToAST(document);
@@ -28,7 +28,7 @@ export class API {
      * @param {...DefaultConfig|Object} configs
      * @returns {GherkinDocument}
      */
-    process:GherkinDocument = (ast:GherkinDocument, ...configs:(DefaultConfig | Object)[]) => {
+    process = (ast:Document, ...configs:(DefaultConfig | Object)[]): Document => {
         configs.forEach(config => {
             const compiler = new PreCompiler(config);
             ast = compiler.applyToAST(ast);
@@ -41,9 +41,9 @@ export class API {
      *
      * @param {string} pathToFile
      * @param {GherkinDocument} ast
-     * @param {AssemblerConfig|Object} [options]
+     * @param {Object} [options]
      */
-    save:object = (pathToFile:string, ast:GherkinDocument, options:AssemblerConfig|Object) => {
+    save = (pathToFile:string, ast:GherkinDocument, options:Object): void => {
         fs.writeFileSync(pathToFile, this.format(ast, options), 'utf8');
     };
 

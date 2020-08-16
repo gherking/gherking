@@ -3,9 +3,11 @@ import {
     Background,
     DataTable,
     DocString,
+    Document,
     Examples,
     Feature,
     GherkinDocument,
+    Rule,
     Scenario,
     ScenarioOutline,
     Step,
@@ -35,6 +37,10 @@ const METHODS = {
         EXAMPLES: {
             PRE: 'preFilterExamples',
             POST: 'postFilterExamples'
+        },
+        RULE: {
+            PRE: "preFilterRule",
+            POST: "postFilterRule"
         }
     },
     EVENT: {
@@ -48,7 +54,8 @@ const METHODS = {
         DATA_TABLE: 'onDataTable',
         EXAMPLES: 'onExamples',
         EXAMPLE_HEADER: 'onExampleHeader',
-        EXAMPLE_ROW: 'onExampleRow'
+        EXAMPLE_ROW: 'onExampleRow',
+        RULE: 'onRule'
     }
 };
 
@@ -67,11 +74,11 @@ export class PreCompiler {
     /**
      * Applies the pre-compiler to the given AST.
      *
-     * @param {GherkinDocument} ast
-     * @returns {GherkinDocument}
+     * @param {Document} ast
+     * @returns {Document}
      */
-    public applyToAST(ast: GherkinDocument): GherkinDocument {
-        const result: GherkinDocument = ast.clone();
+    public applyToAST(ast: Document): Document {
+        const result: Document = ast.clone();
         this._applyToFeature(result.feature, result);
         return result;
     }
@@ -134,7 +141,7 @@ export class PreCompiler {
     }
 
     /**
-     * Applies the process events on Fags.
+     * Applies the process events on Tags.
      *
      * @param {Array.<Tag>} tags
      * @param {Feature|Scenario|ScenarioOutline|Background|Examples} parent
@@ -153,41 +160,74 @@ export class PreCompiler {
      * @param {GherkinDocument} doc
      * @private
      */
-    _applyToFeature(feature: Feature, doc: GherkinDocument): void {
+    _applyToFeature(feature: Feature, doc: Document): void {
         this._handleEvent(doc, 'feature', METHODS.EVENT.FEATURE);
 
         feature.tags = this._filter(feature.tags, feature, METHODS.FILTER.TAG.PRE);
         this._applyToTags(feature.tags, feature);
         feature.tags = this._filter(feature.tags, feature, METHODS.FILTER.TAG.POST);
-
-        feature.elements = this._filter(feature.elements, feature, METHODS.FILTER.SCENARIO.PRE);
+        let containsRule = false;
         for (let i = 0; i < feature.elements.length; ++i) {
-            const element: Scenario | ScenarioOutline | Background = feature.elements[i];
-            switch (element.constructor.name) {
-                case 'Scenario':
-                    this._applyToScenario(element, feature, i);
-                    break;
-                case 'ScenarioOutline':
-                    this._applyToScenarioOutline(element, feature, i);
-                    break;
-                case 'Background':
-                    this._applyToBackground(element, feature, i);
-                    break;
+            if (feature.elements[i] instanceof Rule) {
+                containsRule = true;
+                break;
             }
         }
-        feature.elements = this._filter(feature.elements, feature, METHODS.FILTER.SCENARIO.POST);
+        if (containsRule) {
+            feature.elements = this._filter(feature.elements, feature, METHODS.FILTER.RULE.PRE);
+            for (let i = 0; i < feature.elements.length; ++i) {
+                this._applyToRule(<Rule>feature.elements[i], feature, i)
+            }
+            feature.elements = this._filter(feature.elements, feature, METHODS.FILTER.RULE.PRE);
+        }
+        else {
+            feature.elements = this._filter(feature.elements, feature, METHODS.FILTER.SCENARIO.PRE);
+            for (let i = 0; i < feature.elements.length; ++i) {
+                const element: Scenario | ScenarioOutline | Background | Rule = feature.elements[i];
+                if (element instanceof Scenario) {
+                    this._applyToScenario(element, feature, i);
+                } else if (element instanceof ScenarioOutline) {
+                    this._applyToScenarioOutline(element, feature, i);
+                } else if (element instanceof Background) {
+                    this._applyToBackground(element, feature, i);
+                }
+            }
+            feature.elements = this._filter(feature.elements, feature, METHODS.FILTER.SCENARIO.POST);
+        }
+    }
+
+    /**
+     * Applies the process events to Rule
+     * @param {Rule} rule
+     * @param {Feature} feature
+     * @param {number} i
+     * @private
+     */
+    _applyToRule(rule: Rule, feature: Feature, i: number): void {
+        this._handleListEvent(feature.elements, feature, i, METHODS.EVENT.RULE);
+
+        rule.elements = this._filter(rule.elements, rule, METHODS.FILTER.SCENARIO.PRE);
+        for (let i = 0; i < rule.elements.length; ++i) {
+            const element: Scenario | Background = rule.elements[i];
+            if (element instanceof Scenario) {
+                this._applyToScenario(element, rule, i);
+            } else if (element instanceof Background) {
+                this._applyToBackground(element, rule, i);
+            }
+        }
+        rule.elements = this._filter(rule.elements, rule, METHODS.FILTER.SCENARIO.POST);
     }
 
     /**
      * Applies the process events to Scenario.
      *
      * @param {Scenario} scenario
-     * @param {Feature} feature
+     * @param {Feature|Rule} parent
      * @param {number} i
      * @private
      */
-    _applyToScenario(scenario: Scenario, feature: Feature, i: number): void {
-        this._handleListEvent(feature.elements, feature, i, 'onScenario');
+    _applyToScenario(scenario: Scenario, parent: Feature | Rule, i: number): void {
+        this._handleListEvent(parent.elements, parent, i, 'onScenario');
 
         scenario.tags = this._filter(scenario.tags, scenario, METHODS.FILTER.TAG.PRE);
         this._applyToTags(scenario.tags, scenario);
@@ -232,12 +272,12 @@ export class PreCompiler {
      * Applies the process events to Background.
      *
      * @param {Background} background
-     * @param {Feature} feature
+     * @param {Feature|Rule} parent
      * @param {number} i
      * @private
      */
-    _applyToBackground(background: Background, feature: Feature, i: number): void {
-        this._handleListEvent(feature.elements, feature, i, METHODS.EVENT.BACKGROUND);
+    _applyToBackground(background: Background, parent: Feature | Rule, i: number): void {
+        this._handleListEvent(parent.elements, parent, i, METHODS.EVENT.BACKGROUND);
 
         background.steps = this._filter(background.steps, background, METHODS.FILTER.STEP.PRE);
         for (let i = 0; i < background.steps.length; ++i) {
@@ -256,17 +296,12 @@ export class PreCompiler {
      */
     _applyToStep(step: Step, parent: Background | Scenario | ScenarioOutline, i: number): void {
         this._handleListEvent(parent.steps, parent, i, METHODS.EVENT.STEP);
-        if (step.argument) {
-            switch (step.argument.constructor.name) {
-                case 'DocString':
-                    this._handleEvent(step, 'argument', METHODS.EVENT.DOC_STRING);
-                    break;
-                case 'DataTable':
-                    step.argument.rows = this._filter(step.argument.rows, step.argument, METHODS.FILTER.ROW.PRE);
-                    this._handleEvent(step, 'argument', METHODS.EVENT.DATA_TABLE);
-                    step.argument.rows = this._filter(step.argument.rows, step.argument, METHODS.FILTER.ROW.POST);
-                    break;
-            }
+        if (step.docString) {
+            this._handleEvent(step, 'argument', METHODS.EVENT.DOC_STRING);
+        } else if (step.dataTable) {
+            step.dataTable.rows = this._filter(step.dataTable.rows, step.dataTable, METHODS.FILTER.ROW.PRE);
+            this._handleEvent(step, 'argument', METHODS.EVENT.DATA_TABLE);
+            step.dataTable.rows = this._filter(step.dataTable.rows, step.dataTable, METHODS.FILTER.ROW.POST);
         }
     }
 
