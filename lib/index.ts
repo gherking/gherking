@@ -3,11 +3,10 @@ import * as fs from "fs-extra";
 import assembler from "gherkin-assembler";
 import {Parser} from "gherkin";
 import {Document, GherkinDocument} from 'gherkin-ast';
-import {DefaultConfig} from "./DefaultConfig";
 import {PreCompiler} from "./PreCompiler";
+import {GherKing} from "./GherKing";
 
 export class API {
-    private DefaultConfig: DefaultConfig = new DefaultConfig();
 
     /**
      * Loads the given feature file to a GherkinDocument.

@@ -14,61 +14,68 @@ import {
     TableRow,
     Tag
 } from 'gherkin-ast';
-import {DefaultConfig} from "./DefaultConfig";
+import {PreCompiler} from "./PreCompiler";
 
-const METHODS = {
-    FILTER: {
-        TAG: {
-            PRE: 'preFilterTag',
-            POST: 'postFilterTag'
-        },
-        SCENARIO: {
-            PRE: 'preFilterScenario',
-            POST: 'postFilterScenario'
-        },
-        STEP: {
-            PRE: 'preFilterStep',
-            POST: 'postFilterStep'
-        },
-        ROW: {
-            PRE: 'preFilterRow',
-            POST: 'postFilterRow'
-        },
-        EXAMPLES: {
-            PRE: 'preFilterExamples',
-            POST: 'postFilterExamples'
-        },
-        RULE: {
-            PRE: "preFilterRule",
-            POST: "postFilterRule"
-        }
+type PreCompilerMethod = keyof PreCompiler;
+interface EventMethods {
+    [name: string]: PreCompilerMethod;
+}
+interface FilterMethods {
+    [name: string]: {
+        PRE: PreCompilerMethod;
+        POST: PreCompilerMethod;
+    };
+}
+const EVENT_METHODS: EventMethods = {
+    FEATURE: 'onFeature',
+    SCENARIO: 'onScenario',
+    BACKGROUND: 'onBackground',
+    SCENARIO_OUTLINE: 'onScenarioOutline',
+    STEP: 'onStep',
+    TAG: 'onTag',
+    DOC_STRING: 'onDocString',
+    DATA_TABLE: 'onDataTable',
+    EXAMPLES: 'onExamples',
+    EXAMPLE_HEADER: 'onExampleHeader',
+    EXAMPLE_ROW: 'onExampleRow',
+    RULE: 'onRule'
+};
+const FILTER_METHODS: FilterMethods = {
+    TAG: {
+        PRE: 'preFilterTag',
+        POST: 'postFilterTag'
     },
-    EVENT: {
-        FEATURE: 'onFeature',
-        SCENARIO: 'onScenario',
-        BACKGROUND: 'onBackground',
-        SCENARIO_OUTLINE: 'onScenarioOutline',
-        STEP: 'onStep',
-        TAG: 'onTag',
-        DOC_STRING: 'onDocString',
-        DATA_TABLE: 'onDataTable',
-        EXAMPLES: 'onExamples',
-        EXAMPLE_HEADER: 'onExampleHeader',
-        EXAMPLE_ROW: 'onExampleRow',
-        RULE: 'onRule'
+    SCENARIO: {
+        PRE: 'preFilterScenario',
+        POST: 'postFilterScenario'
+    },
+    STEP: {
+        PRE: 'preFilterStep',
+        POST: 'postFilterStep'
+    },
+    ROW: {
+        PRE: 'preFilterRow',
+        POST: 'postFilterRow'
+    },
+    EXAMPLES: {
+        PRE: 'preFilterExamples',
+        POST: 'postFilterExamples'
+    },
+    RULE: {
+        PRE: "preFilterRule",
+        POST: "postFilterRule"
     }
 };
-
 /**
  * Gherkin feature file pre-compilers.
  * @class
  */
-export class PreCompiler {
+export class GherKing {
     /** Config of the precompiler */
-    public config: Object | DefaultConfig;
+    private preCompiler: Partial<PreCompiler>;
 
-    constructor(config: Object) {
-        this.config = config || {};
+    constructor(preCompiler: Partial<PreCompiler>) {
+        this.preCompiler = preCompiler || {};
     }
 
     /**
@@ -79,57 +86,29 @@ export class PreCompiler {
      */
     public applyToAST(ast: Document): Document {
         const result: Document = ast.clone();
-        this._applyToFeature(result.feature, result);
+        this.applyToFeature(result.feature, result);
         return result;
     }
 
-    /**
-     * Filters the given list with given method.
-     *
-     * @param {Array} list
-     * @param {Object} parent
-     * @param {string} method
-     * @returns {Array}
-     * @private
-     */
-    _filter(list: Array<any>, parent: Object, method: string): Array<any> {
-        if (!this.config[method]) {
+    private filter<L,P>(list: L[], parent: P, method: PreCompilerMethod): L[] {
+        if (!this.preCompiler[method]) {
             return list;
         }
-        return list.filter((item, i) => this.config[method](item, parent, i) !== false);
+        return list.filter((item, i) => this.preCompiler[method](item, parent, i) !== false);
     }
 
-    /**
-     * Applies the given event method on the given element and
-     * handles various return value possibilities.
-     *
-     * @param {Object} parent
-     * @param {string} key
-     * @param {string} method
-     * @private
-     */
-    _handleEvent(parent: Object, key: string, method: string): void {
-        if (this.config[method]) {
-            const result: Object = this.config[method](parent[key], parent);
+    private handleEvent<P>(parent: P, key: keyof P, method: PreCompilerMethod): void {
+        if (this.preCompiler[method]) {
+            const result = this.preCompiler[method](parent[key], parent);
             if (result !== undefined) {
                 parent[key] = result;
             }
         }
     }
 
-    /**
-     * Applies the given event method on the given list element
-     * and handles various return value possiblities.
-     *
-     * @param {Array} list
-     * @param {Object} parent
-     * @param {number} i
-     * @param {string} method
-     * @private
-     */
-    _handleListEvent(list: Array<any>, parent: Object, i: number, method: string): void {
-        if (this.config[method]) {
-            const result: Object | DefaultConfig = this.config[method](list[i], parent, i);
+    private handleListEvent<L,P>(list: L[], parent: P, i: number, method: PreCompilerMethod): void {
+        if (this.preCompiler[method]) {
+            const result = this.preCompiler[method](list[i], parent, i);
             if (result === null) {
                 list.splice(i, 1);
             } else if (Array.isArray(result)) {
@@ -140,16 +119,9 @@ export class PreCompiler {
         }
     }
 
-    /**
-     * Applies the process events on Tags.
-     *
-     * @param {Array.<Tag>} tags
-     * @param {Feature|Scenario|ScenarioOutline|Background|Examples} parent
-     * @private
-     */
-    _applyToTags(tags: Array<Tag>, parent: Feature | Scenario | ScenarioOutline | Background | Examples): void {
+    private applyToTags(tags: Tag[], parent: Feature | Scenario | ScenarioOutline | Background | Examples): void {
         for (let i = 0; i < tags.length; ++i) {
-            this._handleListEvent(tags, parent, i, METHODS.EVENT.TAG);
+            this.handleListEvent<Tag, Feature | Scenario | ScenarioOutline | Background | Examples>(tags, parent, i, EVENT_METHODS.TAG);
         }
     }
 
@@ -160,12 +132,12 @@ export class PreCompiler {
      * @param {GherkinDocument} doc
      * @private
      */
-    _applyToFeature(feature: Feature, doc: Document): void {
-        this._handleEvent(doc, 'feature', METHODS.EVENT.FEATURE);
+    private applyToFeature(feature: Feature, doc: Document): void {
+        this.handleEvent(doc, 'feature', EVENT_METHODS.FEATURE);
 
-        feature.tags = this._filter(feature.tags, feature, METHODS.FILTER.TAG.PRE);
-        this._applyToTags(feature.tags, feature);
-        feature.tags = this._filter(feature.tags, feature, METHODS.FILTER.TAG.POST);
+        feature.tags = this.filter(feature.tags, feature, FILTER_METHODS.TAG.PRE);
+        this.applyToTags(feature.tags, feature);
+        feature.tags = this.filter(feature.tags, feature, FILTER_METHODS.TAG.POST);
         let containsRule = false;
         for (let i = 0; i < feature.elements.length; ++i) {
             if (feature.elements[i] instanceof Rule) {
@@ -174,116 +146,85 @@ export class PreCompiler {
             }
         }
         if (containsRule) {
-            feature.elements = this._filter(feature.elements, feature, METHODS.FILTER.RULE.PRE);
+            feature.elements = this.filter(feature.elements, feature, FILTER_METHODS.RULE.PRE);
             for (let i = 0; i < feature.elements.length; ++i) {
-                this._applyToRule(<Rule>feature.elements[i], feature, i)
+                this.applyToRule(<Rule>feature.elements[i], feature, i)
             }
-            feature.elements = this._filter(feature.elements, feature, METHODS.FILTER.RULE.PRE);
+            feature.elements = this.filter(feature.elements, feature, FILTER_METHODS.RULE.PRE);
         }
         else {
-            feature.elements = this._filter(feature.elements, feature, METHODS.FILTER.SCENARIO.PRE);
+            feature.elements = this.filter(feature.elements, feature, FILTER_METHODS.SCENARIO.PRE);
             for (let i = 0; i < feature.elements.length; ++i) {
                 const element: Scenario | ScenarioOutline | Background | Rule = feature.elements[i];
                 if (element instanceof Scenario) {
-                    this._applyToScenario(element, feature, i);
+                    this.applyToScenario(element, feature, i);
                 } else if (element instanceof ScenarioOutline) {
-                    this._applyToScenarioOutline(element, feature, i);
+                    this.applyToScenarioOutline(element, feature, i);
                 } else if (element instanceof Background) {
-                    this._applyToBackground(element, feature, i);
+                    this.applyToBackground(element, feature, i);
                 }
             }
-            feature.elements = this._filter(feature.elements, feature, METHODS.FILTER.SCENARIO.POST);
+            feature.elements = this.filter(feature.elements, feature, FILTER_METHODS.SCENARIO.POST);
         }
     }
 
-    /**
-     * Applies the process events to Rule
-     * @param {Rule} rule
-     * @param {Feature} feature
-     * @param {number} i
-     * @private
-     */
-    _applyToRule(rule: Rule, feature: Feature, i: number): void {
-        this._handleListEvent(feature.elements, feature, i, METHODS.EVENT.RULE);
+    private applyToRule(rule: Rule, feature: Feature, i: number): void {
+        this.handleListEvent(feature.elements, feature, i, EVENT_METHODS.RULE);
 
-        rule.elements = this._filter(rule.elements, rule, METHODS.FILTER.SCENARIO.PRE);
+        rule.elements = this.filter(rule.elements, rule, FILTER_METHODS.SCENARIO.PRE);
         for (let i = 0; i < rule.elements.length; ++i) {
             const element: Scenario | Background = rule.elements[i];
             if (element instanceof Scenario) {
-                this._applyToScenario(element, rule, i);
+                this.applyToScenario(element, rule, i);
             } else if (element instanceof Background) {
-                this._applyToBackground(element, rule, i);
+                this.applyToBackground(element, rule, i);
             }
         }
-        rule.elements = this._filter(rule.elements, rule, METHODS.FILTER.SCENARIO.POST);
+        rule.elements = this.filter(rule.elements, rule, FILTER_METHODS.SCENARIO.POST);
     }
 
-    /**
-     * Applies the process events to Scenario.
-     *
-     * @param {Scenario} scenario
-     * @param {Feature|Rule} parent
-     * @param {number} i
-     * @private
-     */
-    _applyToScenario(scenario: Scenario, parent: Feature | Rule, i: number): void {
-        this._handleListEvent(parent.elements, parent, i, 'onScenario');
+    private applyToScenario(scenario: Scenario, parent: Feature | Rule, i: number): void {
+        this.handleListEvent(parent.elements, parent, i, 'onScenario');
 
-        scenario.tags = this._filter(scenario.tags, scenario, METHODS.FILTER.TAG.PRE);
-        this._applyToTags(scenario.tags, scenario);
-        scenario.tags = this._filter(scenario.tags, scenario, METHODS.FILTER.TAG.POST);
+        scenario.tags = this.filter(scenario.tags, scenario, FILTER_METHODS.TAG.PRE);
+        this.applyToTags(scenario.tags, scenario);
+        scenario.tags = this.filter(scenario.tags, scenario, FILTER_METHODS.TAG.POST);
 
-        scenario.steps = this._filter(scenario.steps, scenario, METHODS.FILTER.STEP.PRE);
+        scenario.steps = this.filter(scenario.steps, scenario, FILTER_METHODS.STEP.PRE);
         for (let i = 0; i < scenario.steps.length; ++i) {
-            this._applyToStep(scenario.steps[i], scenario, i);
+            this.applyToStep(scenario.steps[i], scenario, i);
         }
-        scenario.steps = this._filter(scenario.steps, scenario, METHODS.FILTER.STEP.POST);
+        scenario.steps = this.filter(scenario.steps, scenario, FILTER_METHODS.STEP.POST);
     }
 
-    /**
-     * Applies the process events to ScenarioOutline.
-     *
-     * @param {ScenarioOutline} scenarioOutline
-     * @param {Feature} feature
-     * @param {number} i
-     * @private
-     */
-    _applyToScenarioOutline(scenarioOutline: ScenarioOutline, feature: Feature, i: number): void {
-        this._handleListEvent(feature.elements, feature, i, METHODS.EVENT.SCENARIO_OUTLINE);
+    private applyToScenarioOutline(scenarioOutline: ScenarioOutline, feature: Feature, i: number): void {
+        this.handleListEvent(feature.elements, feature, i, EVENT_METHODS.SCENARIO_OUTLINE);
 
-        scenarioOutline.tags = this._filter(scenarioOutline.tags, scenarioOutline, METHODS.FILTER.TAG.PRE);
-        this._applyToTags(scenarioOutline.tags, scenarioOutline);
-        scenarioOutline.tags = this._filter(scenarioOutline.tags, scenarioOutline, METHODS.FILTER.TAG.POST);
+        scenarioOutline.tags = this.filter(scenarioOutline.tags, scenarioOutline, FILTER_METHODS.TAG.PRE);
+        this.applyToTags(scenarioOutline.tags, scenarioOutline);
+        scenarioOutline.tags = this.filter(scenarioOutline.tags, scenarioOutline, FILTER_METHODS.TAG.POST);
 
-        scenarioOutline.steps = this._filter(scenarioOutline.steps, scenarioOutline, METHODS.FILTER.STEP.PRE);
+        scenarioOutline.steps = this.filter(scenarioOutline.steps, scenarioOutline, FILTER_METHODS.STEP.PRE);
         for (let i = 0; i < scenarioOutline.steps.length; ++i) {
-            this._applyToStep(scenarioOutline.steps[i], scenarioOutline, i);
+            this.applyToStep(scenarioOutline.steps[i], scenarioOutline, i);
         }
-        scenarioOutline.steps = this._filter(scenarioOutline.steps, scenarioOutline, METHODS.FILTER.STEP.POST);
+        scenarioOutline.steps = this.filter(scenarioOutline.steps, scenarioOutline, FILTER_METHODS.STEP.POST);
 
-        scenarioOutline.examples = this._filter(scenarioOutline.examples, scenarioOutline, METHODS.FILTER.EXAMPLES.PRE);
+        scenarioOutline.examples = this.filter(scenarioOutline.examples, scenarioOutline, FILTER_METHODS.EXAMPLES.PRE);
         for (let i = 0; i < scenarioOutline.examples.length; ++i) {
-            this._applyToExamples(scenarioOutline.examples[i], scenarioOutline, i);
+            this.applyToExamples(scenarioOutline.examples[i], scenarioOutline, i);
         }
-        scenarioOutline.examples = this._filter(scenarioOutline.examples, scenarioOutline, METHODS.FILTER.EXAMPLES.POST);
+        scenarioOutline.examples = this.filter(scenarioOutline.examples, scenarioOutline, FILTER_METHODS.EXAMPLES.POST);
     }
 
-    /**
-     * Applies the process events to Background.
-     *
-     * @param {Background} background
-     * @param {Feature|Rule} parent
-     * @param {number} i
-     * @private
-     */
-    _applyToBackground(background: Background, parent: Feature | Rule, i: number): void {
-        this._handleListEvent(parent.elements, parent, i, METHODS.EVENT.BACKGROUND);
+    private applyToBackground(background: Background, parent: Feature | Rule, i: number): void {
+        this.handleListEvent(parent.elements, parent, i, EVENT_METHODS.BACKGROUND);
 
-        background.steps = this._filter(background.steps, background, METHODS.FILTER.STEP.PRE);
+        background.steps = this.filter(background.steps, background, FILTER_METHODS.STEP.PRE);
         for (let i = 0; i < background.steps.length; ++i) {
-            this._applyToStep(background.steps[i], background, i);
+            this.applyToStep(background.steps[i], background, i);
         }
-        background.steps = this._filter(background.steps, background, METHODS.FILTER.STEP.POST);
+        background.steps = this.filter(background.steps, background, FILTER_METHODS.STEP.POST);
     }
 
     /**
@@ -294,36 +235,29 @@ export class PreCompiler {
      * @param {number} i
      * @private
      */
-    _applyToStep(step: Step, parent: Background | Scenario | ScenarioOutline, i: number): void {
-        this._handleListEvent(parent.steps, parent, i, METHODS.EVENT.STEP);
+    private applyToStep(step: Step, parent: Background | Scenario | ScenarioOutline, i: number): void {
+        this.handleListEvent(parent.steps, parent, i, EVENT_METHODS.STEP);
         if (step.docString) {
-            this._handleEvent(step, 'argument', METHODS.EVENT.DOC_STRING);
+            this.handleEvent(step, 'argument', EVENT_METHODS.DOC_STRING);
         } else if (step.dataTable) {
-            step.dataTable.rows = this._filter(step.dataTable.rows, step.dataTable, METHODS.FILTER.ROW.PRE);
-            this._handleEvent(step, 'argument', METHODS.EVENT.DATA_TABLE);
-            step.dataTable.rows = this._filter(step.dataTable.rows, step.dataTable, METHODS.FILTER.ROW.POST);
+            step.dataTable.rows = this.filter(step.dataTable.rows, step.dataTable, FILTER_METHODS.ROW.PRE);
+            this.handleEvent(step, 'argument', EVENT_METHODS.DATA_TABLE);
+            step.dataTable.rows = this.filter(step.dataTable.rows, step.dataTable, FILTER_METHODS.ROW.POST);
         }
     }
 
-    /**
-     * Applies the process events to Examples.
-     * @param {Examples} examples
-     * @param {ScenarioOutline} scenarioOutline
-     * @param {number} i
-     * @private
-     */
-    _applyToExamples(examples: Examples, scenarioOutline: ScenarioOutline, i: number): void {
-        this._handleListEvent(scenarioOutline.examples, scenarioOutline, i, METHODS.EVENT.EXAMPLES);
-        this._handleEvent(examples, 'header', METHODS.EVENT.EXAMPLE_HEADER);
+    private applyToExamples(examples: Examples, scenarioOutline: ScenarioOutline, i: number): void {
+        this.handleListEvent(scenarioOutline.examples, scenarioOutline, i, EVENT_METHODS.EXAMPLES);
+        this.handleEvent(examples, 'header', EVENT_METHODS.EXAMPLE_HEADER);
 
-        examples.tags = this._filter(examples.tags, examples, METHODS.FILTER.TAG.PRE);
-        this._applyToTags(examples.tags, examples);
-        examples.tags = this._filter(examples.tags, examples, METHODS.FILTER.TAG.POST);
+        examples.tags = this.filter(examples.tags, examples, FILTER_METHODS.TAG.PRE);
+        this.applyToTags(examples.tags, examples);
+        examples.tags = this.filter(examples.tags, examples, FILTER_METHODS.TAG.POST);
 
-        examples.body = this._filter(examples.body, examples, METHODS.FILTER.ROW.PRE);
+        examples.body = this.filter(examples.body, examples, FILTER_METHODS.ROW.PRE);
         for (let i = 0; i < examples.body.length; ++i) {
-            this._handleListEvent(examples.body, examples, i, METHODS.EVENT.EXAMPLE_ROW);
+            this.handleListEvent(examples.body, examples, i, EVENT_METHODS.EXAMPLE_ROW);
         }
-        examples.body = this._filter(examples.body, examples, METHODS.FILTER.ROW.POST);
+        examples.body = this.filter(examples.body, examples, FILTER_METHODS.ROW.POST);
     }
 }
