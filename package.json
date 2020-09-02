@@ -2,15 +2,15 @@
   "name": "gherking",
   "version": "0.0.3",
   "description": "Simple pre-compiler for Gherkin feature files",
-  "main": "lib/index.ts",
+  "main": ".old/lib/index.ts",
   "bin": {
-    "gherkin-precompiler": "bin/precompiler.js",
-    "precompile": "bin/precompiler.js"
+    "gherkin-precompiler": ".old/bin/precompiler.js",
+    "precompile": ".old/bin/precompiler.js"
   },
   "scripts": {
-    "test": "mocha ./test/*.spec.js ./test/builtIn/*.spec.js",
-    "coverage": "istanbul cover --include-all-sources ./node_modules/mocha/bin/_mocha --root ./lib -- ./test/*.spec.js ./test/builtIn/*.spec.js",
-    "travis": "istanbul cover --include-all-sources ./node_modules/mocha/bin/_mocha --root ./lib --report lcovonly -- ./test/*.spec.js ./test/builtIn/*.spec.js -R spec && cat ./coverage/lcov.info | node ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage"
+    "test": "mocha .old/test/*.spec.js ./test/builtIn/*.spec.js",
+    "coverage": "istanbul cover --include-all-sources ./node_modules/mocha/bin/_mocha --root .old/lib -- ./test/*.spec.js ./test/builtIn/*.spec.js",
+    "travis": "istanbul cover --include-all-sources ./node_modules/mocha/bin/_mocha --root .old/lib --report lcovonly -- ./test/*.spec.js ./test/builtIn/*.spec.js -R spec && cat ./coverage/lcov.info | node ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage"
   },
   "preferGlobal": false,
   "repository": {
