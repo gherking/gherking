@@ -103,7 +103,6 @@ export class GherKing {
             // @ts-ignore
             const result = this.preCompiler[method](parent[key], parent);
             if (result !== undefined) {
-                // @ts-ignore
                 parent[key] = result;
             }
         }
@@ -116,18 +115,16 @@ export class GherKing {
             if (result === null) {
                 list.splice(i, 1);
             } else if (Array.isArray(result)) {
-                // @ts-ignore
-                list.splice.apply(list, [i, 1].concat(result));
+                list.splice(i, 1, ...result);
             } else if (result !== undefined) {
-                // @ts-ignore
                 list[i] = result;
             }
         }
     }
 
-    private applyToTags(tags: Tag[], parent: Feature | Scenario | ScenarioOutline | Background | Examples): void {
+    private applyToTags<P>(tags: Tag[], parent: P): void {
         for (let i = 0; i < tags.length; ++i) {
-            this.handleListEvent<Tag, Feature | Scenario | ScenarioOutline | Background | Examples>(tags, parent, i, EVENT_METHODS.TAG);
+            this.handleListEvent<Tag, P>(tags, parent, i, EVENT_METHODS.TAG);
         }
     }
 
@@ -244,10 +241,10 @@ export class GherKing {
     private applyToStep(step: Step, parent: Background | Scenario | ScenarioOutline, i: number): void {
         this.handleListEvent(parent.steps, parent, i, EVENT_METHODS.STEP);
         if (step.docString) {
-            this.handleEvent(step, 'argument', EVENT_METHODS.DOC_STRING);
+            this.handleEvent(step, 'docString', EVENT_METHODS.DOC_STRING);
         } else if (step.dataTable) {
             step.dataTable.rows = this.filter(step.dataTable.rows, step.dataTable, FILTER_METHODS.ROW.PRE);
-            this.handleEvent(step, 'argument', EVENT_METHODS.DATA_TABLE);
+            this.handleEvent(step, 'dataTable', EVENT_METHODS.DATA_TABLE);
             step.dataTable.rows = this.filter(step.dataTable.rows, step.dataTable, FILTER_METHODS.ROW.POST);
         }
     }
