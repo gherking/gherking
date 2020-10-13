@@ -4,6 +4,7 @@ import {
     DataTable,
     DocString,
     Document,
+    Element,
     Examples,
     Feature,
     GherkinDocument,
@@ -124,6 +125,7 @@ export class GherKing {
 
     private applyToTags<P>(tags: Tag[], parent: P): void {
         for (let i = 0; i < tags.length; ++i) {
+            // ezt alapján
             this.handleListEvent<Tag, P>(tags, parent, i, EVENT_METHODS.TAG);
         }
     }
@@ -136,11 +138,11 @@ export class GherKing {
      * @private
      */
     private applyToFeature(feature: Feature, doc: Document): void {
-        this.handleEvent(doc, 'feature', EVENT_METHODS.FEATURE);
+        this.handleEvent<Document>(doc, 'feature', EVENT_METHODS.FEATURE);
 
-        feature.tags = this.filter(feature.tags, feature, FILTER_METHODS.TAG.PRE);
+        feature.tags = this.filter<Tag, Feature>(feature.tags, feature, FILTER_METHODS.TAG.PRE);
         this.applyToTags(feature.tags, feature);
-        feature.tags = this.filter(feature.tags, feature, FILTER_METHODS.TAG.POST);
+        feature.tags = this.filter<Tag, Feature>(feature.tags, feature, FILTER_METHODS.TAG.POST);
         let containsRule = false;
         for (let i = 0; i < feature.elements.length; ++i) {
             if (feature.elements[i] instanceof Rule) {
@@ -149,14 +151,14 @@ export class GherKing {
             }
         }
         if (containsRule) {
-            feature.elements = this.filter(feature.elements, feature, FILTER_METHODS.RULE.PRE);
+            feature.elements = this.filter<Rule | Element, Feature>(feature.elements, feature, FILTER_METHODS.RULE.PRE);
             for (let i = 0; i < feature.elements.length; ++i) {
                 this.applyToRule(<Rule>feature.elements[i], feature, i)
             }
-            feature.elements = this.filter(feature.elements, feature, FILTER_METHODS.RULE.PRE);
+            feature.elements = this.filter<Rule | Element, Feature>(feature.elements, feature, FILTER_METHODS.RULE.PRE);
         }
         else {
-            feature.elements = this.filter(feature.elements, feature, FILTER_METHODS.SCENARIO.PRE);
+            feature.elements = this.filter<Rule | Element, Feature>(feature.elements, feature, FILTER_METHODS.SCENARIO.PRE);
             for (let i = 0; i < feature.elements.length; ++i) {
                 const element: Scenario | ScenarioOutline | Background | Rule = feature.elements[i];
                 if (element instanceof Scenario) {
@@ -167,14 +169,14 @@ export class GherKing {
                     this.applyToBackground(element, feature, i);
                 }
             }
-            feature.elements = this.filter(feature.elements, feature, FILTER_METHODS.SCENARIO.POST);
+            feature.elements = this.filter<Rule | Element, Feature>(feature.elements, feature, FILTER_METHODS.SCENARIO.POST);
         }
     }
 
     private applyToRule(rule: Rule, feature: Feature, i: number): void {
-        this.handleListEvent(feature.elements, feature, i, EVENT_METHODS.RULE);
+        this.handleListEvent<Rule | Element, Feature>(feature.elements, feature, i, EVENT_METHODS.RULE);
 
-        rule.elements = this.filter(rule.elements, rule, FILTER_METHODS.SCENARIO.PRE);
+        rule.elements = this.filter<Element, Rule>(rule.elements, rule, FILTER_METHODS.SCENARIO.PRE);
         for (let i = 0; i < rule.elements.length; ++i) {
             const element: Scenario | Background = rule.elements[i];
             if (element instanceof Scenario) {
@@ -183,51 +185,51 @@ export class GherKing {
                 this.applyToBackground(element, rule, i);
             }
         }
-        rule.elements = this.filter(rule.elements, rule, FILTER_METHODS.SCENARIO.POST);
+        rule.elements = this.filter<Element, Rule>(rule.elements, rule, FILTER_METHODS.SCENARIO.POST);
     }
 
     private applyToScenario(scenario: Scenario, parent: Feature | Rule, i: number): void {
-        this.handleListEvent(parent.elements, parent, i, 'onScenario');
+        this.handleListEvent<Rule | Element, Feature | Rule>(parent.elements, parent, i, 'onScenario');
 
-        scenario.tags = this.filter(scenario.tags, scenario, FILTER_METHODS.TAG.PRE);
+        scenario.tags = this.filter<Tag, Scenario>(scenario.tags, scenario, FILTER_METHODS.TAG.PRE);
         this.applyToTags(scenario.tags, scenario);
-        scenario.tags = this.filter(scenario.tags, scenario, FILTER_METHODS.TAG.POST);
+        scenario.tags = this.filter<Tag, Scenario>(scenario.tags, scenario, FILTER_METHODS.TAG.POST);
 
-        scenario.steps = this.filter(scenario.steps, scenario, FILTER_METHODS.STEP.PRE);
+        scenario.steps = this.filter<Step, Scenario>(scenario.steps, scenario, FILTER_METHODS.STEP.PRE);
         for (let i = 0; i < scenario.steps.length; ++i) {
             this.applyToStep(scenario.steps[i], scenario, i);
         }
-        scenario.steps = this.filter(scenario.steps, scenario, FILTER_METHODS.STEP.POST);
+        scenario.steps = this.filter<Step, Scenario>(scenario.steps, scenario, FILTER_METHODS.STEP.POST);
     }
 
     private applyToScenarioOutline(scenarioOutline: ScenarioOutline, feature: Feature, i: number): void {
-        this.handleListEvent(feature.elements, feature, i, EVENT_METHODS.SCENARIO_OUTLINE);
+        this.handleListEvent<Rule | Element, Feature>(feature.elements, feature, i, EVENT_METHODS.SCENARIO_OUTLINE);
 
-        scenarioOutline.tags = this.filter(scenarioOutline.tags, scenarioOutline, FILTER_METHODS.TAG.PRE);
+        scenarioOutline.tags = this.filter<Tag, ScenarioOutline>(scenarioOutline.tags, scenarioOutline, FILTER_METHODS.TAG.PRE);
         this.applyToTags(scenarioOutline.tags, scenarioOutline);
-        scenarioOutline.tags = this.filter(scenarioOutline.tags, scenarioOutline, FILTER_METHODS.TAG.POST);
+        scenarioOutline.tags = this.filter<Tag, ScenarioOutline>(scenarioOutline.tags, scenarioOutline, FILTER_METHODS.TAG.POST);
 
-        scenarioOutline.steps = this.filter(scenarioOutline.steps, scenarioOutline, FILTER_METHODS.STEP.PRE);
+        scenarioOutline.steps = this.filter<Step, ScenarioOutline>(scenarioOutline.steps, scenarioOutline, FILTER_METHODS.STEP.PRE);
         for (let i = 0; i < scenarioOutline.steps.length; ++i) {
             this.applyToStep(scenarioOutline.steps[i], scenarioOutline, i);
         }
-        scenarioOutline.steps = this.filter(scenarioOutline.steps, scenarioOutline, FILTER_METHODS.STEP.POST);
+        scenarioOutline.steps = this.filter<Step, ScenarioOutline>(scenarioOutline.steps, scenarioOutline, FILTER_METHODS.STEP.POST);
 
-        scenarioOutline.examples = this.filter(scenarioOutline.examples, scenarioOutline, FILTER_METHODS.EXAMPLES.PRE);
+        scenarioOutline.examples = this.filter<Examples, ScenarioOutline>(scenarioOutline.examples, scenarioOutline, FILTER_METHODS.EXAMPLES.PRE);
         for (let i = 0; i < scenarioOutline.examples.length; ++i) {
             this.applyToExamples(scenarioOutline.examples[i], scenarioOutline, i);
         }
-        scenarioOutline.examples = this.filter(scenarioOutline.examples, scenarioOutline, FILTER_METHODS.EXAMPLES.POST);
+        scenarioOutline.examples = this.filter<Examples, ScenarioOutline>(scenarioOutline.examples, scenarioOutline, FILTER_METHODS.EXAMPLES.POST);
     }
 
     private applyToBackground(background: Background, parent: Feature | Rule, i: number): void {
-        this.handleListEvent(parent.elements, parent, i, EVENT_METHODS.BACKGROUND);
+        this.handleListEvent<Rule | Element, Feature | Rule>(parent.elements, parent, i, EVENT_METHODS.BACKGROUND);
 
-        background.steps = this.filter(background.steps, background, FILTER_METHODS.STEP.PRE);
+        background.steps = this.filter<Step, Background>(background.steps, background, FILTER_METHODS.STEP.PRE);
         for (let i = 0; i < background.steps.length; ++i) {
             this.applyToStep(background.steps[i], background, i);
         }
-        background.steps = this.filter(background.steps, background, FILTER_METHODS.STEP.POST);
+        background.steps = this.filter<Step, Background>(background.steps, background, FILTER_METHODS.STEP.POST);
     }
 
     /**
@@ -239,28 +241,28 @@ export class GherKing {
      * @private
      */
     private applyToStep(step: Step, parent: Background | Scenario | ScenarioOutline, i: number): void {
-        this.handleListEvent(parent.steps, parent, i, EVENT_METHODS.STEP);
+        this.handleListEvent<Step, Background | Scenario | ScenarioOutline>(parent.steps, parent, i, EVENT_METHODS.STEP);
         if (step.docString) {
-            this.handleEvent(step, 'docString', EVENT_METHODS.DOC_STRING);
+            this.handleEvent<Step>(step, 'docString', EVENT_METHODS.DOC_STRING);
         } else if (step.dataTable) {
-            step.dataTable.rows = this.filter(step.dataTable.rows, step.dataTable, FILTER_METHODS.ROW.PRE);
-            this.handleEvent(step, 'dataTable', EVENT_METHODS.DATA_TABLE);
-            step.dataTable.rows = this.filter(step.dataTable.rows, step.dataTable, FILTER_METHODS.ROW.POST);
+            step.dataTable.rows = this.filter<TableRow, DataTable>(step.dataTable.rows, step.dataTable, FILTER_METHODS.ROW.PRE);
+            this.handleEvent<Step>(step, 'dataTable', EVENT_METHODS.DATA_TABLE);
+            step.dataTable.rows = this.filter<TableRow, DataTable>(step.dataTable.rows, step.dataTable, FILTER_METHODS.ROW.POST);
         }
     }
 
     private applyToExamples(examples: Examples, scenarioOutline: ScenarioOutline, i: number): void {
-        this.handleListEvent(scenarioOutline.examples, scenarioOutline, i, EVENT_METHODS.EXAMPLES);
-        this.handleEvent(examples, 'header', EVENT_METHODS.EXAMPLE_HEADER);
+        this.handleListEvent<Examples, ScenarioOutline>(scenarioOutline.examples, scenarioOutline, i, EVENT_METHODS.EXAMPLES);
+        this.handleEvent<Examples>(examples, 'header', EVENT_METHODS.EXAMPLE_HEADER);
 
-        examples.tags = this.filter(examples.tags, examples, FILTER_METHODS.TAG.PRE);
+        examples.tags = this.filter<Tag, Examples>(examples.tags, examples, FILTER_METHODS.TAG.PRE);
         this.applyToTags(examples.tags, examples);
-        examples.tags = this.filter(examples.tags, examples, FILTER_METHODS.TAG.POST);
+        examples.tags = this.filter<Tag, Examples>(examples.tags, examples, FILTER_METHODS.TAG.POST);
 
-        examples.body = this.filter(examples.body, examples, FILTER_METHODS.ROW.PRE);
+        examples.body = this.filter<TableRow, Examples>(examples.body, examples, FILTER_METHODS.ROW.PRE);
         for (let i = 0; i < examples.body.length; ++i) {
-            this.handleListEvent(examples.body, examples, i, EVENT_METHODS.EXAMPLE_ROW);
+            this.handleListEvent<TableRow, Examples>(examples.body, examples, i, EVENT_METHODS.EXAMPLE_ROW);
         }
-        examples.body = this.filter(examples.body, examples, FILTER_METHODS.ROW.POST);
+        examples.body = this.filter<TableRow, Examples>(examples.body, examples, FILTER_METHODS.ROW.POST);
     }
 }
