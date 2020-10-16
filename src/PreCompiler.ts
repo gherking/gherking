@@ -14,30 +14,33 @@ import {
 //javadoc
 export type SingleControlType<T> = null | undefined | T;
 export type MultiControlType<T> = null | undefined | T | T[];
+export type SingleEventHandler<T,P> = (e:T, p?:P) => SingleControlType<T>;
+export type MultiEventHandler<T,P> = (e:T, p?:P, i?:number) => MultiControlType<T>;
+export type FilterEventHandler<T,P> = (e:T, p?:P, i?:number) => boolean;
 
 export interface PreCompiler {
-    onFeature(feature: Feature): SingleControlType<Feature>;
-    onRule(rule: Rule, parent?: Feature, i?: number): MultiControlType<Rule>;
-    onScenario(scenario: Scenario, parent?: Feature | Rule, i?: number): MultiControlType<Scenario>;
-    onBackground(background: Background, parent?: Feature | Rule, i?: number): MultiControlType<Background>;
-    onScenarioOutline(scenarioOutline: ScenarioOutline, parent?: Feature, i?: number): MultiControlType<ScenarioOutline>;
-    onStep(step: Step, parent?: Scenario | ScenarioOutline | Background, i?: number): MultiControlType<Step>;
-    onTag(tag: Tag, parent?: Feature | Scenario | ScenarioOutline | Examples, i?: number): MultiControlType<Tag>;
-    onDocString(docString: DocString, parent?: Step): SingleControlType<DocString>;
-    onDataTable(dataTable: DataTable, parent?: Step): SingleControlType<DataTable>;
-    onExamples(examples: Examples, parent?: ScenarioOutline, i?: number): MultiControlType<Examples>;
-    onExampleHeader(header: TableRow, parent?: Examples): SingleControlType<TableRow>;
-    onExampleRow(row: TableRow, parent?: Examples, i?: number): MultiControlType<TableRow>;
-    preFilterRule(rule: Rule, parent?: Feature, i?: number): boolean;
-    postFilterRule(rule: Rule, parent?: Feature, i?: number): boolean;
-    preFilterScenario(scenario: Scenario | ScenarioOutline, parent?: Feature | Rule, i?: number): boolean;
-    postFilterScenario(scenario: Scenario | ScenarioOutline, parent?: Feature | Rule, i?: number): boolean;
-    preFilterTag(tag: Tag, parent?: Feature | Scenario | ScenarioOutline | Examples, i?: number): boolean;
-    postFilterTag(tag: Tag, parent?: Feature | Scenario | ScenarioOutline | Examples, i?: number): boolean;
-    preFilterStep(step: Step, parent?: Background | Scenario | ScenarioOutline, i?: number): boolean;
-    postFilterStep(step: Step, parent?: Background | Scenario | ScenarioOutline, i?: number): boolean;
-    preFilterRow(row: TableRow, parent?: DataTable | Examples, i?: number): boolean;
-    postFilterRow(row: TableRow, parent?: DataTable | Examples, i?: number): boolean;
-    preFilterExamples(examples: Examples, parent?: ScenarioOutline, i?: number): boolean;
-    postFilterExamples(examples: Examples, parent?: ScenarioOutline, i?: number): boolean;
+    onFeature: SingleEventHandler<Feature, Document>;
+    onRule: MultiEventHandler<Rule, Feature>;
+    onScenario: MultiEventHandler<Scenario, Feature | Rule>;
+    onBackground: MultiEventHandler<Background, Feature | Rule>;
+    onScenarioOutline: MultiEventHandler<ScenarioOutline, Feature>;
+    onStep: MultiEventHandler<Step, ScenarioOutline | Scenario | Background>;
+    onTag: MultiEventHandler<Tag, Feature | Scenario | ScenarioOutline | Examples>;
+    onDocString: SingleEventHandler<DocString, Step>;
+    onDataTable: SingleEventHandler<DataTable, Step>;
+    onExamples: MultiEventHandler<Examples, ScenarioOutline>;
+    onExampleHeader: SingleEventHandler<TableRow, Examples>;
+    onExampleRow: MultiEventHandler<TableRow, Examples>;
+    preFilterRule: FilterEventHandler<Rule, Feature>;
+    postFilterRule: FilterEventHandler<Rule, Feature>;
+    preFilterScenario: FilterEventHandler<ScenarioOutline | Scenario, Rule | Feature>;
+    postFilterScenario: FilterEventHandler<ScenarioOutline | Scenario, Rule | Feature>;
+    preFilterTag: FilterEventHandler<Tag, Feature | Scenario | ScenarioOutline | Examples>;
+    postFilterTag: FilterEventHandler<Tag, Feature | Scenario | ScenarioOutline | Examples>;
+    preFilterStep: FilterEventHandler<Step, Background | Scenario | ScenarioOutline>;
+    postFilterStep: FilterEventHandler<Step, Background | Scenario | ScenarioOutline>;
+    preFilterRow: FilterEventHandler<TableRow, DataTable | Examples>;
+    postFilterRow: FilterEventHandler<TableRow, DataTable | Examples>;
+    preFilterExamples: FilterEventHandler<Examples, ScenarioOutline>;
+    postFilterExamples: FilterEventHandler<Examples, ScenarioOutline>;
 }
