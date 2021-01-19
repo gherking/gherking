@@ -3,7 +3,7 @@ import { MultiControlType, PreCompiler } from "./PreCompiler";
 export abstract class ProcessorBase {
     protected preCompiler: Partial<PreCompiler>;
 
-    constructor(preCompiler: Partial<PreCompiler>) {
+    constructor(preCompiler?: Partial<PreCompiler>) {
         this.preCompiler = preCompiler || {};
     }
 }
@@ -51,6 +51,7 @@ export abstract class ListProcessor<T,P> extends PartialListProcessor<T,P> {
                 i--;
             } else if (Array.isArray(result)) {
                 preFiltered.splice(i, 1, ...result);
+                i += result.length;
             } else if (result) {
                 preFiltered[i] = result;
             }

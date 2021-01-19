@@ -12,8 +12,8 @@ import {
     TableRow,
     Tag
 } from 'gherkin-ast';
-export type SingleControlType<T> = null | undefined | T;
-export type MultiControlType<T> = null | undefined | T | T[];
+export type SingleControlType<T> = void | null | undefined | T;
+export type MultiControlType<T> = void | null | undefined | T | T[];
 export type SingleEventHandler<T,P> = (e:T, p?:P) => SingleControlType<T>;
 export type MultiEventHandler<T,P> = (e:T, p?:P, i?:number) => MultiControlType<T>;
 export type FilterEventHandler<T,P> = (e:T, p?:P, i?:number) => boolean;
