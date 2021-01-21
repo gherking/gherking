@@ -1,5 +1,5 @@
 import { Background, Feature, Rule } from "gherkin-ast";
-import { PreCompiler } from "./PreCompiler";
+import { PreCompiler, SingleControlType } from "./PreCompiler";
 import { PartialProcessor } from "./Processor";
 import { StepProcessor } from "./StepProcessor";
 
@@ -17,8 +17,8 @@ export class BackgroundProcessor<P extends Feature | Rule> extends PartialProces
     public postFilter(e: Background, p: P): boolean {
         return !this.preCompiler.postBackground || this.preCompiler.postBackground(e, p);
     }
-    public process(e: Background, p: P): Background {
-        let background = e;
+    public process(e: Background, p: P): SingleControlType<Background> {
+        let background: SingleControlType<Background> = e;
         if (this.preCompiler.onBackground) {
             background = this.preCompiler.onBackground(e, p);
         }

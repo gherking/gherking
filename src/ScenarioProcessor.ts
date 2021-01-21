@@ -10,8 +10,8 @@ export class ScenarioProcessor<P extends Feature | Rule> extends PartialListProc
 
     constructor(preCompiler: Partial<PreCompiler>) {
         super(preCompiler);
-        this.stepProcessor = new StepProcessor(preCompiler);
-        this.tagProcessor = new TagProcessor(preCompiler);
+        this.stepProcessor = new StepProcessor<Scenario>(preCompiler);
+        this.tagProcessor = new TagProcessor<Scenario>(preCompiler);
     }
 
     public preFilter(e: Scenario, p: P, i: number): boolean {
@@ -27,7 +27,7 @@ export class ScenarioProcessor<P extends Feature | Rule> extends PartialListProc
         }
         if (scenario) {
             if (Array.isArray(scenario)) {
-                scenario[0] = this.postProcess(scenario[0]);
+                scenario = scenario.map(this.postProcess.bind(this));
             } else {
                 scenario = this.postProcess(scenario);
             }

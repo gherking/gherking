@@ -1,4 +1,5 @@
 import { DocString, Step } from "gherkin-ast";
+import { SingleControlType } from "./PreCompiler";
 import { Processor } from "./Processor";
 
 export class DocStringProcessor extends Processor<DocString, Step> {
@@ -8,7 +9,7 @@ export class DocStringProcessor extends Processor<DocString, Step> {
     protected postFilter(e: DocString, p: Step): boolean {
         return !this.preCompiler.postDocString || this.preCompiler.postDocString(e, p);
     }
-    protected process(e: DocString, p: Step): DocString {
+    protected process(e: DocString, p: Step): SingleControlType<DocString> {
         if (this.preCompiler.onDocString) {
             return this.preCompiler.onDocString(e, p);
         }

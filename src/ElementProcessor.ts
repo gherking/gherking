@@ -7,11 +7,13 @@ import { ScenarioProcessor } from "./ScenarioProcessor";
 export class ElementProcessor<P extends Feature | Rule> extends ListProcessor<Element, P> {
     private backgroundProcessor: BackgroundProcessor<P>;
     private scenarioProcessor: ScenarioProcessor<P>;
+    private scenarioOutlineProcessor: ScenarioProcessor<P>;
 
     constructor(preCompiler: Partial<PreCompiler>) {
         super(preCompiler);
         this.backgroundProcessor = new BackgroundProcessor<P>(preCompiler);
         this.scenarioProcessor = new ScenarioProcessor<P>(preCompiler);
+        this.scenarioOutlineProcessor = new ScenarioProcessor<P>(preCompiler);
     }
 
     protected preFilter(e: Element, p: P, i: number): boolean {
@@ -21,6 +23,9 @@ export class ElementProcessor<P extends Feature | Rule> extends ListProcessor<El
         if (e instanceof Scenario) {
             return this.scenarioProcessor.preFilter(e, p, i);
         }
+        if (e instanceof ScenarioOutline) {
+            return this.scenarioOutlineProcessor.preFilter(e, p, i);
+        }
     }
     protected postFilter(e: Element, p: P, i: number): boolean {
         if (e instanceof Background) {
@@ -29,6 +34,9 @@ export class ElementProcessor<P extends Feature | Rule> extends ListProcessor<El
         if (e instanceof Scenario) {
             return this.scenarioProcessor.postFilter(e, p, i);
         }
+        if (e instanceof ScenarioOutline) {
+            return this.scenarioOutlineProcessor.postFilter(e, p, i);
+        }
     }
     protected process(e: Element, p: P, i: number): MultiControlType<Element> {
         if (e instanceof Background) {
@@ -36,6 +44,9 @@ export class ElementProcessor<P extends Feature | Rule> extends ListProcessor<El
         }
         if (e instanceof Scenario) {
             return this.scenarioProcessor.process(e, p, i);
+        }
+        if (e instanceof ScenarioOutline) {
+            return this.scenarioOutlineProcessor.process(e, p, i);
         }
     }
 }

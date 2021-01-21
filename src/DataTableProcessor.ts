@@ -1,12 +1,12 @@
 import { DataTable, Step } from "gherkin-ast";
-import { PreCompiler } from "./PreCompiler";
+import { PreCompiler, SingleControlType } from "./PreCompiler";
 import { Processor } from "./Processor";
 import { TableRowProcessor } from "./TableRowProcessor";
 
 export class DataTableProcessor extends Processor<DataTable, Step> {
     private tableRowProcessor: TableRowProcessor<DataTable>
 
-    constructor(preCompiler: Partial<PreCompiler>) {
+    constructor(preCompiler?: Partial<PreCompiler>) {
         super(preCompiler);
         this.tableRowProcessor = new TableRowProcessor<DataTable>(preCompiler);
     }
@@ -17,8 +17,8 @@ export class DataTableProcessor extends Processor<DataTable, Step> {
     protected postFilter(e: DataTable, p: Step): boolean {
         return !this.preCompiler.postDataTable || this.preCompiler.postDataTable(e, p);
     }
-    protected process(e: DataTable, p: Step): DataTable {
-        let dataTable = e;
+    protected process(e: DataTable, p: Step): SingleControlType<DataTable> {
+        let dataTable: SingleControlType<DataTable> = e;
         if (this.preCompiler.onDataTable) {
             dataTable = this.preCompiler.onDataTable(e, p);
         }

@@ -8,7 +8,7 @@ export class StepProcessor<P extends Background | Scenario | ScenarioOutline> ex
     private docStringProcessor: DocStringProcessor;
     private dataTableProcessor: DataTableProcessor;
     
-    constructor(preCompiler: Partial<PreCompiler>) {
+    constructor(preCompiler?: Partial<PreCompiler>) {
         super(preCompiler);
         this.docStringProcessor = new DocStringProcessor(preCompiler);
         this.dataTableProcessor = new DataTableProcessor(preCompiler);
@@ -27,7 +27,7 @@ export class StepProcessor<P extends Background | Scenario | ScenarioOutline> ex
         }
         if (step) {
             if (Array.isArray(step)) {
-                step[0] = this.postProcess(step[0]);
+                step = step.map(this.postProcess.bind(this));
             } else {
                 step = this.postProcess(step);
             }

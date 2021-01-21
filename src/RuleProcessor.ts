@@ -24,7 +24,7 @@ export class RuleProcessor extends ListProcessor<Rule, Feature> {
         }
         if (rule) {
             if (Array.isArray(rule)) {
-                rule[0] = this.postProcess(rule[0]);
+                rule = rule.map(this.postProcess.bind(this));
             } else {
                 rule = this.postProcess(rule);
             }

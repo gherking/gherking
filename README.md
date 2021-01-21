@@ -35,7 +35,8 @@ ast = process(
     ast,
     new Replacer({
         name: 'Hello'
-    }));
+    })
+);
 save('./features/dist/login.feature', ast, {
     lineBreak: '\r\n'
 });
@@ -127,7 +128,7 @@ It loads the given feature file to a `GherkinDocument`.
 
  * `{string} pathToFile` - the path of the feature file which needs to be loaded
  
-**Returns:** `{GherkinDocument}` the AST of the given feature file
+**Returns:** `{Promise<Document[]>}` the AST of the given feature file
 
 ### `save`
 
@@ -136,8 +137,8 @@ Saves the given AST ast feature file to the given path.
 **Params:**
  
  * `{string} pathToFile` - the path of the feature file where the AST needs to be saved
- * `{GherkinDocument} ast` - the AST needs to be saved to the file
- * `{FormatterConfig} [options]` - configuration of formatting, see [FormatterConfig](https://github.com/gherking/gherkin-formatter)
+ * `{Document|Document[]} ast` - the AST needs to be saved to the file
+ * `{FormatterOptions} [options]` - configuration of formatting, see [FormatterConfig](https://github.com/gherking/gherkin-formatter)
  
 ### `process`
 
@@ -145,53 +146,60 @@ Applies the given pre-compilers to the given AST.
 
 **Params:**
 
- * `{GherkinDocument} ast` - the AST needs to be processed
- * `{...DefaultConfig|Object} pre-compilers` - the pre-compilers needs to be applied to the given AST
+ * `{Document|Document[]} ast` - the AST needs to be processed
+ * `{...PreCompiler} pre-compilers` - the pre-compilers needs to be applied to the given AST
  
-**Returns:** `{GherkinDocument}` the processed AST
+**Returns:** `{Document[]}` the processed AST
 
-### Configuration
+## PreCompiler
 
 If you want to create own pre-compiler, you only have to extends the `Default` class and override the filter and/or event methods, that you want to use; or create and object with the desired methods.
 
-#### Event methods
+### Event methods
 
 Every element can be modified by using it's correspondent event methods.
 
 All event methods (except `onFeature`) receives the given element, it's parent and - if applicable - the index of the element.
 Given that all event receives the given element as an `Object`, those can be easily modified by modifying the object itself.
 
-If you return
+The following methods are available, to see exact signature of the given method, click on the name of it:
+
+ * [onFeature](src/PreCompiler.ts#22)<sup>1</sup>
+ * [onRule](src/PreCompiler.ts#23)<sup>1</sup>
+ * [onScenario](src/PreCompiler.ts#24)<sup>1</sup>
+ * [onScenarioOutline](src/PreCompiler.ts#25)<sup>1</sup>
+ * [onBackground](src/PreCompiler.ts#26)
+ * [onExamples](src/PreCompiler.ts#27)<sup>1</sup>
+ * [onStep](src/PreCompiler.ts#28)<sup>1</sup>
+ * [onTag](src/PreCompiler.ts#29)<sup>1</sup>
+ * [onDocString](src/PreCompiler.ts#30)
+ * [onDataTable](src/PreCompiler.ts#31)
+ * [onTableRow](src/PreCompiler.ts#32)<sup>1</sup>
+
+If the method returns
  * `null`, then the given element will be deleted
  * an element, then the original element will be replaced with the returned one
- * an element array, in case of event which process list element (i.e. tag, scenario, examples, step, background, scenario outline), then the original element will be replaced with the returned list
+ * (only for <sup>1</sup>) an element array, in case of event which process list element (i.e. tag, scenario, examples, step, background, scenario outline), then the original element will be replaced with the returned list
+ * nothing, the element won't be replaced
 
-The following methods are available, to see exact signature of the given method, click on the name of it:
+### Filter methods
 
- * [onFeature](lib/DefaultConfig.js#13)
- * [onScenario](lib/DefaultConfig.js#25)
- * [onBackground](lib/DefaultConfig.js#37)
- * [onScenarioOutline](lib/DefaultConfig.js#49) 
- * [onStep](lib/DefaultConfig.js#61)
- * [onTag](lib/DefaultConfig.js#73)
- * [onDocString](lib/DefaultConfig.js#84)
- * [onDataTable](lib/DefaultConfig.js#95) 
- * [onExamples](lib/DefaultConfig.js#107) 
- * [onExampleHeader](lib/DefaultConfig.js#118) 
- * [onExampleRow](lib/DefaultConfig.js#130)
- 
-#### Filter methods
-
-Every element list in the AST can be filtered by using it's correspondent pre- or post filter methods.
+Every element (both single and list) in the AST can be filtered by using it's correspondent pre- or post filter methods.
 A pre filter methods is applied before the processing of the event, the post applied after it.
 
-All filter methods receives the given element, it's parent and the index of the element.
-If the methods returns `false` the given element will be excluded from the final list, otherwise not.
+All filter methods receives the given element, it's parent and - if applicable - the index of the element.
+If a filter method is set, the metod **must** return `true` if the element should be kept, otherwise the element will be discarded. If a filter method is not set, no filtering will happen on the given type of element.
 
 The following methods are available, to see exact signature of the given method, click on the name of it:
 
- * [preFilterScenario](lib/DefaultConfig.js#144), [postFilterScenario](lib/DefaultConfig.js#158)
- * [preFilterTag](lib/DefaultConfig.js#172), [postFilterTag](lib/DefaultConfig.js#186)
- * [preFilterStep](lib/DefaultConfig.js#200), [postFilterStep](lib/DefaultConfig.js#214)
- * [preFilterRow](lib/DefaultConfig.js#228), [postFilterRow](lib/DefaultConfig.js#242)
- * [preFilterExamples](lib/DefaultConfig.js#255), [postFilterExamples](lib/DefaultConfig.js#268)
+ * [preFeature](src/PreCompiler.ts#34), [postFeature](src/PreCompiler.ts#35)
+ * [preRule](src/PreCompiler.ts#36), [postRule](src/PreCompiler.ts#37)
+ * [preScenario](src/PreCompiler.ts#38), [postScenario](src/PreCompiler.ts#39)
+ * [preScenarioOutline](src/PreCompiler.ts#40), [postScenarioOutline](src/PreCompiler.ts#41)
+ * [preBackground](src/PreCompiler.ts#42), [postBackground](src/PreCompiler.ts#43)
+ * [preExamples](src/PreCompiler.ts#44), [postExamples](src/PreCompiler.ts#45)
+ * [preStep](src/PreCompiler.ts#46), [postStep](src/PreCompiler.ts#47)
+ * [preTag](src/PreCompiler.ts#48), [postTag](src/PreCompiler.ts#49)
+ * [preDocString](src/PreCompiler.ts#50), [postDocString](src/PreCompiler.ts#51)
+ * [preDataTable](src/PreCompiler.ts#52), [postDataTable](src/PreCompiler.ts#53)
+ * [preTableRow](src/PreCompiler.ts#54), [postTableRow](src/PreCompiler.ts#55)

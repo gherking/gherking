@@ -1,4 +1,4 @@
-import { MultiControlType, PreCompiler } from "./PreCompiler";
+import { MultiControlType, PreCompiler, SingleControlType } from "./PreCompiler";
 
 export abstract class ProcessorBase {
     protected preCompiler: Partial<PreCompiler>;
@@ -11,7 +11,7 @@ export abstract class ProcessorBase {
 export abstract class PartialProcessor<T,P,R=T|null> extends ProcessorBase {
     protected abstract preFilter(e: T, p: P): boolean;
     protected abstract postFilter(e: T, p: P): boolean;
-    protected abstract process(e: T, p: P): R;
+    protected abstract process(e: T, p: P): SingleControlType<R>;
 }
 
 export abstract class Processor<T,P,R = T | null> extends PartialProcessor<T,P,R> {
