@@ -164,17 +164,17 @@ Given that all event receives the given element as an `Object`, those can be eas
 
 The following methods are available, to see exact signature of the given method, click on the name of it:
 
- * [onFeature](src/PreCompiler.ts#22)<sup>1</sup>
- * [onRule](src/PreCompiler.ts#23)<sup>1</sup>
- * [onScenario](src/PreCompiler.ts#24)<sup>1</sup>
- * [onScenarioOutline](src/PreCompiler.ts#25)<sup>1</sup>
- * [onBackground](src/PreCompiler.ts#26)
- * [onExamples](src/PreCompiler.ts#27)<sup>1</sup>
- * [onStep](src/PreCompiler.ts#28)<sup>1</sup>
- * [onTag](src/PreCompiler.ts#29)<sup>1</sup>
- * [onDocString](src/PreCompiler.ts#30)
- * [onDataTable](src/PreCompiler.ts#31)
- * [onTableRow](src/PreCompiler.ts#32)<sup>1</sup>
+ * [onFeature](src/PreCompiler.ts#L22)<sup>1</sup>
+ * [onRule](src/PreCompiler.ts#L23)<sup>1</sup>
+ * [onScenario](src/PreCompiler.ts#L24)<sup>1</sup>
+ * [onScenarioOutline](src/PreCompiler.ts#L25)<sup>1</sup>
+ * [onBackground](src/PreCompiler.ts#L26)
+ * [onExamples](src/PreCompiler.ts#L27)<sup>1</sup>
+ * [onStep](src/PreCompiler.ts#L28)<sup>1</sup>
+ * [onTag](src/PreCompiler.ts#L29)<sup>1</sup>
+ * [onDocString](src/PreCompiler.ts#L30)
+ * [onDataTable](src/PreCompiler.ts#L31)
+ * [onTableRow](src/PreCompiler.ts#L32)<sup>1</sup>
 
 If the method returns
  * `null`, then the given element will be deleted
@@ -192,14 +192,14 @@ If a filter method is set, the metod **must** return `true` if the element shoul
 
 The following methods are available, to see exact signature of the given method, click on the name of it:
 
- * [preFeature](src/PreCompiler.ts#34), [postFeature](src/PreCompiler.ts#35)
- * [preRule](src/PreCompiler.ts#36), [postRule](src/PreCompiler.ts#37)
- * [preScenario](src/PreCompiler.ts#38), [postScenario](src/PreCompiler.ts#39)
- * [preScenarioOutline](src/PreCompiler.ts#40), [postScenarioOutline](src/PreCompiler.ts#41)
- * [preBackground](src/PreCompiler.ts#42), [postBackground](src/PreCompiler.ts#43)
- * [preExamples](src/PreCompiler.ts#44), [postExamples](src/PreCompiler.ts#45)
- * [preStep](src/PreCompiler.ts#46), [postStep](src/PreCompiler.ts#47)
- * [preTag](src/PreCompiler.ts#48), [postTag](src/PreCompiler.ts#49)
- * [preDocString](src/PreCompiler.ts#50), [postDocString](src/PreCompiler.ts#51)
- * [preDataTable](src/PreCompiler.ts#52), [postDataTable](src/PreCompiler.ts#53)
- * [preTableRow](src/PreCompiler.ts#54), [postTableRow](src/PreCompiler.ts#55)
+ * [preFeature](src/PreCompiler.ts#L34), [postFeature](src/PreCompiler.ts#L35)
+ * [preRule](src/PreCompiler.ts#L36), [postRule](src/PreCompiler.ts#L37)
+ * [preScenario](src/PreCompiler.ts#L38), [postScenario](src/PreCompiler.ts#L39)
+ * [preScenarioOutline](src/PreCompiler.ts#L40), [postScenarioOutline](src/PreCompiler.ts#L41)
+ * [preBackground](src/PreCompiler.ts#L42), [postBackground](src/PreCompiler.ts#L43)
+ * [preExamples](src/PreCompiler.ts#L44), [postExamples](src/PreCompiler.ts#L45)
+ * [preStep](src/PreCompiler.ts#L46), [postStep](src/PreCompiler.ts#L47)
+ * [preTag](src/PreCompiler.ts#L48), [postTag](src/PreCompiler.ts#L49)
+ * [preDocString](src/PreCompiler.ts#L50), [postDocString](src/PreCompiler.ts#L51)
+ * [preDataTable](src/PreCompiler.ts#L52), [postDataTable](src/PreCompiler.ts#L53)
+ * [preTableRow](src/PreCompiler.ts#L54), [postTableRow](src/PreCompiler.ts#L55)
