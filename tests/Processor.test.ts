@@ -102,14 +102,17 @@ describe("Processors", () => {
         test("should have idempotet processor", () => {
             class IdempotentProcessor extends Processor<Child, Parent> {
                 protected preFilter(e: Child, p: Parent): boolean {
+                    expect(e, "Element should be passed to pre-filter").toBe(child);
                     expect(p, "Parent should be passed to pre-filter").toBe(parent);
                     return true;
                 }
                 protected postFilter(e: Child, p: Parent): boolean {
+                    expect(e, "Element should be passed to post-filter").toBe(child);
                     expect(p, "Parent should be passed to post-filter").toBe(parent);
                     return true;
                 }
                 protected process(e: Child, p: Parent): Child {
+                    expect(e, "Element should be passed to process").toBe(child);
                     expect(p, "Parent should be passed to process").toBe(parent);
                     return undefined;
                 }
@@ -268,15 +271,21 @@ describe("Processors", () => {
         
         test("should have idempotet processor", () => {
             class IdempotentListProcessor extends ListProcessor<Child, List> {
-                protected preFilter(e: Child, p: List): boolean {
+                protected preFilter(e: Child, p: List, i: number): boolean {
+                    // TODO test e
+                    // TODO test i
                     expect(p, "Parent should be passed to pre-filter").toBe(list);
                     return true;
                 }
-                protected postFilter(e: Child, p: List): boolean {
+                protected postFilter(e: Child, p: List, i: number): boolean {
+                    // TODO test e
+                    // TODO test i
                     expect(p, "Parent should be passed to post-filter").toBe(list);
                     return true;
                 }
-                protected process(e: Child, p: List): Child {
+                protected process(e: Child, p: List, i: number): Child {
+                    // TODO test e
+                    // TODO test i
                     expect(p, "Parent should be passed to process").toBe(list);
                     return undefined;
                 }
