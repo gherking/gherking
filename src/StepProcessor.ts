@@ -7,7 +7,7 @@ import { ListProcessor } from "./Processor";
 export class StepProcessor<P extends Background | Scenario | ScenarioOutline> extends ListProcessor<Step, P> {
     private docStringProcessor: DocStringProcessor;
     private dataTableProcessor: DataTableProcessor;
-    
+
     constructor(preCompiler?: Partial<PreCompiler>) {
         super(preCompiler);
         this.docStringProcessor = new DocStringProcessor(preCompiler);

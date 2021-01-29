@@ -31,7 +31,7 @@ export class RuleProcessor extends ListProcessor<Rule, Feature> {
         }
         return rule;
     }
-    
+
     private postProcess(e: Rule): Rule {
         e.elements = this.elementProcessor.execute(e.elements, e);
         return e;

@@ -1,5 +1,5 @@
 import { Feature, Tag } from "gherkin-ast";
-import { MultiControlType, MultiEventHandler } from "../src/PreCompiler";
+import { MultiControlType } from "../src/PreCompiler";
 import { TagProcessor } from "../src/TagProcessor";
 
 describe("TagProcessor", () => {

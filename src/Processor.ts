@@ -8,7 +8,7 @@ export abstract class ProcessorBase {
     }
 }
 
-export abstract class PartialProcessor<T,P,R=T|null> extends ProcessorBase {
+export abstract class PartialProcessor<T,P,R= T|null> extends ProcessorBase {
     protected abstract preFilter(e: T, p: P): boolean;
     protected abstract postFilter(e: T, p: P): boolean;
     protected abstract process(e: T, p: P): SingleControlType<R>;

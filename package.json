@@ -8,13 +8,13 @@
     "precompile": ".old/bin/precompiler.js"
   },
   "scripts": {
-    "build": "npm run clean && npm run compile && npm run copyToDist && npm test -- --coverage && npm run typedoc",
+    "build": "npm run clean && npm run compile && npm run copyToDist && npm test && npm run typedoc",
     "buildUpdate": "npm run compile && npm run copyToDist",
     "copyToDist": "copyfiles -f *.txt *.md package.json dist",
-    "typedoc": "typedoc --mode file --exclude **/bin/**/*.ts --exclude **/cli.ts --out ./docs ./src && touch ./docs/.nojekyll",
+    "typedoc": "typedoc --out ./docs ./src && touch ./docs/.nojekyll",
     "clean": "rimraf ./dist ./docs ./reports",
     "test": "cross-env JEST_JUNIT_OUTPUT_DIR=./reports jest --coverage",
-    "tslint": "tslint -c tslint.json ./src/**/*.ts ./tests/**/*.ts",
+    "tslint": "tslint -c tslint.json ./src/**/*.ts ./tests/**/*.ts --fix",
     "compile": "tsc && npm run tslint"
   },
   "repository": {
@@ -81,6 +81,7 @@
       "/node_modules/",
       "dist"
     ],
+    "collectCoverage": true,
     "coverageDirectory": "./coverage",
     "collectCoverageFrom": [
       "./src/**/*.ts"

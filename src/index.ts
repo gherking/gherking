@@ -1,16 +1,24 @@
 import { PreCompiler } from "./PreCompiler";
-import {read, write, FormatOptions} from "gherkin-io";
+import { read, write, FormatOptions } from "gherkin-io";
 import { Document } from "gherkin-ast";
+import { DocumentProcessor } from "./DocumentProcessor";
 
 export * from "./PreCompiler";
 export * from "gherkin-ast";
-export {FormatOptions} from "gherkin-io";
+export { FormatOptions } from "gherkin-io";
 
 export const load = read;
 
 export const process = (ast: Document, ...preCompilers: PreCompiler[]): Document[] => {
-    let documents = [ast];
-    // TODO
+    const documents = [ast];
+    for (const preCompiler of preCompilers) {
+        const processor = new DocumentProcessor(preCompiler);
+        for (let i = 0; i < documents.length; ++i) {
+            const newDocuments = processor.execute(documents[i]);
+            documents.splice(i, 1, ...newDocuments);
+            i += newDocuments.length - 1;
+        }
+    }
     return documents;
 }
 
@@ -27,7 +35,7 @@ export async function save(path: string | PathGenerator, ast: Document | Documen
             if (!/\.feature$/.test(path)) {
                 path += ".feature";
             }
-            pathGenerator = (document: Document, i: number) => String(path).replace(/\.feature$/, `${i}.feature`);
+            pathGenerator = (_1: Document, i: number) => String(path).replace(/\.feature$/, `${i}.feature`);
         }
         for (let i = 0; i < ast.length; ++i) {
             const filePath = pathGenerator(ast[i], i);

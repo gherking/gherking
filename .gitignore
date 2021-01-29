@@ -1,8 +1,8 @@
 /node_modules
 /coverage
 /reports
+/docs
 **/dist
 .idea
 *.log
 *.*~
-package-lock.json

@@ -1,4 +1,4 @@
-import {Document, Feature, Rule, Element } from "gherkin-ast";
+import { Document, Feature, Rule, Element } from "gherkin-ast";
 import { ElementProcessor } from "./ElementProcessor";
 import { MultiControlType, PreCompiler } from "./PreCompiler";
 import { Processor } from "./Processor";

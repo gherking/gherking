@@ -1,5 +1,4 @@
 import { DataTable, Step, TableCell, TableRow } from "gherkin-ast";
-import { isExportDeclaration } from "typescript";
 import { DataTableProcessor } from "../src/DataTableProcessor";
 import { SingleControlType } from "../src/PreCompiler";
 
@@ -28,7 +27,7 @@ describe("DataTableProcessor", () => {
     test("should filter by pre-filter", () => {
         const onDataTable = jest.fn();
         const dataTableProcessor = new DataTableProcessor({
-            preDataTable(e: DataTable): boolean {
+            preDataTable(_e: DataTable): boolean {
                 return false;
             },
             onDataTable,
@@ -42,7 +41,7 @@ describe("DataTableProcessor", () => {
     test("should filter by post-filter", () => {
         const onDataTable = jest.fn();
         const dataTableProcessor = new DataTableProcessor({
-            postDataTable(e: DataTable): boolean {
+            postDataTable(_e: DataTable): boolean {
                 return false;
             },
             onDataTable,
@@ -56,7 +55,7 @@ describe("DataTableProcessor", () => {
     test("should process with event handler", () => {
         const onTableRow = jest.fn();
         const dataTableProcessor = new DataTableProcessor({
-            onDataTable(e: DataTable): SingleControlType<DataTable> {
+            onDataTable(_e: DataTable): SingleControlType<DataTable> {
                 return null;
             },
             onTableRow,

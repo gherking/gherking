@@ -1,5 +1,5 @@
 import { Feature, Rule, ScenarioOutline } from "gherkin-ast";
-import {ExamplesProcessor} from "./ExamplesProcessor";
+import { ExamplesProcessor } from "./ExamplesProcessor";
 import { MultiControlType, PreCompiler } from "./PreCompiler";
 import { PartialListProcessor } from "./Processor";
 import { StepProcessor } from "./StepProcessor";
