@@ -17,6 +17,7 @@ jobs:
       - run: npm ci
       - run: npm run build
       - name: Monitor coverage
+        if: ${{ always() }}
         uses: slavcodev/coverage-monitor-action@1.2.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
