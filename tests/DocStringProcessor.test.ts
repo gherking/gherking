@@ -46,7 +46,7 @@ describe("DocStringProcessor", () => {
         expect(onDocString).toHaveBeenCalledWith(docString, step);
     });
 
-    test("shoudl process with event handler", () => {
+    test("should process with event handler", () => {
         const docStringProcessor = new DocStringProcessor({
             onDocString(e: DocString): void {
                 e.content += "2";
