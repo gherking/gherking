@@ -8,13 +8,14 @@ export abstract class ProcessorBase {
     }
 }
 
-export abstract class PartialProcessor<T,P,R= T|null> extends ProcessorBase {
+export abstract class PartialProcessor<T, P, R = T | null> extends ProcessorBase {
+    /* eslint-disable no-unused-vars */
     protected abstract preFilter(e: T, p: P): boolean;
     protected abstract postFilter(e: T, p: P): boolean;
     protected abstract process(e: T, p: P): SingleControlType<R>;
 }
 
-export abstract class Processor<T,P,R = T | null> extends PartialProcessor<T,P,R> {
+export abstract class Processor<T, P, R = T | null> extends PartialProcessor<T, P, R> {
     public execute(e: T, p: P): R {
         const preFilterResult = this.preFilter(e, p);
         if (!preFilterResult) {
@@ -32,13 +33,14 @@ export abstract class Processor<T,P,R = T | null> extends PartialProcessor<T,P,R
     }
 }
 
-export abstract class PartialListProcessor<T,P> extends ProcessorBase {
+export abstract class PartialListProcessor<T, P> extends ProcessorBase {
+    /* eslint-disable no-unused-vars */
     protected abstract preFilter(e: T, p: P, i: number): boolean;
     protected abstract postFilter(e: T, p: P, i: number): boolean;
     protected abstract process(e: T, p: P, i: number): MultiControlType<T>;
 }
 
-export abstract class ListProcessor<T,P> extends PartialListProcessor<T,P> {
+export abstract class ListProcessor<T, P> extends PartialListProcessor<T, P> {
     public execute(items: T[], p: P): T[] {
         if (!Array.isArray(items)) {
             return [];

@@ -78,7 +78,7 @@ describe("StepProcessor", () => {
 
     test("should process array of steps with event handler", () => {
         const stepProcessor = new StepProcessor<Background>({
-            onStep(e: Step): Array<Step> {
+            onStep(e: Step): Step[] {
                 e.text += "1";
                 return new Array(e);
             },
