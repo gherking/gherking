@@ -18,7 +18,7 @@ jobs:
       - run: npm run build
       - name: Monitor coverage
         if: ${{ always() }}
-        uses: slavcodev/coverage-monitor-action@1.2.0
+        uses: szikszail/coverage-monitor-action@feature-all-metrics
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           clover_file: "coverage/clover.xml"
