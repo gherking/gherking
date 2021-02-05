@@ -18,9 +18,10 @@ jobs:
       - run: npm run build
       - name: Monitor coverage
         if: ${{ always() }}
-        uses: szikszail/coverage-monitor-action@feature-all-metrics
+        uses: szikszail/coverage-monitor-action@main
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           clover_file: "coverage/clover.xml"
           threshold_alert: 10
           threshold_warning: 50
+          threshold_metric: "branches"
