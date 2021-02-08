@@ -1,6 +1,10 @@
 # gherking
 
-[![Build Status](https://travis-ci.org/gherking/gherking.svg?branch=master)](https://travis-ci.org/gherking/gherking) [![dependency Status](https://david-dm.org/gherking/gherking.svg)](https://david-dm.org/gherking/gherking) [![devDependency Status](https://david-dm.org/gherking/gherking/dev-status.svg)](https://david-dm.org/gherking/gherking#info=devDependencies) [![Coverage Status](https://coveralls.io/repos/github/gherking/gherking/badge.svg?branch=master)](https://coveralls.io/github/gherking/gherking?branch=master)
+![Downloads](https://img.shields.io/npm/dw/gpc-template?style=flat-square)
+![Version@npm](https://img.shields.io/npm/v/gpc-template?label=version%40npm&style=flat-square)
+![Version@git](https://img.shields.io/github/package-json/v/gherking/gpc-template/master?label=version%40git&style=flat-square)
+![CI](https://img.shields.io/github/workflow/status/gherking/gpc-template/CI/master?label=ci&style=flat-square)
+![Docs](https://img.shields.io/github/workflow/status/gherking/gpc-template/Docs/master?label=docs&style=flat-square)
 
 Simple pre-compiler for Gherkin feature files.
 
