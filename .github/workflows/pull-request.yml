@@ -24,3 +24,4 @@ jobs:
           clover_file: "coverage/clover.xml"
           threshold_alert: 60
           threshold_warning: 80
+          threshold_metric: branches
