@@ -1,3 +1,3 @@
-const debug = require("debug");
+import debug = require("debug");
 
 export const getDebugger = (m: string) => debug(`gherking:${m}`);
