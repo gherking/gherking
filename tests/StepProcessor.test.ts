@@ -1,6 +1,4 @@
 import { Background, Step, DocString, DataTable, TableRow, TableCell } from "gherkin-ast";
-import { DocStringProcessor } from "../src/DocStringProcessor";
-import { DataTableProcessor } from "../src/DataTableProcessor";
 import { StepProcessor } from "../src/StepProcessor";
 
 describe("StepProcessor", () => {
@@ -16,12 +14,10 @@ describe("StepProcessor", () => {
         background = new Background("Background", "0", "");
 
         steps[0].docString = new DocString("1");
-        steps[1].docString = new DocString("2");
         steps[2].docString = new DocString("3");
 
         steps[0].dataTable = new DataTable([new TableRow([new TableCell("1")])]);
         steps[1].dataTable = new DataTable([new TableRow([new TableCell("2")])]);
-        steps[2].dataTable = new DataTable([new TableRow([new TableCell("3")])]);
 
         background.steps = steps;
     })
@@ -70,7 +66,7 @@ describe("StepProcessor", () => {
         });
         const results = stepProcessor.execute(steps, background);
 
-        expect(results).toBeInstanceOf(Array);
+        expect(results).toHaveLength(3);
         expect(results[0].text).toEqual("11");
         expect(results[1].text).toEqual("21");
         expect(results[2].text).toEqual("31");
@@ -79,51 +75,44 @@ describe("StepProcessor", () => {
     test("should process array of steps with event handler", () => {
         const stepProcessor = new StepProcessor<Background>({
             onStep(e: Step): Array<Step> {
-                e.text += "1";
-                return new Array(e);
+                const c = e.clone();
+                c.text += 1
+                return [c, c];
             },
         });
         const results = stepProcessor.execute(steps, background);
 
-        expect(results).toBeInstanceOf(Array);
-        expect(results[0].text).toEqual("11");
-        expect(results[1].text).toEqual("21");
-        expect(results[2].text).toEqual("31");
+        const texts = results.map(s => s.text)
+
+        expect(texts).toHaveLength(6);
+        expect(texts).toEqual(["11", "11", "21", "21", "31", "31"]);
     });
 
     test("should process docString of step", () => {
-        const onDocString = jest.fn();
-        const docStringProcessor = new DocStringProcessor({
-            onDocString,
-        })
         const stepProcessor = new StepProcessor<Background>({
-            onStep(e: Step): void {
-                docStringProcessor.execute(e.docString, e)
-            },
+            onDocString(e: DocString): void {
+                e.content += "1";
+            }
         });
 
         const results = stepProcessor.execute(steps, background);
-        expect(onDocString).toHaveBeenCalledWith(steps[0].docString, steps[0]);
-        expect(onDocString).toHaveBeenCalledWith(steps[1].docString, steps[1]);
-        expect(onDocString).toHaveBeenCalledWith(steps[2].docString, steps[2]);
+        expect(results[0].docString.content).toEqual("11");
+        expect(results[1].docString).toBeNull();
+        expect(results[2].docString.content).toEqual("31");
         expect(results).not.toBeNull();
     });
 
     test("should process dataTable of step", () => {
-        const onDataTable = jest.fn();
-        const dataTableProcessor = new DataTableProcessor({
-            onDataTable,
-        })
         const stepProcessor = new StepProcessor<Background>({
-            onStep(e: Step): void {
-                dataTableProcessor.execute(e.dataTable, e)
+            onDataTable(e: DataTable): void {
+                e.rows[0].cells[0].value += "1"
             },
         });
 
         const results = stepProcessor.execute(steps, background);
-        expect(onDataTable).toHaveBeenCalledWith(steps[0].dataTable, steps[0]);
-        expect(onDataTable).toHaveBeenCalledWith(steps[1].dataTable, steps[1]);
-        expect(onDataTable).toHaveBeenCalledWith(steps[2].dataTable, steps[2]);
+        expect(results[0].dataTable.rows[0].cells[0].value).toEqual("11");
+        expect(results[1].dataTable.rows[0].cells[0].value).toEqual("21");
+        expect(results[2].dataTable).toBeNull();
         expect(results).not.toBeNull();
     });
 })
