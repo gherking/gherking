@@ -9,7 +9,7 @@ export class ElementProcessor<P extends Feature | Rule> extends ListProcessor<El
     private scenarioProcessor: ScenarioProcessor<P>;
     private scenarioOutlineProcessor: ScenarioProcessor<P>;
 
-    constructor(preCompiler: Partial<PreCompiler>) {
+    constructor(preCompiler?: Partial<PreCompiler>) {
         super(preCompiler);
         this.backgroundProcessor = new BackgroundProcessor<P>(preCompiler);
         this.scenarioProcessor = new ScenarioProcessor<P>(preCompiler);
