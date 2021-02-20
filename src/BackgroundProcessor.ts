@@ -6,7 +6,7 @@ import { StepProcessor } from "./StepProcessor";
 export class BackgroundProcessor<P extends Feature | Rule> extends PartialProcessor<Background, P> {
     private stepProcessor: StepProcessor<Background>;
 
-    constructor(preCompiler: Partial<PreCompiler>) {
+    constructor(preCompiler?: Partial<PreCompiler>) {
         super(preCompiler);
         this.stepProcessor = new StepProcessor(preCompiler);
     }

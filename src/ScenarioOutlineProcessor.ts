@@ -10,7 +10,7 @@ export class ScenarioOutlineProcessor<P extends Feature | Rule> extends PartialL
     private tagProcessor: TagProcessor<ScenarioOutline>;
     private examplesProcessor: ExamplesProcessor;
 
-    constructor(preCompiler: Partial<PreCompiler>) {
+    constructor(preCompiler?: Partial<PreCompiler>) {
         super(preCompiler);
         this.stepProcessor = new StepProcessor<ScenarioOutline>(preCompiler);
         this.tagProcessor = new TagProcessor<ScenarioOutline>(preCompiler);

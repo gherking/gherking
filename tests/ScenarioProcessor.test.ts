@@ -57,19 +57,19 @@ describe("ScenarioProcessor", () => {
         });
         const result1 = scenarioProcessor.postFilter(scenario1, feature, 1);
         const result2 = scenarioProcessor.postFilter(scenario2, feature, 1);
-        expect(result1).toBe(true);
-        expect(result2).toBe(false);        
+        expect(result1).toBe(false);
+        expect(result2).toBe(true);        
     });
     
-    test.only("should process scenarios", () => {
+    test("should process scenarios", () => {
         const scenarioProcessor = new ScenarioProcessor<Feature>({
             onScenario(e: Scenario): Scenario {
                 e.description += "1"
                 return e;
             },
         });
-        const result1 = scenarioProcessor.process(scenario1, feature, 1);
-        const result2 = scenarioProcessor.process(scenario2, feature, 1);
+        const result1 = scenarioProcessor.process(scenario1, feature, 1) as Scenario;
+        const result2 = scenarioProcessor.process(scenario2, feature, 1) as Scenario;
         expect(result1.description).toBe("31");
         expect(result2.description).toBe("61");        
     });
@@ -82,12 +82,23 @@ describe("ScenarioProcessor", () => {
                 return [c, c];
             },
         });
-        const results = scenarioProcessor.process(scenario1, feature, 1);
+        const results = scenarioProcessor.process(scenario1, feature, 1) as Scenario[];
 
-        const keywords = results[0].map(s => s.keyword)
+        const keywords = results.map(s => s.keyword)
 
         expect(keywords).toHaveLength(2);
         expect(keywords).toEqual(["11", "11"]);
+    });
+
+    test("should handle null value", () => {
+        const scenarioProcessor = new ScenarioProcessor<Feature>({
+            onScenario(): Array<Scenario> {
+                return null;
+            },
+        });
+        const results = scenarioProcessor.process(scenario1, feature, 1) as Scenario[];
+
+        expect(results).toBeNull();
     });
 
 })
