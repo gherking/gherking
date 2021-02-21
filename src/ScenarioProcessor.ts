@@ -15,14 +15,14 @@ export class ScenarioProcessor<P extends Feature | Rule> extends PartialListProc
     }
 
     public preFilter(e: Scenario, p: P, i: number): boolean {
-        return !this?.preCompiler?.preScenario || this?.preCompiler?.preScenario(e, p, i);
+        return !this.preCompiler.preScenario || this.preCompiler.preScenario(e, p, i);
     }
     public postFilter(e: Scenario, p: P, i: number): boolean {
-        return !this?.preCompiler?.postScenario || this?.preCompiler?.postScenario(e, p, i);
+        return !this.preCompiler.postScenario || this.preCompiler.postScenario(e, p, i);
     }
     public process(e: Scenario, p: P, i: number): MultiControlType<Scenario> {
         let scenario: MultiControlType<Scenario> = e;
-        if (this?.preCompiler?.onScenario) {
+        if (this.preCompiler.onScenario) {
             scenario = this.preCompiler.onScenario(e, p, i);
         }
         if (scenario) {

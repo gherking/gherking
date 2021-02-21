@@ -21,7 +21,7 @@ export abstract class PartialProcessor<T, P, R = T | null> extends ProcessorBase
 
 export abstract class Processor<T, P, R = T | null> extends PartialProcessor<T, P, R> {
     public execute(e: T, p: P): R {
-        processorDebug("execute(e: %s, p: %s)", e?.constructor?.name, p?.constructor?.name);
+        processorDebug("execute(e: %s, p: %s)", e?.constructor.name, p?.constructor.name);
         const preFilterResult = this.preFilter(e, p);
         if (!preFilterResult) {
             processorDebug("...!preFilterResult");
@@ -51,7 +51,7 @@ export abstract class PartialListProcessor<T, P> extends ProcessorBase {
 
 export abstract class ListProcessor<T, P> extends PartialListProcessor<T, P> {
     public execute(items: T[], p: P): T[] {
-        listProcessorDebug("ListProcessor.execute(e: %s, p: %s)", items?.constructor?.name, p?.constructor?.name);
+        listProcessorDebug("ListProcessor.execute(e: %s, p: %s)", items?.constructor.name, p?.constructor.name);
         if (!Array.isArray(items)) {
             listProcessorDebug("...!Array");
             return [];

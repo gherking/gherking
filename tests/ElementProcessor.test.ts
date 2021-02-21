@@ -11,9 +11,9 @@ describe("ElementProcessor", () => {
         background = new Background("1", "background", "3");
         scenario = new Scenario("1", "scenario", "3");
         scenarioOutline = new ScenarioOutline("1", "scenarioOutline", "3");
-        feature = new Feature("1", "2", "3");
+        feature = new Feature("1", "feature", "3");
 
-        feature.elements.push(background, scenario, scenarioOutline);
+        feature.elements = [background, scenario, scenarioOutline];
     })
 
     test("should handle if no pre/post-filter or event handler is set", () => {
