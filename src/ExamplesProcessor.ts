@@ -8,7 +8,7 @@ export class ExamplesProcessor extends ListProcessor<Examples, ScenarioOutline> 
     private tagsProcessor: TagProcessor<Examples>;
     private tableRowProcessor: TableRowProcessor<Examples>;
 
-    constructor(preCompiler: Partial<PreCompiler>) {
+    constructor(preCompiler?: Partial<PreCompiler>) {
         super(preCompiler);
         this.tagsProcessor = new TagProcessor<Examples>(preCompiler);
         this.tableRowProcessor = new TableRowProcessor<Examples>(preCompiler);

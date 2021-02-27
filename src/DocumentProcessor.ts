@@ -6,7 +6,7 @@ import { ProcessorBase } from "./Processor";
 export class DocumentProcessor extends ProcessorBase {
     private featureProcessor: FeatureProcessor;
 
-    constructor(preCompiler: Partial<PreCompiler>) {
+    constructor(preCompiler?: Partial<PreCompiler>) {
         super(preCompiler);
         this.featureProcessor = new FeatureProcessor(preCompiler);
     }

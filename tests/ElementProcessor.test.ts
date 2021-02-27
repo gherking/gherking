@@ -53,4 +53,10 @@ describe("ElementProcessor", () => {
         expect(onScenarioOutline).not.toHaveBeenCalled();
     });
 
+    test("should handle if incorrect object type is passed", () => {
+        const elements: any = new Object()
+        const elementProcessor = new ElementProcessor<Feature>();
+        const results = elementProcessor.execute(elements, feature);
+        expect(results).toEqual([]);
+    });
 })
