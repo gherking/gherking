@@ -12,6 +12,7 @@ export { FormatOptions } from "gherkin-io";
 
 export const load = (pattern: string): Promise<Document[]> => {
     debug("load(pattern: %s)", pattern);
+    // @ts-ignore
     return read(pattern);
 }
 
