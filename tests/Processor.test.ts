@@ -23,6 +23,25 @@ describe("Processors", () => {
             parent = new Parent(child);
         });
 
+        test("should handle missing element", () => {
+            class EmptyProcessor extends Processor<Child, Parent> {
+                protected preFilter(_e: Child, _p: Parent): boolean {
+                    return true;
+                }
+                protected postFilter(_e: Child, _p: Parent): boolean {
+                    return true;
+                }
+                protected process(_e: Child, _p: Parent): Child {
+                    return new Child("new");
+                }
+            }
+
+            const processor = new EmptyProcessor({});
+            const result = processor.execute(null, parent);
+
+            expect(result).toBeNull();
+        })
+
         test("should filter out single property via pre-filter", () => {
             class PreFilterProcessor extends Processor<Child, Parent> {
                 protected preFilter(_e: Child, _p: Parent): boolean {

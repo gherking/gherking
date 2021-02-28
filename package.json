@@ -64,8 +64,11 @@
   },
   "dependencies": {
     "debug": "^4.3.1",
-    "gherkin-ast": "^3.0.1",
+    "gherkin-ast": "^3.0.2",
     "gherkin-io": "^0.1.1"
+  },
+  "resolutions": {
+    "gherkin-ast": "^3.0.2"
   },
   "jest": {
     "setupFilesAfterEnv": [
