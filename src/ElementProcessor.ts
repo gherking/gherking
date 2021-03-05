@@ -30,6 +30,7 @@ export class ElementProcessor<P extends Feature | Rule> extends ListProcessor<El
             elementDebug("preFilter -> Scenario");
             return this.scenarioProcessor.preFilter(e, p, i);
         }
+        /* istanbul ignore else */
         if (e instanceof ScenarioOutline) {
             elementDebug("preFilter -> ScenarioOutline");
             return this.scenarioOutlineProcessor.preFilter(e, p, i);
@@ -45,6 +46,7 @@ export class ElementProcessor<P extends Feature | Rule> extends ListProcessor<El
             elementDebug("postFilter -> Scenario");
             return this.scenarioProcessor.postFilter(e, p, i);
         }
+        /* istanbul ignore else */
         if (e instanceof ScenarioOutline) {
             elementDebug("postFilter -> ScenarioOutline");
             return this.scenarioOutlineProcessor.postFilter(e, p, i);
@@ -60,6 +62,7 @@ export class ElementProcessor<P extends Feature | Rule> extends ListProcessor<El
             elementDebug("process -> Scenario");
             return this.scenarioProcessor.process(e, p, i);
         }
+        /* istanbul ignore else */
         if (e instanceof ScenarioOutline) {
             elementDebug("process -> ScenarioOutline");
             return this.scenarioOutlineProcessor.process(e, p, i);
