@@ -6,7 +6,7 @@ import { ListProcessor } from "./Processor";
 import { ScenarioProcessor } from "./ScenarioProcessor";
 import { ScenarioOutlineProcessor } from './ScenarioOutlineProcessor';
 
-const elementDebug = getDebugger("ElementProcessor");
+const debug = getDebugger("ElementProcessor");
 
 export class ElementProcessor<P extends Feature | Rule> extends ListProcessor<Element, P> {
     private backgroundProcessor: BackgroundProcessor<P>;
@@ -21,50 +21,62 @@ export class ElementProcessor<P extends Feature | Rule> extends ListProcessor<El
     }
 
     protected preFilter(e: Element, p: P, i: number): boolean {
-        elementDebug("preFilter(constructor: %s, i: %d)", e.constructor.name, i);
+        /* istanbul ignore next */
+        debug(
+            "preFilter(e: %s, p: %s, i: %d)", 
+            e?.constructor.name, p?.constructor.name, i
+        );
         if (e instanceof Background) {
-            elementDebug("preFilter -> Background");
+            debug("preFilter -> Background");
             return this.backgroundProcessor.preFilter(e, p);
         }
         if (e instanceof Scenario) {
-            elementDebug("preFilter -> Scenario");
+            debug("preFilter -> Scenario");
             return this.scenarioProcessor.preFilter(e, p, i);
         }
         /* istanbul ignore else */
         if (e instanceof ScenarioOutline) {
-            elementDebug("preFilter -> ScenarioOutline");
+            debug("preFilter -> ScenarioOutline");
             return this.scenarioOutlineProcessor.preFilter(e, p, i);
         }
     }
     protected postFilter(e: Element, p: P, i: number): boolean {
-        elementDebug("postFilter(constructor: %s, i: %d)", e.constructor.name, i);
+        /* istanbul ignore next */
+        debug(
+            "postFilter(e: %s, p: %s, i: %d)", 
+            e?.constructor.name, p?.constructor.name, i
+        );
         if (e instanceof Background) {
-            elementDebug("postFilter -> Background");
+            debug("postFilter -> Background");
             return this.backgroundProcessor.preFilter(e, p);
         }
         if (e instanceof Scenario) {
-            elementDebug("postFilter -> Scenario");
+            debug("postFilter -> Scenario");
             return this.scenarioProcessor.postFilter(e, p, i);
         }
         /* istanbul ignore else */
         if (e instanceof ScenarioOutline) {
-            elementDebug("postFilter -> ScenarioOutline");
+            debug("postFilter -> ScenarioOutline");
             return this.scenarioOutlineProcessor.postFilter(e, p, i);
         }
     }
     protected process(e: Element, p: P, i: number): MultiControlType<Element> {
-        elementDebug("process(constructor: %s, i: %d)", e.constructor.name, i);
+        /* istanbul ignore next */
+        debug(
+            "process(e: %s, p: %s, i: %d)", 
+            e?.constructor.name, p?.constructor.name, i
+        );
         if (e instanceof Background) {
-            elementDebug("process -> Background");
+            debug("process -> Background");
             return this.backgroundProcessor.process(e, p);
         }
         if (e instanceof Scenario) {
-            elementDebug("process -> Scenario");
+            debug("process -> Scenario");
             return this.scenarioProcessor.process(e, p, i);
         }
         /* istanbul ignore else */
         if (e instanceof ScenarioOutline) {
-            elementDebug("process -> ScenarioOutline");
+            debug("process -> ScenarioOutline");
             return this.scenarioOutlineProcessor.process(e, p, i);
         }
     }
