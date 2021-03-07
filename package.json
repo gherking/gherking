@@ -47,8 +47,10 @@
   },
   "devDependencies": {
     "@types/debug": "^4.1.5",
+    "@types/glob": "^7.1.3",
     "@types/jest": "^26.0.20",
     "@types/node": "^14.14.21",
+    "@types/yargs": "^15.0.13",
     "@typescript-eslint/eslint-plugin": "^4.14.1",
     "@typescript-eslint/parser": "^4.14.1",
     "copyfiles": "^2.4.1",
@@ -65,7 +67,9 @@
   "dependencies": {
     "debug": "^4.3.1",
     "gherkin-ast": "^3.0.2",
-    "gherkin-io": "^0.1.1"
+    "gherkin-io": "^0.1.1",
+    "glob": "^7.1.6",
+    "yargs": "^16.2.0"
   },
   "resolutions": {
     "gherkin-ast": "^3.0.2"

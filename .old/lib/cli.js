@@ -25,7 +25,7 @@ const prepareArguments = argv => {
             throw new Error('Base must be a directory, not a glob pattern!');
         }
         const baseStat = statSync(argv.base);
-        if (!baseStat.isDirectory()) {
+        if (!baseStat.isDirectory()) {  
             throw new Error('Base must be a directory!');
         }
     }

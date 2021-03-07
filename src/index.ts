@@ -13,7 +13,7 @@ export { FormatOptions } from "gherkin-io";
 export const load = (pattern: string): Promise<Document[]> => {
     debug("load(pattern: %s)", pattern);
     // @ts-ignore
-    return read(pattern);
+    return read(pattern) as Document[];
 }
 
 export const process = (ast: Document, ...preCompilers: PreCompiler[]): Document[] => {
@@ -36,7 +36,7 @@ export const process = (ast: Document, ...preCompilers: PreCompiler[]): Document
 
 export type PathGenerator = (document: Document, i?: number) => string;
 export async function save(path: string, ast: Document, options?: FormatOptions): Promise<void>;
-export async function save(path: PathGenerator, ast: Document[], options?: FormatOptions): Promise<void>;
+export async function save(path: string | PathGenerator, ast: Document[], options?: FormatOptions): Promise<void>;
 export async function save(path: string | PathGenerator, ast: Document | Document[], options?: FormatOptions): Promise<void> {
     /* istanbul ignore next */
     debug("save(path: %s, ast: %s, options: %o)", path, ast?.constructor.name, options);
