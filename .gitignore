@@ -2,6 +2,7 @@
 /coverage
 /reports
 /docs
+/tests/cli/data/destination/*.feature
 **/dist
 .idea
 *.log

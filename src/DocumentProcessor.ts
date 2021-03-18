@@ -18,6 +18,9 @@ export class DocumentProcessor extends ProcessorBase {
     public execute(e: Document): Document[] {
         /* istanbul ignore next */
         debug("execute(e: %s)", e?.constructor.name);
+        if (!e) {
+            return [];
+        }
         const document = e.clone();
         if (!document.feature) {
             debug("...!feature");

@@ -172,8 +172,8 @@ const loadCompilers = (compilers: CompilerConfig[]): PreCompiler[] => {
         } else {
             preCompiler = require(resolve(compiler.path));
         }
-        if (typeof preCompiler !== "function") {
-            return new preCompiler(...compiler.arguments);
+        if (typeof preCompiler === "function") {
+            return new preCompiler(...(compiler.arguments || []));
         }
         if (typeof preCompiler !== "object") {
             throw new Error(`Precompiler (${compiler.path}) must be a class or a PreCompiler object: ${preCompiler}!`);

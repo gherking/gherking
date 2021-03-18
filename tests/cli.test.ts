@@ -1,4 +1,5 @@
 import { run, CLIConfig } from "../src/cli";
+import { read } from "gherkin-io";
 
 console.error = jest.fn();
 
@@ -31,6 +32,8 @@ describe("CLI", () => {
         return run();
     }
 
+    const getResult = (destination = "destination") => read(`tests/cli/data/${destination}/**/*.feature`);
+
     test("should fail if no config found", async () => {
         await expect(() => runWithArgs({
             config: null,
@@ -59,19 +62,41 @@ describe("CLI", () => {
 
     test("should fail is base is not a folder", async () => {
         await expect(() => runWithArgs({
-            base: "test/cli/data/source/1.feature",
+            base: "tests/cli/data/source/1.feature",
         })).rejects.toThrow("Base must be a directory!");
     });
 
-    test.todo("should fail if destination is not a directory");
+    test("should fail if destination is not a directory", async () => {
+        await expect(() => runWithArgs({
+            destination: "tests/cli/data/source/1.feature",
+        })).rejects.toThrow("Destination mutst be a directory!");
+    });
 
-    test.todo("should fail if compilers not set");
+    test("should fail if compilers not set", async () => {
+        await expect(() => runWithArgs({
+            config: "tests/cli/data/config-no-compiler.json",
+        })).rejects.toThrow("Precompilers must be set in the configuration file!");
+    });
 
-    test.todo("should fail if any compiler miss path");
+    test("should fail if any compiler miss path", async () => {
+        await expect(() => runWithArgs({
+            config: "tests/cli/data/config-wo-path.json",
+        })).rejects.toThrow("Package or path of the precompiler must be set!");
+    });
 
-    test.todo("should fail if any compiler is neither a package, not a file");
+    test("should fail if any compiler is neither a package, not a file", async () => {
+        await expect(() => runWithArgs({
+            config: "tests/cli/data/config-w-dir-path.json",
+        })).rejects.toThrow("Path must be either a NPM package name or a JS file: test/cli/compilers!");
+    });
 
-    test.todo("should use source if no base set and source is a directory");
+    test("should use source if no base set and source is a directory", async () => {
+        await runWithArgs({
+            config: "tests/cli/data/config.json"
+        });
+        const results = await getResult();
+        expect(results).toHaveLength(1);
+    });
 
     test.todo("should use dirname of source if no base ser and source if a file");
 

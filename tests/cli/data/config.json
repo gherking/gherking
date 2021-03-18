@@ -1,3 +1,7 @@
 {
-    "compilers": []
+    "compilers": [
+        {
+            "path": "tests/cli/compilers/test.js"
+        }
+    ]
 }
