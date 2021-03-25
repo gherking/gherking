@@ -32,15 +32,26 @@ export abstract class Processor<T, P, R = T | null> extends PartialProcessor<T, 
             processorDebug("...!preFilterResult");
             return null;
         }
-        const result = this.process(e, p);
+        let result = this.process(e, p);
         if (result === null) {
             processorDebug("...!result");
             return null;
         }
-        const postFilterResult = this.postFilter((result || e) as T, p);
-        if (!postFilterResult) {
-            processorDebug("...!postFilterResult");
-            return null;
+        if(Array.isArray(result)){
+            processorDebug("...!array");
+            // @ts-ignore
+            result = result.filter(r => this.postFilter(r as T, p));
+            // @ts-ignore
+            if (!result.length) {
+                processorDebug("...!postFilterResult");
+                return null;
+            }
+        } else {
+            const postFilterResult = this.postFilter((result || e) as T, p);
+            if (!postFilterResult) {
+                processorDebug("...!postFilterResult");
+                return null;
+            }
         }
         processorDebug("...result: %o", result || e);
         return (result || e) as R;

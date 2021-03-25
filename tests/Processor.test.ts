@@ -2,15 +2,15 @@ import { MultiControlType } from "../src/PreCompiler";
 import { ListProcessor, Processor } from "../src/Processor"
 
 class Child {
-    constructor(public property: string) {}
+    constructor(public property: string) { }
 }
 
 class Parent {
-    constructor(public child: Child) {}
+    constructor(public child: Child) { }
 }
 
 class List {
-    constructor(public items: Child[]) {}
+    constructor(public items: Child[]) { }
 }
 
 describe("Processors", () => {
@@ -225,6 +225,46 @@ describe("Processors", () => {
             expect(result[0].property).toBe("3");
         });
 
+        test("should filter array of items by post-filter", () => {
+            class PostFilterListProcessor extends ListProcessor<Child, List> {
+                protected preFilter(_e: Child, _p: List, _i: number): boolean {
+                    return true;
+                }
+                protected postFilter(e: Child, _p: List, _i: number): boolean {
+                    return +e.property > 2;
+                }
+                protected process(_e: Child, _p: List, _i: number): MultiControlType<Child> {
+                    return [_e, _e];
+                }
+            }
+
+            const processor = new PostFilterListProcessor({});
+            const result = processor.execute(items, list);
+
+            expect(result).toBeInstanceOf(Array);
+            expect(result).toHaveLength(2);
+            expect(result[0].property).toBe("3");
+            expect(result[1].property).toBe("3");
+        });
+
+        test("should filter out array of items by post-filter", () => {
+            class PostFilterListProcessor extends Processor<Child, List, MultiControlType<Child>> {
+                protected preFilter(_e: Child, _p: List): boolean {
+                    return true;
+                }
+                protected postFilter(e: Child, _p: List): boolean {
+                    return +e.property > 3;
+                }
+                protected process(_e: Child, _p: List): MultiControlType<Child> {
+                    return [_e, _e];
+                }
+            }
+
+            const processor = new PostFilterListProcessor({});
+            const result = processor.execute(items[0], list);
+            expect(result).toBeNull();
+        });
+
         test("should filter items by event handler", () => {
             class EventHandlerDeleteListProcessor extends ListProcessor<Child, List> {
                 protected preFilter(_e: Child, _p: List, _i: number): boolean {
@@ -327,5 +367,26 @@ describe("Processors", () => {
             expect(result).toEqual(items);
             expect(list.items).toBe(items);
         });
+
+        test('should handle when result is null', () => {
+            class NullListProcessor extends ListProcessor<Child, List> {
+                protected preFilter(_e: Child, _p: List, _i: number): boolean {
+                    return true;
+                }
+                protected postFilter(_e: Child, _p: List, _i: number): boolean {
+                    return true;
+                }
+                protected process(e: Child, _p: List, _i: number): MultiControlType<Child> {
+                    return e.property === "3" ? null : e;
+                }
+            }
+
+            const processor = new NullListProcessor({});
+            const result = processor.execute(items, list);
+
+            expect(result.length).toBe(2);
+            expect(result[0].property).toBe("1");
+            expect(result[1].property).toBe("2");
+        })
     })
 });
