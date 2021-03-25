@@ -2,7 +2,7 @@ import { Feature, Rule } from "gherkin-ast";
 import { ElementProcessor } from "./ElementProcessor";
 import { MultiControlType, PreCompiler } from "./PreCompiler";
 import { ListProcessor } from "./Processor";
-import { getDebugger } from './debug';
+import { getDebugger } from "./debug";
 
 const debug = getDebugger("RuleProcessor");
 

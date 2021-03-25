@@ -16,7 +16,7 @@ describe("API", () => {
 
     describe("save", () => {
         beforeEach(() => {
-            deleteDirectory('destination');
+            deleteDirectory("destination");
         });
 
         test("should fail if no path set", async () => {
@@ -26,14 +26,14 @@ describe("API", () => {
 
         test("should save single AST to single file", async () => {
             const sources: Document[] = await load("tests/cli/data/source/*.feature");
-            await save('tests/cli/data/destination/dest1.feature', sources[0]);
+            await save("tests/cli/data/destination/dest1.feature", sources[0]);
             const results: Document[] = await load("tests/cli/data/destination/dest1.feature");
             expect(results).toHaveLength(1);
         });
 
         test("should save single AST to single file without extension", async () => {
             const sources: Document[] = await load("tests/cli/data/source/*.feature");
-            await save('tests/cli/data/destination/dest2', sources[0]);
+            await save("tests/cli/data/destination/dest2", sources[0]);
             const results: Document[] = await load("tests/cli/data/destination/dest2.feature");
             expect(results).toHaveLength(1);
         });
@@ -42,7 +42,7 @@ describe("API", () => {
             const sources: Document[] = await load("tests/cli/data/source/*.feature");
             // @ts-ignore
             await save((ast: Document): string => {
-                return 'tests/cli/data/destination/' + ast.feature.name.replace(/ /g, "_");
+                return "tests/cli/data/destination/" + ast.feature.name.replace(/ /g, "_");
             }, sources[0]);
             const results: Document[] = await load("tests/cli/data/destination/Guess_the_word.feature");
             expect(results).toHaveLength(1);
@@ -51,7 +51,7 @@ describe("API", () => {
         test("should save multiple AST using path generator", async () => {
             const sources: Document[] = await load("tests/cli/data/source/*.feature");
             await save((ast: Document, i: number): string => {
-                return 'tests/cli/data/destination/' + ast.feature.name.replace(/ /g, "" + (i + 1)) + '.feature';
+                return "tests/cli/data/destination/" + ast.feature.name.replace(/ /g, "" + (i + 1)) + ".feature";
             }, sources);
             const results: Document[] = await load("tests/cli/data/destination/Guess1the1word.feature");
             expect(results).toHaveLength(1);
@@ -60,7 +60,7 @@ describe("API", () => {
         test("should save multiple AST using path generator what does not add extension", async () => {
             const sources: Document[] = await load("tests/cli/data/source/*.feature");
             await save((ast: Document, i: number): string => {
-                return 'tests/cli/data/destination/' + ast.feature.name.replace(/ /g, "" + i);
+                return "tests/cli/data/destination/" + ast.feature.name.replace(/ /g, "" + i);
             }, sources);
             const results: Document[] = await load("tests/cli/data/destination/Guess0the0word.feature");
             expect(results).toHaveLength(1);
@@ -68,14 +68,14 @@ describe("API", () => {
 
         test("should save multiple AST with default filename generator", async () => {
             const sources: Document[] = await load("tests/cli/data/source/*.feature");
-            await save('tests/cli/data/destination/dest3.feature', sources);
+            await save("tests/cli/data/destination/dest3.feature", sources);
             const results: Document[] = await load("tests/cli/data/destination/dest30.feature");
             expect(results).toHaveLength(1);
         });
 
         test("should save multiple AST with default filename generator even if extension is missing", async () => {
             const sources: Document[] = await load("tests/cli/data/source/*.feature");
-            await save('tests/cli/data/destination/dest4', sources);
+            await save("tests/cli/data/destination/dest4", sources);
             const results: Document[] = await load("tests/cli/data/destination/dest40.feature");
             expect(results).toHaveLength(1);
         });

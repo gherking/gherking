@@ -1,7 +1,7 @@
 import { DocString, Step } from "gherkin-ast";
 import { SingleControlType } from "./PreCompiler";
 import { Processor } from "./Processor";
-import { getDebugger } from './debug';
+import { getDebugger } from "./debug";
 
 const debug = getDebugger("DocStringProcessor");
 

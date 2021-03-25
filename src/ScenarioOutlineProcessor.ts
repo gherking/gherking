@@ -4,9 +4,9 @@ import { MultiControlType, PreCompiler } from "./PreCompiler";
 import { PartialListProcessor } from "./Processor";
 import { StepProcessor } from "./StepProcessor";
 import { TagProcessor } from "./TagProcessor";
-import { getDebugger } from './debug';
+import { getDebugger } from "./debug";
 
-const debug = getDebugger('ScenarioOutlineProcessor');
+const debug = getDebugger("ScenarioOutlineProcessor");
 
 export class ScenarioOutlineProcessor<P extends Feature | Rule> extends PartialListProcessor<ScenarioOutline, P> {
     private stepProcessor: StepProcessor<ScenarioOutline>;

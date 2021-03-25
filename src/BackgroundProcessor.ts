@@ -2,7 +2,7 @@ import { Background, Feature, Rule } from "gherkin-ast";
 import { PreCompiler, SingleControlType } from "./PreCompiler";
 import { PartialProcessor } from "./Processor";
 import { StepProcessor } from "./StepProcessor";
-import { getDebugger } from './debug';
+import { getDebugger } from "./debug";
 
 const debug = getDebugger("BackgroundProcessor");
 

@@ -18,10 +18,10 @@ describe("CLI", () => {
 
     const runWithArgs = (config: CLIConfig = {}) => {
         config = {
-            config: 'tests/cli/data/config.json',
-            source: 'tests/cli/data/source/**/*',
-            base: 'tests/cli/data/source',
-            destination: 'tests/cli/data/destination',
+            config: "tests/cli/data/config.json",
+            source: "tests/cli/data/source/**/*",
+            base: "tests/cli/data/source",
+            destination: "tests/cli/data/destination",
             verbose: true,
             clean: true,
             ...config,
@@ -34,14 +34,14 @@ describe("CLI", () => {
         return run();
     }
 
-    const getSources = () => read('tests/cli/data/source/**/*.feature');
+    const getSources = () => read("tests/cli/data/source/**/*.feature");
     const getResult = (destination = "destination") => read(`tests/cli/data/${destination}/**/*.feature`);
     const deleteDirectory = (dir: string) => {
         rmdirSync(`tests/cli/data/${dir}`, { recursive: true });
     };
 
     beforeEach(() => {
-        deleteDirectory('source/dist');
+        deleteDirectory("source/dist");
         (console.log as unknown as jest.Mock).mockClear();
     });
 
@@ -147,7 +147,7 @@ describe("CLI", () => {
             destination: null,
         });
         const sources: Document[] = await getSources();
-        const results: Document[] = await getResult('source/dist');
+        const results: Document[] = await getResult("source/dist");
         expect(results).toHaveLength(1);
         expect(results[0].feature.name).toMatch(/PROCESSED$/);
         expect(results[0].feature.elements).toEqual(sources[0].feature.elements);
@@ -196,7 +196,7 @@ describe("CLI", () => {
     });
 
     test("should clean destination directory if clean is set", async () => {
-        copyFileSync('tests/cli/data/source/1.feature', 'tests/cli/data/destination/1.feature');
+        copyFileSync("tests/cli/data/source/1.feature", "tests/cli/data/destination/1.feature");
         await runWithArgs({
             config: "tests/cli/data/config.json",
             clean: false,
@@ -213,7 +213,7 @@ describe("CLI", () => {
     });
 
     test("should create destination directory if it does not exist", async () => {
-        deleteDirectory('destination');
+        deleteDirectory("destination");
         await runWithArgs({
             config: "tests/cli/data/config.json",
         });

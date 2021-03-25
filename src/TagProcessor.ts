@@ -1,5 +1,5 @@
 import { Examples, Feature, Scenario, ScenarioOutline, Tag } from "gherkin-ast";
-import { getDebugger } from './debug';
+import { getDebugger } from "./debug";
 import { MultiControlType } from "./PreCompiler";
 import { ListProcessor } from "./Processor";
 

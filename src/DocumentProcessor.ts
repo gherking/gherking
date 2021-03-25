@@ -2,7 +2,7 @@ import { Document } from "gherkin-ast";
 import { FeatureProcessor } from "./FeatureProcessor";
 import { PreCompiler } from "./PreCompiler";
 import { ProcessorBase } from "./Processor";
-import { getDebugger } from './debug';
+import { getDebugger } from "./debug";
 
 const debug = getDebugger("DocumentProcessor");
 

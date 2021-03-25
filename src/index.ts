@@ -2,7 +2,7 @@ import { PreCompiler } from "./PreCompiler";
 import { read, write, FormatOptions } from "gherkin-io";
 import { Document } from "gherkin-ast";
 import { DocumentProcessor } from "./DocumentProcessor";
-import { getDebugger } from './debug';
+import { getDebugger } from "./debug";
 
 const debug = getDebugger("main");
 

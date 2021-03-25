@@ -2,7 +2,7 @@ import { DataTable, Step } from "gherkin-ast";
 import { PreCompiler, SingleControlType } from "./PreCompiler";
 import { Processor } from "./Processor";
 import { TableRowProcessor } from "./TableRowProcessor";
-import { getDebugger } from './debug';
+import { getDebugger } from "./debug";
 
 const debug = getDebugger("DataTableProcessor");
 

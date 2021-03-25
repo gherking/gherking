@@ -4,7 +4,7 @@ import { MultiControlType, PreCompiler } from "./PreCompiler";
 import { Processor } from "./Processor";
 import { RuleProcessor } from "./RuleProcessor";
 import { TagProcessor } from "./TagProcessor";
-import { getDebugger } from './debug';
+import { getDebugger } from "./debug";
 
 const debug = getDebugger("FeatureProcessor");
 

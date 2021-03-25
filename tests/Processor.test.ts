@@ -368,7 +368,7 @@ describe("Processors", () => {
             expect(list.items).toBe(items);
         });
 
-        test('should handle when result is null', () => {
+        test("should handle when result is null", () => {
             class NullListProcessor extends ListProcessor<Child, List> {
                 protected preFilter(_e: Child, _p: List, _i: number): boolean {
                     return true;

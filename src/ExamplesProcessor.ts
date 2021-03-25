@@ -3,7 +3,7 @@ import { MultiControlType, PreCompiler } from "./PreCompiler";
 import { ListProcessor } from "./Processor";
 import { TableRowProcessor } from "./TableRowProcessor";
 import { TagProcessor } from "./TagProcessor";
-import { getDebugger } from './debug';
+import { getDebugger } from "./debug";
 
 const debug = getDebugger("ExamplesProcessor");
 

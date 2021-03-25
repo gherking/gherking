@@ -5,7 +5,7 @@ const debug = getDebugger("cli");
 
 run();
 
-process.on('unhandledRejection', error => {
+process.on("unhandledRejection", error => {
     debug("unhandledRejection:\n%s", error);
     process.exit(1);
 });

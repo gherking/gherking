@@ -12,7 +12,7 @@ import {
     Step,
     TableRow,
     Tag
-} from 'gherkin-ast';
+} from "gherkin-ast";
 export type SingleControlType<T> = void | null | undefined | T;
 export type MultiControlType<T> = void | null | undefined | T | T[];
 export type SingleEventHandler<T,P> = (e: T, p?: P) => SingleControlType<T>;

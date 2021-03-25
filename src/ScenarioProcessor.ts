@@ -3,7 +3,7 @@ import { MultiControlType, PreCompiler } from "./PreCompiler";
 import { PartialListProcessor } from "./Processor";
 import { StepProcessor } from "./StepProcessor";
 import { TagProcessor } from "./TagProcessor";
-import { getDebugger } from './debug';
+import { getDebugger } from "./debug";
 
 const debug = getDebugger("ScenarioProcessor");
 

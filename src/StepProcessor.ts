@@ -1,6 +1,6 @@
 import { Background, Scenario, ScenarioOutline, Step } from "gherkin-ast";
 import { DataTableProcessor } from "./DataTableProcessor";
-import { getDebugger } from './debug';
+import { getDebugger } from "./debug";
 import { DocStringProcessor } from "./DocStringProcessor";
 import { MultiControlType, PreCompiler } from "./PreCompiler";
 import { ListProcessor } from "./Processor";

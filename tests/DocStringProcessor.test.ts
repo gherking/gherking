@@ -6,7 +6,7 @@ describe("DocStringProcessor", () => {
     let docString: DocString;
 
     beforeEach(() => {
-        docString = new DocString("content", '"""');
+        docString = new DocString("content", "\"\"\"");
         step = new Step("Given", "step");
         step.docString = docString;
     });

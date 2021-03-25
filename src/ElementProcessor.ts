@@ -1,10 +1,10 @@
-import { getDebugger } from './debug';
+import { getDebugger } from "./debug";
 import { Background, Feature, Rule, Scenario, Element, ScenarioOutline } from "gherkin-ast";
 import { BackgroundProcessor } from "./BackgroundProcessor";
 import { MultiControlType, PreCompiler } from "./PreCompiler";
 import { ListProcessor } from "./Processor";
 import { ScenarioProcessor } from "./ScenarioProcessor";
-import { ScenarioOutlineProcessor } from './ScenarioOutlineProcessor';
+import { ScenarioOutlineProcessor } from "./ScenarioOutlineProcessor";
 
 const debug = getDebugger("ElementProcessor");
 

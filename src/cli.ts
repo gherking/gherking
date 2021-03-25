@@ -1,8 +1,8 @@
 import { hasMagic, sync } from "glob";
 import { statSync, rmdirSync, mkdirSync, existsSync } from "fs";
 import { join, resolve, dirname, normalize } from "path";
-import yargs = require('yargs/yargs');
-import { getDebugger } from './debug';
+import yargs = require("yargs/yargs");
+import { getDebugger } from "./debug";
 import { PreCompiler } from "./PreCompiler";
 import { process as processAst, load, save } from ".";
 import { Document } from "gherkin-ast";
@@ -65,46 +65,46 @@ const isFile = (path: string): boolean => {
 const parseConfig = (): Config => {
     debug("parseConfig %o", process.argv);
     return yargs(process.argv)
-        .option('config', {
-            type: 'string',
-            alias: 'c',
+        .option("config", {
+            type: "string",
+            alias: "c",
             coerce: resolve,
-            default: './precompiler.json',
-            description: 'The path of the configuration file which contains the precompilers and their configurations.',
+            default: "./precompiler.json",
+            description: "The path of the configuration file which contains the precompilers and their configurations.",
             normalize: true,
             config: true,
             configParser: path => require(path)
         })
-        .option('source', {
-            type: 'string',
-            alias: 's',
+        .option("source", {
+            type: "string",
+            alias: "s",
             coerce: resolve,
-            description: 'The pattern or path of feature files which needs to be precompiled.',
+            description: "The pattern or path of feature files which needs to be precompiled.",
             normalize: true
         })
-        .option('base', {
-            type: 'string',
-            alias: 'b',
+        .option("base", {
+            type: "string",
+            alias: "b",
             coerce: resolve,
-            description: 'The base directory of feature files.',
+            description: "The base directory of feature files.",
             normalize: true
         })
-        .option('destination', {
-            type: 'string',
-            alias: 'd',
+        .option("destination", {
+            type: "string",
+            alias: "d",
             coerce: resolve,
-            description: 'The destination directory of precompiled feature files.',
+            description: "The destination directory of precompiled feature files.",
             normalize: true
         })
-        .option('verbose', {
-            type: 'boolean',
+        .option("verbose", {
+            type: "boolean",
         })
-        .option('clean', {
-            type: 'boolean',
-            description: 'Whether the destination directory should be clean in advance.',
+        .option("clean", {
+            type: "boolean",
+            description: "Whether the destination directory should be clean in advance.",
         })
         .check(argv => prepareConfig(argv as unknown as Config))
-        .help('help')
+        .help("help")
         .fail((msg, err, ya) => {
             console.error(msg);
             console.error(ya.help())
@@ -119,11 +119,11 @@ const prepareConfig = (argv: Config): Config => {
         throw new Error(`Configuration file does not exist: ${argv.config}!`);
     }
     if (!argv.source && !argv.base) {
-        throw new Error('Either source of base option must be set!');
+        throw new Error("Either source of base option must be set!");
     }
     if (!argv.base) {
         if (hasMagic(argv.source)) {
-            throw new Error('Base must be set in case of source is a pattern!');
+            throw new Error("Base must be set in case of source is a pattern!");
         }
         if (isDirectory(argv.source)) {
             argv.base = argv.source;
@@ -132,10 +132,10 @@ const prepareConfig = (argv: Config): Config => {
         }
     } else {
         if (hasMagic(argv.base)) {
-            throw new Error('Base must be a directory, not a glob pattern!');
+            throw new Error("Base must be a directory, not a glob pattern!");
         }
         if (!isDirectory(argv.base)) {
-            throw new Error('Base must be a directory!');
+            throw new Error("Base must be a directory!");
         }
     }
     if (!argv.source) {
@@ -147,16 +147,16 @@ const prepareConfig = (argv: Config): Config => {
         argv.destination = join(argv.base, "dist");
     } else if (!isDirectory(argv.destination)) {
         if (existsSync(argv.destination)) {
-            throw new Error('Destination must be a directory!');
+            throw new Error("Destination must be a directory!");
         }
         mkdirSync(argv.destination);
     }
     if (!Array.isArray(argv.compilers)) {
-        throw new Error('Precompilers must be set in the configuration file!');
+        throw new Error("Precompilers must be set in the configuration file!");
     } else {
         argv.compilers.forEach(config => {
             if (!config.path) {
-                throw new Error('Package or path of the precompiler must be set!');
+                throw new Error("Package or path of the precompiler must be set!");
             }
             if (!isPackage(config.path) && !isFile(config.path)) {
                 throw new Error(`Path must be either a NPM package name or a JS file: ${config.path}!`);
@@ -164,7 +164,7 @@ const prepareConfig = (argv: Config): Config => {
         })
     }
     if (argv.verbose) {
-        console.log('Configuration:', JSON.stringify(argv, null, 2));
+        console.log("Configuration:", JSON.stringify(argv, null, 2));
     }
     return argv;
 }
