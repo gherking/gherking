@@ -27,7 +27,7 @@
     "cucumber",
     "feature file"
   ],
-  "author": "GherKing",
+  "author": "GherKing (https://github.com/gherking)",
   "license": "MIT",
   "contributors": [
     "Laszlo Szikszai <sziklaszlo@gmail.com>",
@@ -56,6 +56,7 @@
     "copyfiles": "^2.4.1",
     "cross-env": "^7.0.3",
     "eslint": "^7.19.0",
+    "gpc-test": "./tests/cli/compilers/gpc-test",
     "jest": "^26.6.3",
     "jest-expect-message": "^1.0.2",
     "jest-junit": "^12.0.0",
@@ -67,12 +68,9 @@
   "dependencies": {
     "debug": "^4.3.1",
     "gherkin-ast": "^3.0.2",
-    "gherkin-io": "^0.1.1",
+    "gherkin-io": "^1.0.3",
     "glob": "^7.1.6",
     "yargs": "^16.2.0"
-  },
-  "resolutions": {
-    "gherkin-ast": "^3.0.2"
   },
   "jest": {
     "setupFilesAfterEnv": [
@@ -97,7 +95,7 @@
     "collectCoverage": true,
     "coverageDirectory": "./coverage",
     "collectCoverageFrom": [
-      "./src/**/*.ts"
+      "./src/*.ts"
     ],
     "moduleFileExtensions": [
       "ts",

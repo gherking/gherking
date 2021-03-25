@@ -58,7 +58,11 @@ export async function save(path: string | PathGenerator, ast: Document | Documen
             };
         }
         for (let i = 0; i < ast.length; ++i) {
-            const filePath = pathGenerator(ast[i], i);
+            let filePath = pathGenerator(ast[i], i);
+            if (!/\.feature$/.test(filePath)) {
+                debug("......adding extension");
+                filePath += ".feature";
+            }
             debug("...process(path: %s, i: %d)", filePath, i);
             await write(filePath, ast[i], options);
         }
@@ -66,6 +70,10 @@ export async function save(path: string | PathGenerator, ast: Document | Documen
         if (typeof path === "function") {
             path = path(ast);
             debug("...path: %s", path);
+        }
+        if (!/\.feature$/.test(path)) {
+            debug("......adding extension");
+            path += ".feature";
         }
         await write(path, ast, options);
     }

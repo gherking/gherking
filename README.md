@@ -71,14 +71,22 @@ gherking --config precompiler.json --base e2e/features/src --destination e2e/fea
 
 ### Arguments
 
-| Argument | Description | Example |
-|:---------|:------------|:--------|
-| `--config`<br>`-c` | **Mandatory**, The location of the configuration which contains the precompiler configuration and could contain all the other configuration options as well. | `precompiler.json` |
-| `--source`<br>`-s` | The source glob pattern or a folder path where the source feature files are located. | `e2e/features/src/**/*.feature` |
-| `--base`<br>`-b` | The base directory or the feature files/precompile process. The location in the desctination directory of each precompiled feature file is determined by the base directory. | `e2e/features/src` |
-| <nobr>`--destination`</nobr><br>`-d` | The destination directory where the precompiled feature files should be stored. | `e2e/features/dist` |
-| `--verbose` | If set, precompiler prints out the final configuration and the status of the process. | |
-| `--help` | If set, no precompile process is applied, only the usage guidelines are printed out. | |
+```shell
+Options:
+      --version      Show version number                               [boolean]
+  -c, --config       The path of the configuration file which contains the
+                     precompilers and their configurations.
+                                        [string] [default: "./precompiler.json"]
+  -s, --source       The pattern or path of feature files which needs to be
+                     precompiled.                                       [string]
+  -b, --base         The base directory of feature files.               [string]
+  -d, --destination  The destination directory of precompiled feature files.
+                                                                        [string]
+      --verbose                                                        [boolean]
+      --clean        Whether the destination directory should be clean in
+                     advance.                                          [boolean]
+      --help         Show help                                         [boolean]
+```
 
 #### Important
 
@@ -100,7 +108,7 @@ The configuration **must** contain the precompilers configuration and optionally
         // one option is to use precompiler packages,
         {
             // by setting the package
-            "package": "gpc-replacer",
+            "path": "gpc-replacer",
             // any by setting the configuration which
             // is passed to the constructor
             "configuration": {
@@ -140,7 +148,7 @@ Saves the given AST ast feature file to the given path.
 
 **Params:**
  
- * `{string} pathToFile` - the path of the feature file where the AST needs to be saved
+ * `{string|PathGenerator} pathToFile` - the path of the feature file where the AST needs to be saved, or a funtion what can generate the path from the ast and the index
  * `{Document|Document[]} ast` - the AST needs to be saved to the file
  * `{FormatterOptions} [options]` - configuration of formatting, see [FormatterConfig](https://github.com/gherking/gherkin-formatter)
  

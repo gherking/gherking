@@ -1,7 +1,9 @@
 import { run, CLIConfig } from "../src/cli";
-import { read } from "gherkin-io";
+import { Document, read } from "gherkin-io";
+import { rmdirSync, copyFileSync } from "fs";
 
 console.error = jest.fn();
+console.log = jest.fn();
 
 describe("CLI", () => {
     let prevArgs: string[];
@@ -32,12 +34,21 @@ describe("CLI", () => {
         return run();
     }
 
+    const getSources = () => read('tests/cli/data/source/**/*.feature');
     const getResult = (destination = "destination") => read(`tests/cli/data/${destination}/**/*.feature`);
+    const deleteDirectory = (dir: string) => {
+        rmdirSync(`tests/cli/data/${dir}`, { recursive: true });
+    };
+
+    beforeEach(() => {
+        deleteDirectory('source/dist');
+        (console.log as unknown as jest.Mock).mockClear();
+    });
 
     test("should fail if no config found", async () => {
         await expect(() => runWithArgs({
             config: null,
-        })).rejects.toThrow("Configuration file does not exist: /home/laszloszikszai/Work/gherking/precompiler.json!");
+        })).rejects.toThrow(/Configuration file does not exist: .*precompiler.json!/);
     });
 
     test("should fail if neither base nor source set", async () => {
@@ -69,7 +80,7 @@ describe("CLI", () => {
     test("should fail if destination is not a directory", async () => {
         await expect(() => runWithArgs({
             destination: "tests/cli/data/source/1.feature",
-        })).rejects.toThrow("Destination mutst be a directory!");
+        })).rejects.toThrow("Destination must be a directory!");
     });
 
     test("should fail if compilers not set", async () => {
@@ -86,37 +97,127 @@ describe("CLI", () => {
 
     test("should fail if any compiler is neither a package, not a file", async () => {
         await expect(() => runWithArgs({
-            config: "tests/cli/data/config-w-dir-path.json",
+            config: "tests/cli/data/config-w-directory.json",
         })).rejects.toThrow("Path must be either a NPM package name or a JS file: test/cli/compilers!");
     });
 
     test("should use source if no base set and source is a directory", async () => {
         await runWithArgs({
-            config: "tests/cli/data/config.json"
+            config: "tests/cli/data/config.json",
+            base: null,
+            source: "tests/cli/data/source",
         });
-        const results = await getResult();
+        const sources: Document[] = await getSources();
+        const results: Document[] = await getResult();
+        expect(results).toHaveLength(1);
+        expect(results[0].feature.name).toMatch(/PROCESSED$/);
+        expect(results[0].feature.elements).toEqual(sources[0].feature.elements);
+    });
+
+    test("should use dirname of source if no base ser and source if a file", async () => {
+        await runWithArgs({
+            config: "tests/cli/data/config.json",
+            base: null,
+            source: "tests/cli/data/source/1.feature",
+        });
+        const sources: Document[] = await getSources();
+        const results: Document[] = await getResult();
+        expect(results).toHaveLength(1);
+        expect(results[0].feature.name).toMatch(/PROCESSED$/);
+        expect(results[0].feature.elements).toEqual(sources[0].feature.elements);
+    });
+
+    test("should set source using base", async () => {
+        await runWithArgs({
+            config: "tests/cli/data/config.json",
+            base: "tests/cli/data/source",
+            source: null,
+        });
+        const sources: Document[] = await getSources();
+        const results: Document[] = await getResult();
+        expect(results).toHaveLength(1);
+        expect(results[0].feature.name).toMatch(/PROCESSED$/);
+        expect(results[0].feature.elements).toEqual(sources[0].feature.elements);
+    });
+
+    test("should set destination if not set based on the base", async () => {
+        await runWithArgs({
+            config: "tests/cli/data/config.json",
+            base: "tests/cli/data/source",
+            destination: null,
+        });
+        const sources: Document[] = await getSources();
+        const results: Document[] = await getResult('source/dist');
+        expect(results).toHaveLength(1);
+        expect(results[0].feature.name).toMatch(/PROCESSED$/);
+        expect(results[0].feature.elements).toEqual(sources[0].feature.elements);
+    });
+
+    test("should log configuration if verbose set", async () => {
+        await runWithArgs({
+            config: "tests/cli/data/config.json",
+            verbose: false,
+        });
+        expect(console.log).not.toHaveBeenCalled();
+
+        await runWithArgs({
+            config: "tests/cli/data/config.json",
+            verbose: true,
+        });
+        expect(console.log).toHaveBeenCalled();
+    });
+
+    test("should use package as compiler", async () => {
+        await runWithArgs({
+            config: "tests/cli/data/config-w-package.json",
+        });
+        const sources: Document[] = await getSources();
+        const results: Document[] = await getResult();
+        expect(results).toHaveLength(1);
+        expect(results[0].feature.name).toMatch(/PACKAGE$/);
+        expect(results[0].feature.elements).toEqual(sources[0].feature.elements);
+    });
+
+    test("should use compiler object", async () => {
+        await runWithArgs({
+            config: "tests/cli/data/config-w-object.json",
+        });
+        const sources: Document[] = await getSources();
+        const results: Document[] = await getResult();
+        expect(results).toHaveLength(1);
+        expect(results[0].feature.name).toMatch(/OBJECT$/);
+        expect(results[0].feature.elements).toEqual(sources[0].feature.elements);
+    });
+
+    test("should fail if compiler is neither class nor object", async () => {
+        await expect(() => runWithArgs({
+            config: "tests/cli/data/config-w-invalid.json"
+        })).rejects.toThrow(/Precompiler \(.*gpc-test-invalid.js\) must be a class or a PreCompiler object: 1!/);
+    });
+
+    test("should clean destination directory if clean is set", async () => {
+        copyFileSync('tests/cli/data/source/1.feature', 'tests/cli/data/destination/1.feature');
+        await runWithArgs({
+            config: "tests/cli/data/config.json",
+            clean: false,
+        });
+        let results: Document[] = await getResult();
+        expect(results).toHaveLength(2);
+
+        await runWithArgs({
+            config: "tests/cli/data/config.json",
+            clean: true,
+        });
+        results = await getResult();
         expect(results).toHaveLength(1);
     });
 
-    test.todo("should use dirname of source if no base ser and source if a file");
-
-    test.todo("should set source using base");
-
-    test.todo("should update source if a directory is set");
-
-    test.todo("should set destination if not set based on the base");
-
-    test.todo("should log configuration if verbose set");
-
-    test.todo("should use package as compiler");
-
-    test.todo("should use file as compiler");
-
-    test.todo("should use compiler class");
-
-    test.todo("should use compiler object");
-
-    test.todo("should fail if compiler is neither class nor object");
-
-    test.todo("should clean destination directory if clean is set");
+    test("should create destination directory if it does not exist", async () => {
+        deleteDirectory('destination');
+        await runWithArgs({
+            config: "tests/cli/data/config.json",
+        });
+        const results: Document[] = await getResult();
+        expect(results).toHaveLength(1);
+    });
 });

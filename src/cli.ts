@@ -12,8 +12,10 @@ const debug = getDebugger("cli");
 
 interface CompilerConfig {
     path?: string;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    arguments?: any[];
+    configuration?: {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        [name: string]: any;
+    }
 }
 
 interface IOConfig {
@@ -144,7 +146,10 @@ const prepareConfig = (argv: Config): Config => {
     if (!argv.destination) {
         argv.destination = join(argv.base, "dist");
     } else if (!isDirectory(argv.destination)) {
-        throw new Error('Destination mutst be a directory!');
+        if (existsSync(argv.destination)) {
+            throw new Error('Destination must be a directory!');
+        }
+        mkdirSync(argv.destination);
     }
     if (!Array.isArray(argv.compilers)) {
         throw new Error('Precompilers must be set in the configuration file!');
@@ -173,7 +178,7 @@ const loadCompilers = (compilers: CompilerConfig[]): PreCompiler[] => {
             preCompiler = require(resolve(compiler.path));
         }
         if (typeof preCompiler === "function") {
-            return new preCompiler(...(compiler.arguments || []));
+            return new preCompiler(compiler.configuration || {});
         }
         if (typeof preCompiler !== "object") {
             throw new Error(`Precompiler (${compiler.path}) must be a class or a PreCompiler object: ${preCompiler}!`);
