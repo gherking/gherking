@@ -1,7 +1,5 @@
 import { Feature, Document } from "gherkin-ast";
 import { DocumentProcessor } from "../src/DocumentProcessor";
-import { SingleControlType } from "../src/PreCompiler";
-import { Processor } from "../src/Processor";
 
 describe("DocumentProcessor", () => {
     let document1: Document;
@@ -42,34 +40,4 @@ describe("DocumentProcessor", () => {
         expect(result).toEqual([]);
     });
 
-    test("should handle when feature processor retuns singular feature", () => {
-        class SingleFeatureProcessor extends Processor<Feature, Document, SingleControlType<Feature>> {
-            protected preFilter(_e: Feature, _p: Document): boolean {
-                return true;
-            }
-            protected postFilter(_e: Feature, _p: Document): boolean {
-                return true
-            }
-            public process(e: Feature, _p: Document): SingleControlType<Feature> {
-                return e;
-            }
-
-        }
-        const singleFeatureProcessor = new SingleFeatureProcessor()
-        const documentProcessor = new DocumentProcessor({
-            preFeature(_e) {
-                return true;
-            },
-            onFeature(f: Feature) {
-                return singleFeatureProcessor.process(f, null);
-            },
-            postFeature(_e) {
-                return true
-            }
-        });
-
-        const result = documentProcessor.execute(document1);
-
-        expect(result).toBe([document1]);
-    });
 })

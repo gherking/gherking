@@ -1,4 +1,4 @@
-import { Document } from "gherkin-ast";
+import { Document, Feature } from "gherkin-ast";
 import { FeatureProcessor } from "./FeatureProcessor";
 import { PreCompiler } from "./PreCompiler";
 import { ProcessorBase } from "./Processor";
@@ -26,17 +26,14 @@ export class DocumentProcessor extends ProcessorBase {
             debug("...!feature");
             return [];
         }
-        let features = this.featureProcessor.execute(document.feature, document);
+        const features: Feature[] = this.featureProcessor.execute(document.feature, document) as Feature[];
         if (!features) {
             debug("...!features");
             return [];
         }
-        if (!Array.isArray(features)) {
-            debug("...single feature");
-            features = [features];
-        } else {
-            debug("...Array %d", features.length);
-        }
+
+        debug("...Array %d", features.length);
+
         return features.map((feature, i) => {
             debug("...map(i: %d)", i);
             const newDocument = e.clone();
