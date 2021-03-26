@@ -8,9 +8,11 @@
 
 Simple pre-compiler for Gherkin feature files.
 
-<strong style="color:red">IMPORTANT! This version (v1.0.0-beta.1) is only a BETA version. The main functionality of the tool is implemented, but the precompilers haven't been implemented yet. As soon as the 8 built-in precompilers are implemented, the final version will be released.</strong>
+It is based on the AST what is provided by [gherkin-ast](https://www.npmjs.com/package/gherkin-ast)
 
-It is based on the AST what is provided by [gherkin-ast](https://www.npmjs.com/package/gherkin-ast).
+## IMPORTANT! 
+ 
+This version (v1.0.0-beta.1) is only a **BETA version**. The main functionality of the tool is implemented, but **the precompilers haven't been implemented yet**. As soon as the 8 built-in precompilers are implemented, the final version will be released.</strong>
 
 ## Usage
 
