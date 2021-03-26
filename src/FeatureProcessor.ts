@@ -43,39 +43,39 @@ export class FeatureProcessor extends Processor<Feature, Document, MultiControlT
             "process(hasOnFeature: %s, e: %s, p: %s)",
             !!this.preCompiler.onFeature, e?.constructor.name, p?.constructor.name
         );
-        if (e) {
-            let features = [e];
-            if (this.preCompiler.onFeature) {
-                const result = this.preCompiler.onFeature(e, p);
-                if (result === null) {
-                    debug("...delete");
-                    return [];
-                }
-                if (Array.isArray(result)) {
-                    debug("...Array: %d", result.length);
-                    features = result;
-                } else if (result) {
-                    debug("...replace");
-                    features = [result];
-                }
+
+        let features = [e];
+        if (this.preCompiler.onFeature) {
+            const result = this.preCompiler.onFeature(e, p);
+            if (result === null) {
+                debug("...delete");
+                return [];
             }
-
-            features.forEach((feature, i) => {
-                debug("...forEach %d", i);
-                feature.tags = this.tagProcessor.execute(feature?.tags, feature);
-
-                const elements = feature.elements;
-                if (this.hasRule(elements)) {
-                    debug("......hasRule %d", i);
-                    feature.elements = this.ruleProcessor.execute(elements, feature);
-                } else {
-                    debug("......noRule %d", i);
-                    feature.elements = this.elementProcessor.execute(elements as Element[], feature)
-                }
-            });
-
-            return features;
+            if (Array.isArray(result)) {
+                debug("...Array: %d", result.length);
+                features = result;
+            } else if (result) {
+                debug("...replace");
+                features = [result];
+            }
         }
+
+        features.forEach((feature, i) => {
+            debug("...forEach %d", i);
+            feature.tags = this.tagProcessor.execute(feature?.tags, feature);
+
+            const elements = feature.elements;
+            if (this.hasRule(elements)) {
+                debug("......hasRule %d", i);
+                feature.elements = this.ruleProcessor.execute(elements, feature);
+            } else {
+                debug("......noRule %d", i);
+                feature.elements = this.elementProcessor.execute(elements as Element[], feature)
+            }
+        });
+
+        return features;
+
     }
 
     private hasRule(elements: (Element | Rule)[]): elements is Rule[] {
