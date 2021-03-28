@@ -1,6 +1,6 @@
 {
   "name": "gherking",
-  "version": "1.0.0-beta.1",
+  "version": "1.0.0",
   "description": "Simple pre-compiler for Gherkin feature files",
   "main": "index.ts",
   "types": "index.d.ts",
