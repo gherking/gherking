@@ -41,7 +41,7 @@ jobs:
         run: npm run buildUpdate
       - name: Release
         run: |
-          cv=$(npm version | grep gherking | cut -d "'" -f 4)
+          cv=$(cat pacakge.json | grep version | cut -d '"' -f 4)
           echo "$cv-beta.$BUILD_NUMBER"
           npm --no-git-tag-version version "$cv-beta.$BUILD_NUMBER"
           npm publish --tag beta .
