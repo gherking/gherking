@@ -15,16 +15,16 @@ It is based on the AST what is provided by [gherkin-ast](https://www.npmjs.com/p
 ```javascript
 'use strict';
 const compiler = require('gherking');
-const {Replacer} = require('gpc-replacer');
+const Replacer = require('gpc-replacer');
 
-let ast = compiler.load('./features/src/login.feature');
+let ast = await compiler.load('./features/src/login.feature');
 ast = compiler.process(
     ast,
     new Replacer({
         name: 'Hello'
     })
 );
-compiler.save('./features/dist/login.feature', ast, {
+await compiler.save('./features/dist/login.feature', ast, {
     lineBreak: '\r\n'
 });
 ```
@@ -32,16 +32,16 @@ compiler.save('./features/dist/login.feature', ast, {
 ```typescript
 'use strict';
 import {load, process, save} from "gherking";
-import {Replacer} from "gpc-replacer";
+import Replacer = require("gpc-replacer");
 
-let ast = load("./features/src/login.feature");
+let ast = await load("./features/src/login.feature");
 ast = process(
     ast,
     new Replacer({
         name: 'Hello'
     })
 );
-save('./features/dist/login.feature', ast, {
+await save('./features/dist/login.feature', ast, {
     lineBreak: '\r\n'
 });
 ```
