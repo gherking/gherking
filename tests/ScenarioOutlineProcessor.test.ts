@@ -1,4 +1,4 @@
-import { Step, Tag, ScenarioOutline, Feature } from "gherkin-ast";
+import { Step, Tag, ScenarioOutline, Feature, Examples } from "gherkin-ast";
 import { ScenarioOutlineProcessor } from "../src/ScenarioOutlineProcessor";
 
 describe("ScenarioOutlineProcessor", () => {
@@ -6,6 +6,7 @@ describe("ScenarioOutlineProcessor", () => {
     let feature: Feature;
     let steps: Step[];
     let tags: Tag[];
+    let examples: Examples[];
 
     beforeEach(() => {
         steps = [
@@ -18,6 +19,11 @@ describe("ScenarioOutlineProcessor", () => {
             new Tag("tag", "2"),
             new Tag("tag", "3"),
         ];
+        examples = [
+            new Examples("1", "e"),
+            new Examples("2", "f"),
+            new Examples("3", "g"),
+        ]
 
         scenarioOutline1 = new ScenarioOutline("1", "2", "3");
         scenarioOutline2 = new ScenarioOutline("4", "5", "6");
@@ -27,6 +33,8 @@ describe("ScenarioOutlineProcessor", () => {
         scenarioOutline2.steps = steps;
         scenarioOutline1.tags = tags;
         scenarioOutline2.tags = tags;
+        scenarioOutline1.examples = undefined;
+        scenarioOutline2.examples = examples;
         feature.elements.push(scenarioOutline1, scenarioOutline2);
 
     })
@@ -100,6 +108,18 @@ describe("ScenarioOutlineProcessor", () => {
 
         expect(results).toBeNull();
     });
-
-
+    
+    test("should handle present and missing examples", () => {
+        const scenarioOutlineProcessor = new ScenarioOutlineProcessor<Feature>({
+            onScenarioOutline(e: ScenarioOutline): ScenarioOutline {
+                const c = e.clone();
+                c.examples.forEach(example => example.keyword += "1");
+                return c;
+            },
+        });
+        const result1 = scenarioOutlineProcessor.process(scenarioOutline1, feature, 1) as ScenarioOutline;
+        const result2 = scenarioOutlineProcessor.process(scenarioOutline2, feature, 1) as ScenarioOutline;
+        expect(result1.examples).toEqual([]);
+        expect(result2.examples.map(example => example.keyword)).toEqual(["11", "21", "31"]);
+    });
 })

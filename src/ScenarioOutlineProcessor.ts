@@ -66,7 +66,9 @@ export class ScenarioOutlineProcessor<P extends Feature | Rule> extends PartialL
         );
         e.tags = this.tagProcessor.execute(e.tags, e);
         e.steps = this.stepProcessor.execute(e.steps, e);
-        e.examples = this.examplesProcessor.execute(e.examples, e);
+        if (e.examples) {
+            e.examples = this.examplesProcessor.execute(e.examples, e);
+        }
         return e;
     }
 }
