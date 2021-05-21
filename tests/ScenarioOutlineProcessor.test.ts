@@ -1,4 +1,4 @@
-import { Step, Tag, ScenarioOutline, Feature, Examples } from "gherkin-ast";
+import { Step, Tag, ScenarioOutline, Feature, Examples, TableRow, TableCell, Scenario } from "gherkin-ast";
 import { ScenarioOutlineProcessor } from "../src/ScenarioOutlineProcessor";
 
 describe("ScenarioOutlineProcessor", () => {
@@ -7,6 +7,7 @@ describe("ScenarioOutlineProcessor", () => {
     let steps: Step[];
     let tags: Tag[];
     let examples: Examples[];
+    let tableRow: TableRow;
 
     beforeEach(() => {
         steps = [
@@ -19,11 +20,14 @@ describe("ScenarioOutlineProcessor", () => {
             new Tag("tag", "2"),
             new Tag("tag", "3"),
         ];
+        tableRow = new TableRow([new TableCell("1")]);
         examples = [
             new Examples("1", "e"),
             new Examples("2", "f"),
             new Examples("3", "g"),
-        ]
+        ];
+        examples.forEach(example => example.header = tableRow);
+        examples.forEach(example => example.body = [tableRow]);
 
         scenarioOutline1 = new ScenarioOutline("1", "2", "3");
         scenarioOutline2 = new ScenarioOutline("4", "5", "6");
@@ -33,7 +37,7 @@ describe("ScenarioOutlineProcessor", () => {
         scenarioOutline2.steps = steps;
         scenarioOutline1.tags = tags;
         scenarioOutline2.tags = tags;
-        scenarioOutline1.examples = undefined;
+        scenarioOutline1.examples = examples;
         scenarioOutline2.examples = examples;
         feature.elements.push(scenarioOutline1, scenarioOutline2);
 
@@ -109,7 +113,7 @@ describe("ScenarioOutlineProcessor", () => {
         expect(results).toBeNull();
     });
     
-    test("should handle present and missing examples", () => {
+    test("should handle present examples", () => {
         const scenarioOutlineProcessor = new ScenarioOutlineProcessor<Feature>({
             onScenarioOutline(e: ScenarioOutline): ScenarioOutline {
                 const c = e.clone();
@@ -117,9 +121,20 @@ describe("ScenarioOutlineProcessor", () => {
                 return c;
             },
         });
-        const result1 = scenarioOutlineProcessor.process(scenarioOutline1, feature, 1) as ScenarioOutline;
-        const result2 = scenarioOutlineProcessor.process(scenarioOutline2, feature, 1) as ScenarioOutline;
-        expect(result1.examples).toEqual([]);
-        expect(result2.examples.map(example => example.keyword)).toEqual(["11", "21", "31"]);
+        const result = scenarioOutlineProcessor.process(scenarioOutline2, feature, 1) as ScenarioOutline;
+        expect(result.examples.map(example => example.keyword)).toEqual(["11", "21", "31"]);
+    });
+
+    test("should handle missing examples", () => {
+        const scenarioOutlineProcessor = new ScenarioOutlineProcessor<Feature>({
+            // @ts-ignore
+            onScenarioOutline(e: ScenarioOutline) {
+                return e.toScenario();
+            },
+        });
+        const results = scenarioOutlineProcessor.process(scenarioOutline1, feature, 1) as Scenario[];
+        expect(results).toBeInstanceOf(Array);
+        expect(results.length).toEqual(3);
+        expect(results[0]).toBeInstanceOf(Scenario);
     });
 })
