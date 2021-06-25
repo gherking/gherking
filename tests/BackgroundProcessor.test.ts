@@ -77,4 +77,21 @@ describe("BackgroundProcessor", () => {
         expect(results).toBeNull();
     });
 
-})
+    test("should handle steps", () => {
+        const backgroundProcessor = new BackgroundProcessor<Feature>({
+            onBackground(e: Background) {
+                e.name += "PROCESSED";
+            },
+            onStep(e: Step) {
+                e.text += "PROCESSED";
+            }
+        });
+        const result = backgroundProcessor.process(background1, feature) as Background;
+        expect(result.name).toContain("PROCESSED");
+        expect(result.steps).toHaveLength(3);
+
+        for (const step of result.steps) {
+            expect(step.text).toContain("PROCESSED");
+        }
+    });
+});

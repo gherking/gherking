@@ -42,7 +42,10 @@ export class StepProcessor<P extends Background | Scenario | ScenarioOutline> ex
         );
         let step: MultiControlType<Step> = e;
         if (this.preCompiler.onStep) {
-            step = this.preCompiler.onStep(e, p, i);
+            const result = this.preCompiler.onStep(e, p, i);
+            if (typeof result !== "undefined") {
+                step = result;
+            }
         }
         if (step) {
             if (Array.isArray(step)) {

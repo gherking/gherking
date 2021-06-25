@@ -45,7 +45,10 @@ export class ScenarioOutlineProcessor<P extends Feature | Rule> extends PartialL
         );
         let scenarioOutlines: MultiControlType<ScenarioOutline> = e;
         if (this.preCompiler.onScenarioOutline) {
-            scenarioOutlines = this.preCompiler.onScenarioOutline(e, p, i);
+            const result = this.preCompiler.onScenarioOutline(e, p, i);
+            if (typeof result !== "undefined") {
+                scenarioOutlines = result;
+            }
         }
         if (scenarioOutlines) {
             if (Array.isArray(scenarioOutlines)) {

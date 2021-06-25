@@ -137,4 +137,22 @@ describe("ScenarioOutlineProcessor", () => {
         expect(results.length).toEqual(3);
         expect(results[0]).toBeInstanceOf(Scenario);
     });
+
+    test("should handle steps", () => {
+        const scenarioOutlineProcessor = new ScenarioOutlineProcessor<Feature>({
+            onScenarioOutline(e: ScenarioOutline) {
+                e.name += "PROCESSED";
+            },
+            onStep(e: Step) {
+                e.text += "PROCESSED";
+            }
+        });
+        const result = scenarioOutlineProcessor.process(scenarioOutline1, feature, 0) as Scenario;
+        expect(result.name).toContain("PROCESSED");
+        expect(result.steps).toHaveLength(3);
+
+        for (const step of result.steps) {
+            expect(step.text).toContain("PROCESSED");
+        }
+    });
 })

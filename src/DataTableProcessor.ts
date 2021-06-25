@@ -39,7 +39,10 @@ export class DataTableProcessor extends Processor<DataTable, Step> {
         );
         let dataTable: SingleControlType<DataTable> = e;
         if (this.preCompiler.onDataTable) {
-            dataTable = this.preCompiler.onDataTable(e, p);
+            const result = this.preCompiler.onDataTable(e, p);
+            if (typeof result !== "undefined") {
+                dataTable = result;
+            }
         }
         if (dataTable) {
             debug("...rows %s", Array.isArray(dataTable.rows));

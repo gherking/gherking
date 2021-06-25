@@ -1,4 +1,4 @@
-import { Examples, ScenarioOutline } from "gherkin-ast";
+import { Examples, ScenarioOutline, TableCell, TableRow } from "gherkin-ast";
 import { ExamplesProcessor } from "../src/ExamplesProcessor";
 
 describe("ExampleProcessor", () => {
@@ -61,4 +61,22 @@ describe("ExampleProcessor", () => {
         expect(names).toHaveLength(4);
         expect(names).toEqual(["n1", "n1", "k1", "k1"]);
     });
+
+    test("should process header", () => {
+        const exampleProcessor = new ExamplesProcessor({
+            onExamples(e: Examples) {
+                e.name += "PROCESSED";
+            },
+            onTableRow(e: TableRow) {
+                e.cells[0].value += "PROCESSED";
+            }
+        });
+        examples[0].body = [new TableRow([
+            new TableCell("1"),
+        ])];
+
+        const results = exampleProcessor.execute(examples, scenarioOutline);
+        expect(results[0].name).toContain("PROCESSED");
+        expect(results[0].body[0].cells[0].value).toContain("PROCESSED");
+    })
 })
