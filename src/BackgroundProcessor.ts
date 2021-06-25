@@ -39,7 +39,10 @@ export class BackgroundProcessor<P extends Feature | Rule> extends PartialProces
         );
         let background: SingleControlType<Background> = e;
         if (this.preCompiler.onBackground) {
-            background = this.preCompiler.onBackground(e, p);
+            const result = this.preCompiler.onBackground(e, p);
+            if (typeof result !== "undefined") {
+                background = result;
+            }
         }
         if (background) {
             debug("...step %s", Array.isArray(background.steps));

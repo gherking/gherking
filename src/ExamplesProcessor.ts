@@ -42,7 +42,10 @@ export class ExamplesProcessor extends ListProcessor<Examples, ScenarioOutline> 
         );
         let examples: MultiControlType<Examples> = e;
         if (this.preCompiler.onExamples) {
-            examples = this.preCompiler.onExamples(e, p, i);
+            const result = this.preCompiler.onExamples(e, p, i);
+            if (typeof result !== "undefined") {
+                examples = result;
+            }
         }
         if (examples) {
             if (Array.isArray(examples)) {

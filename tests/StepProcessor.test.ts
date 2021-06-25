@@ -90,6 +90,10 @@ describe("StepProcessor", () => {
 
     test("should process docString of step", () => {
         const stepProcessor = new StepProcessor<Background>({
+            onStep(e: Step): void {
+                e.text += "PROCESSED";
+            },
+
             onDocString(e: DocString): void {
                 e.content += "1";
             }

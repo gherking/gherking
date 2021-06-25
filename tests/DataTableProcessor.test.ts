@@ -68,13 +68,16 @@ describe("DataTableProcessor", () => {
 
     test("should process rows", () => {
         const dataTableProcessor = new DataTableProcessor({
+            onDataTable(e: DataTable): void {
+                e.rows.push(new TableRow([]));
+            },
             onTableRow(e: TableRow): void {
                 e.cells.push(new TableCell("new"));
             },
         });
         const result = dataTableProcessor.execute(dataTable, step);
 
-        expect(result.rows).toHaveLength(2);
+        expect(result.rows).toHaveLength(3);
         for (const row of result.rows) {
             expect(row.cells).toHaveLength(1);
             expect(row.cells[0].value).toBe("new");

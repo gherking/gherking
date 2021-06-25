@@ -39,7 +39,10 @@ export class RuleProcessor extends ListProcessor<Rule, Feature> {
         );
         let rule: MultiControlType<Rule> = e;
         if (this.preCompiler.onRule) {
-            rule = this.preCompiler.onRule(e, p, i);
+            const result = this.preCompiler.onRule(e, p, i);
+            if (typeof result !== "undefined") {
+                rule = result;
+            }
         }
         if (rule) {
             if (Array.isArray(rule)) {

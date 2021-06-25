@@ -1,4 +1,4 @@
-import { Rule, Feature } from "gherkin-ast"
+import { Rule, Feature, Scenario } from "gherkin-ast"
 import { RuleProcessor } from "../src/RuleProcessor";
 
 describe("RuleProcessor", ()=> {
@@ -77,4 +77,19 @@ describe("RuleProcessor", ()=> {
         expect(names).toHaveLength(4);
         expect(names).toEqual(["21", "21", "51", "51"]);
     });
-})
+
+    test("should process scenarios", () => {
+        rule1.elements = [new Scenario("Scenario", "1", "")];
+        const ruleProcessor = new RuleProcessor({
+            onRule(e: Rule) {
+                e.name += "PROCESSED";
+            },
+            onScenario(e: Scenario) {
+                e.name += "PROCESSED";
+            }
+        });
+        const results = ruleProcessor.execute(feature1.elements as Rule[], feature1);
+        expect(results[0].name).toContain("PROCESSED");
+        expect(results[0].elements[0].name).toContain("PROCESSED");
+    });
+});

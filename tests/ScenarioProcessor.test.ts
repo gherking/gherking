@@ -101,4 +101,21 @@ describe("ScenarioProcessor", () => {
         expect(results).toBeNull();
     });
 
+    test("should handle steps", () => {
+        const scenarioProcessor = new ScenarioProcessor<Feature>({
+            onScenario(e: Scenario) {
+                e.name += "PROCESSED";
+            },
+            onStep(e: Step) {
+                e.text += "PROCESSED";
+            }
+        });
+        const result = scenarioProcessor.process(scenario1, feature, 0) as Scenario;
+        expect(result.name).toContain("PROCESSED");
+        expect(result.steps).toHaveLength(3);
+
+        for (const step of result.steps) {
+            expect(step.text).toContain("PROCESSED");
+        }
+    });
 })

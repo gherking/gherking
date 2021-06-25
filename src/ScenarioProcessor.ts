@@ -42,7 +42,10 @@ export class ScenarioProcessor<P extends Feature | Rule> extends PartialListProc
         );
         let scenario: MultiControlType<Scenario> = e;
         if (this.preCompiler.onScenario) {
-            scenario = this.preCompiler.onScenario(e, p, i);
+            const result = this.preCompiler.onScenario(e, p, i);
+            if (typeof result !== "undefined") {
+                scenario = result;
+            }
         }
         if (scenario) {
             if (Array.isArray(scenario)) {
