@@ -11,9 +11,9 @@ describe("ExampleProcessor", () => {
             new Examples("n", "k"),
         ]
         scenarioOutline = new ScenarioOutline("1", "2", "3");
-        scenarioOutline.examples = examples;    
+        scenarioOutline.examples = examples;
     })
-    
+
     test("should work if no pre/post-filter or event handler is set", () => {
         const examplesProcessor = new ExamplesProcessor();
         const result = examplesProcessor.execute(examples, scenarioOutline);
@@ -68,15 +68,21 @@ describe("ExampleProcessor", () => {
                 e.name += "PROCESSED";
             },
             onTableRow(e: TableRow) {
-                e.cells[0].value += "PROCESSED";
+                if (e) {
+                    e.cells[0].value += "PROCESSED";
+                }
             }
         });
+        examples[0].header = new TableRow([
+            new TableCell("0"),
+        ])
         examples[0].body = [new TableRow([
             new TableCell("1"),
         ])];
 
         const results = exampleProcessor.execute(examples, scenarioOutline);
         expect(results[0].name).toContain("PROCESSED");
+        expect(results[0].header.cells[0].value).toContain("PROCESSED");
         expect(results[0].body[0].cells[0].value).toContain("PROCESSED");
     })
 })
