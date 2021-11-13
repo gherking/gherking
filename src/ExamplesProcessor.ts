@@ -62,6 +62,7 @@ export class ExamplesProcessor extends ListProcessor<Examples, ScenarioOutline> 
     private postProcess(e: Examples): Examples {
         debug("postProcess(tags: %s, body: %s)", Array.isArray(e.tags), Array.isArray(e.body));
         e.tags = this.tagsProcessor.execute(e.tags, e);
+        e.header = this.tableRowProcessor.execute([e.header], e)?.[0];
         e.body = this.tableRowProcessor.execute(e.body, e);
         return e;
     }
