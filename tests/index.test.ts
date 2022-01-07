@@ -1,6 +1,6 @@
 import { load, save } from "../src";
 import { Document } from "gherkin-ast";
-import { rmSync, existsSync } from "fs";
+import * as fs from "fs";
 
 describe("API", () => {
     describe("load", () => {
@@ -12,8 +12,8 @@ describe("API", () => {
 
     const deleteDirectory = (dir: string) => {
         dir = `tests/cli/data/${dir}`;
-        if (existsSync(dir)) {
-            rmSync(dir, { recursive: true });
+        if (fs.existsSync(dir)) {
+            (fs.rmSync ? fs.rmSync : fs.rmdirSync)(dir, { recursive: true });
         }
     };
 

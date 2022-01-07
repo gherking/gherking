@@ -1,6 +1,6 @@
 import { run, CLIConfig } from "../src/cli";
 import { Document, read } from "gherkin-io";
-import { rmSync, existsSync, copyFileSync } from "fs";
+import * as fs from "fs";
 import { pruneID } from "gherkin-ast";
 
 console.error = jest.fn();
@@ -43,8 +43,8 @@ describe("CLI", () => {
     const getResult = (destination = "destination") => readFeatureFiles(`tests/cli/data/${destination}/**/*.feature`);
     const deleteDirectory = (dir: string) => {
         dir = `tests/cli/data/${dir}`;
-        if (existsSync(dir)) {
-            rmSync(dir, { recursive: true });
+        if (fs.existsSync(dir)) {
+            (fs.rmSync ? fs.rmSync : fs.rmdirSync)(dir, { recursive: true });
         }
     };
 
@@ -204,7 +204,7 @@ describe("CLI", () => {
     });
 
     test("should clean destination directory if clean is set", async () => {
-        copyFileSync("tests/cli/data/source/1.feature", "tests/cli/data/destination/1.feature");
+        fs.copyFileSync("tests/cli/data/source/1.feature", "tests/cli/data/destination/0.feature");
         await runWithArgs({
             config: "tests/cli/data/config.json",
             clean: false,
