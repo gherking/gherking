@@ -1,4 +1,4 @@
-import { Feature, Document } from "gherkin-ast";
+import { Feature, Document, pruneID } from "gherkin-ast";
 import { DocumentProcessor } from "../src/DocumentProcessor";
 
 describe("DocumentProcessor", () => {
@@ -17,7 +17,7 @@ describe("DocumentProcessor", () => {
         const result1 = documentProcessor.execute(document1);
         const result2 = documentProcessor.execute(document2);
         expect(result1).toEqual([]);
-        expect(result2).toEqual([document2]);
+        expect(pruneID(result2)).toEqual([pruneID(document2)]);
     });
 
     test("should handle ", () => {
