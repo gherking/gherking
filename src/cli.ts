@@ -62,13 +62,15 @@ const isFile = (path: string): boolean => {
     }
 }
 
+const resolvePath = (path: string): string => path ? resolve(path) : null;
+
 const parseConfig = (): Config => {
     debug("parseConfig %o", process.argv);
     return yargs(process.argv)
         .option("config", {
             type: "string",
             alias: "c",
-            coerce: resolve,
+            coerce: resolvePath,
             default: "./precompiler.json",
             description: "The path of the configuration file which contains the precompilers and their configurations.",
             normalize: true,
@@ -78,21 +80,21 @@ const parseConfig = (): Config => {
         .option("source", {
             type: "string",
             alias: "s",
-            coerce: resolve,
+            coerce: resolvePath,
             description: "The pattern or path of feature files which needs to be precompiled.",
             normalize: true
         })
         .option("base", {
             type: "string",
             alias: "b",
-            coerce: resolve,
+            coerce: resolvePath,
             description: "The base directory of feature files.",
             normalize: true
         })
         .option("destination", {
             type: "string",
             alias: "d",
-            coerce: resolve,
+            coerce: resolvePath,
             description: "The destination directory of precompiled feature files.",
             normalize: true
         })

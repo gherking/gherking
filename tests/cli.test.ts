@@ -1,6 +1,7 @@
 import { run, CLIConfig } from "../src/cli";
 import { Document, read } from "gherkin-io";
 import { rmdirSync, copyFileSync } from "fs";
+import { pruneID } from "gherkin-ast";
 
 console.error = jest.fn();
 console.log = jest.fn();
@@ -34,8 +35,12 @@ describe("CLI", () => {
         return run();
     }
 
-    const getSources = () => read("tests/cli/data/source/**/*.feature");
-    const getResult = (destination = "destination") => read(`tests/cli/data/${destination}/**/*.feature`);
+    const readFeatureFiles = async (path: string) => {
+        const ast: Document[] = await read(path);
+        return ast.map(pruneID) as Document[];
+    };
+    const getSources = () => readFeatureFiles("tests/cli/data/source/**/*.feature");
+    const getResult = (destination = "destination") => readFeatureFiles(`tests/cli/data/${destination}/**/*.feature`);
     const deleteDirectory = (dir: string) => {
         rmdirSync(`tests/cli/data/${dir}`, { recursive: true });
     };
