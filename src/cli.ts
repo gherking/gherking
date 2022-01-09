@@ -71,7 +71,7 @@ const parseConfig = (): Config => {
             type: "string",
             alias: "c",
             coerce: resolvePath,
-            default: "./precompiler.json",
+            default: "./.gherking.json",
             description: "The path of the configuration file which contains the precompilers and their configurations.",
             normalize: true,
             config: true,

@@ -66,7 +66,7 @@ The package provides a command line interface to be able to easily precompile fe
 npm install -g gherking
 
 # use gherking, precompile or gherkin-precompiler commands
-gherking --config precompiler.json --base e2e/features/src --destination e2e/features/dist
+gherking --config .gherking.json --base e2e/features/src --destination e2e/features/dist
 ```
 
 ### Arguments
@@ -76,7 +76,7 @@ Options:
       --version      Show version number                               [boolean]
   -c, --config       The path of the configuration file which contains the
                      precompilers and their configurations.
-                                        [string] [default: "./precompiler.json"]
+                                        [string] [default: "./.gherking.json"]
   -s, --source       The pattern or path of feature files which needs to be
                      precompiled.                                       [string]
   -b, --base         The base directory of feature files.               [string]
@@ -101,7 +101,7 @@ Options:
 The configuration **must** contain the precompilers configuration and optionally all options which could be specified by command line arguments. It can be a JSON file of a JS file
 
 ```js
-// precompiler.json
+// .gherking.json
 {
     // compilers should be an array of precompiler configurations
     "compilers": [
