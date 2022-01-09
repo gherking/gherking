@@ -56,7 +56,7 @@ describe("CLI", () => {
     test("should fail if no config found", async () => {
         await expect(() => runWithArgs({
             config: null,
-        })).rejects.toThrow(/Configuration file does not exist: .*precompiler.json!/);
+        })).rejects.toThrow(/Configuration file does not exist: .*.gherking.json!/);
     });
 
     test("should fail if neither base nor source set", async () => {
