@@ -117,7 +117,7 @@ describe("CLI", () => {
         });
         const sources: Document[] = await getSources();
         const results: Document[] = await getResult();
-        expect(results).toHaveLength(1);
+        expect(results).toHaveLength(2);
         expect(results[0].feature.name).toMatch(/PROCESSED$/);
         expect(results[0].feature.elements).toEqual(sources[0].feature.elements);
     });
@@ -143,7 +143,7 @@ describe("CLI", () => {
         });
         const sources: Document[] = await getSources();
         const results: Document[] = await getResult();
-        expect(results).toHaveLength(1);
+        expect(results).toHaveLength(2);
         expect(results[0].feature.name).toMatch(/PROCESSED$/);
         expect(results[0].feature.elements).toEqual(sources[0].feature.elements);
     });
@@ -156,7 +156,7 @@ describe("CLI", () => {
         });
         const sources: Document[] = await getSources();
         const results: Document[] = await getResult("source/dist");
-        expect(results).toHaveLength(1);
+        expect(results).toHaveLength(2);
         expect(results[0].feature.name).toMatch(/PROCESSED$/);
         expect(results[0].feature.elements).toEqual(sources[0].feature.elements);
     });
@@ -181,7 +181,7 @@ describe("CLI", () => {
         });
         const sources: Document[] = await getSources();
         const results: Document[] = await getResult();
-        expect(results).toHaveLength(1);
+        expect(results).toHaveLength(2);
         expect(results[0].feature.name).toMatch(/PACKAGE$/);
         expect(results[0].feature.elements).toEqual(sources[0].feature.elements);
     });
@@ -192,7 +192,7 @@ describe("CLI", () => {
         });
         const sources: Document[] = await getSources();
         const results: Document[] = await getResult();
-        expect(results).toHaveLength(1);
+        expect(results).toHaveLength(2);
         expect(results[0].feature.name).toMatch(/OBJECT$/);
         expect(results[0].feature.elements).toEqual(sources[0].feature.elements);
     });
@@ -210,14 +210,14 @@ describe("CLI", () => {
             clean: false,
         });
         let results: Document[] = await getResult();
-        expect(results).toHaveLength(2);
+        expect(results).toHaveLength(3);
 
         await runWithArgs({
             config: "tests/cli/data/config.json",
             clean: true,
         });
         results = await getResult();
-        expect(results).toHaveLength(1);
+        expect(results).toHaveLength(2);
     });
 
     test("should create destination directory if it does not exist", async () => {
@@ -226,6 +226,6 @@ describe("CLI", () => {
             config: "tests/cli/data/config.json",
         });
         const results: Document[] = await getResult();
-        expect(results).toHaveLength(1);
+        expect(results).toHaveLength(2);
     });
 });

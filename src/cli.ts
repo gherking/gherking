@@ -1,5 +1,5 @@
 import { hasMagic, sync } from "glob";
-import { statSync, rmdirSync, mkdirSync, existsSync } from "fs";
+import * as fs from "fs";
 import { join, resolve, dirname, normalize } from "path";
 import yargs = require("yargs/yargs");
 import { getDebugger } from "./debug";
@@ -48,7 +48,7 @@ const isPackage = (name: string): boolean => {
 
 const isDirectory = (path: string): boolean => {
     try {
-        return statSync(path).isDirectory();
+        return fs.statSync(path).isDirectory();
     } catch (e) {
         return false;
     }
@@ -56,7 +56,7 @@ const isDirectory = (path: string): boolean => {
 
 const isFile = (path: string): boolean => {
     try {
-        return statSync(path).isFile();
+        return fs.statSync(path).isFile();
     } catch (e) {
         return false;
     }
@@ -117,7 +117,7 @@ const parseConfig = (): Config => {
 
 const prepareConfig = (argv: Config): Config => {
     debug("prepareConfig %o", argv);
-    if (!existsSync(argv.config)) {
+    if (!fs.existsSync(argv.config)) {
         throw new Error(`Configuration file does not exist: ${argv.config}!`);
     }
     if (!argv.source && !argv.base) {
@@ -148,10 +148,10 @@ const prepareConfig = (argv: Config): Config => {
     if (!argv.destination) {
         argv.destination = join(argv.base, "dist");
     } else if (!isDirectory(argv.destination)) {
-        if (existsSync(argv.destination)) {
+        if (fs.existsSync(argv.destination)) {
             throw new Error("Destination must be a directory!");
         }
-        mkdirSync(argv.destination);
+        fs.mkdirSync(argv.destination);
     }
     if (!Array.isArray(argv.compilers)) {
         throw new Error("Precompilers must be set in the configuration file!");
@@ -202,8 +202,8 @@ const processSource = async (source: IOConfig, compilers: PreCompiler[], formatO
     const ast: Document[] = await load(source.input);
     const outputAst = processAst(ast[0], ...compilers);
     const outputDir = dirname(source.output);
-    if (!existsSync(outputDir)) {
-        mkdirSync(outputDir, { recursive: true });
+    if (!fs.existsSync(outputDir)) {
+        fs.mkdirSync(outputDir, { recursive: true });
     }
     await save(source.output, outputAst, formatOptions);
 }
@@ -219,10 +219,10 @@ export async function run(): Promise<void> {
     const sources = getSources(config);
     debug("...sources: %o", sources);
 
-    if (config.clean && existsSync(config.destination)) {
+    if (config.clean && fs.existsSync(config.destination)) {
         config.verbose && console.log(`Cleaning ${config.destination}`);
-        rmdirSync(config.destination, { recursive: true });
-        mkdirSync(config.destination, { recursive: true });
+        (fs.rmSync ? fs.rmSync : fs.rmdirSync)(config.destination, { recursive: true });
+        fs.mkdirSync(config.destination, { recursive: true });
     }
 
     for (const source of sources) {

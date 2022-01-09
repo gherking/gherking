@@ -6,7 +6,7 @@ describe("API", () => {
     describe("load", () => {
         test("should load Documents", async () => {
             const asts: Document[] = await load("tests/cli/data/source/*.feature");
-            expect(asts).toHaveLength(1);
+            expect(asts).toHaveLength(2);
         });
     });
 
@@ -35,8 +35,8 @@ describe("API", () => {
         });
 
         test("should save single AST to single file without extension", async () => {
-            const sources: Document[] = await load("tests/cli/data/source/*.feature");
-            await save("tests/cli/data/destination/dest2", sources[0]);
+            const sources: Document[] = await load("tests/cli/data/source/1.feature");
+            await save("tests/cli/data/destination/dest2", sources);
             const results: Document[] = await load("tests/cli/data/destination/dest2.feature");
             expect(results).toHaveLength(1);
         });

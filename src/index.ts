@@ -43,7 +43,7 @@ export async function save(path: string | PathGenerator, ast: Document | Documen
     if (!path) {
         throw new TypeError("path parameter must be set, either as a string or a PathGenerator");
     }
-    if (Array.isArray(ast)) {
+    if (Array.isArray(ast) && ast.length > 1) {
         debug("...Array: %d", ast.length);
         let pathGenerator = path as PathGenerator;
         if (typeof path === "string") {
@@ -67,6 +67,9 @@ export async function save(path: string | PathGenerator, ast: Document | Documen
             await write(filePath, ast[i], options);
         }
     } else {
+        if (Array.isArray(ast)) {
+            ast = ast[0];
+        }
         if (typeof path === "function") {
             path = path(ast);
             debug("...path: %s", path);
