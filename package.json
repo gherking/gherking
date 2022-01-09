@@ -2,7 +2,7 @@
   "name": "gherking",
   "version": "1.0.0",
   "description": "Simple pre-compiler for Gherkin feature files",
-  "main": "index.ts",
+  "main": "index.js",
   "types": "index.d.ts",
   "bin": {
     "gherkin-precompiler": "bin/precompiler.js",
