@@ -136,6 +136,8 @@ The configuration **must** contain the precompilers configuration and optionally
 }
 ```
 
+Note: command line arguments should also support setting `formatOptions`, via object arguments, see [Object@yargs](https://github.com/yargs/yargs/blob/main/docs/tricks.md#objects).
+
 ## API
 
 ### `load`
