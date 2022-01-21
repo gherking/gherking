@@ -1,7 +1,7 @@
 {
   "name": "gherking",
   "version": "1.0.0",
-  "description": "Simple pre-compiler for Gherkin feature files",
+  "description": "GherKing is a tool to make Gherkin smarter! It allows you to handle Cucumber/Gherkin feature files programmatically, in your JavaScript/TypeScript code.",
   "main": "index.js",
   "types": "index.d.ts",
   "bin": {
@@ -14,7 +14,7 @@
     "buildUpdate": "npm run clean && npm run compile && npm run copyToDist",
     "copyToDist": "copyfiles -f *.txt *.md package.json dist",
     "typedoc": "typedoc --out ./docs ./src && touch ./docs/.nojekyll",
-    "clean": "rimraf ./dist ./docs ./reports",
+    "clean": "rimraf ./dist ./docs ./reports ./tests/cli/data/destination/*",
     "test": "cross-env JEST_JUNIT_OUTPUT_DIR=./reports jest --coverage",
     "lint": "eslint . --ext .ts --fix",
     "compile": "tsc && npm run lint"
@@ -32,7 +32,8 @@
   "license": "MIT",
   "contributors": [
     "Laszlo Szikszai <sziklaszlo@gmail.com>",
-    "Judit Nahaj <n.juditt@gmail.com>"
+    "Judit Nahaj <n.juditt@gmail.com>",
+    "Balazs Racz <balazs.racz94@gmail.com>"
   ],
   "bugs": {
     "url": "https://github.com/gherking/gherking/issues"
