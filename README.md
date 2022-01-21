@@ -1,12 +1,8 @@
 # gherking
 
-![Downloads](https://img.shields.io/npm/dw/gherking?style=flat-square)
-![Version@npm](https://img.shields.io/npm/v/gherking?label=version%40npm&style=flat-square)
-![Version@git](https://img.shields.io/github/package-json/v/gherking/gherking/master?label=version%40git&style=flat-square)
-![CI](https://img.shields.io/github/workflow/status/gherking/gherking/CI/master?label=ci&style=flat-square)
-![Docs](https://img.shields.io/github/workflow/status/gherking/gherking/Docs/master?label=docs&style=flat-square)
+![Downloads](https://img.shields.io/npm/dw/gherking?style=flat-square) ![Version@npm](https://img.shields.io/npm/v/gherking?label=version%40npm&style=flat-square) ![Version@git](https://img.shields.io/github/package-json/v/gherking/gherking/master?label=version%40git&style=flat-square) ![CI](https://img.shields.io/github/workflow/status/gherking/gherking/CI/master?label=ci&style=flat-square) ![Docs](https://img.shields.io/github/workflow/status/gherking/gherking/Docs/master?label=docs&style=flat-square)
 
-Simple pre-compiler for Gherkin feature files.
+GherKing is a tool to make Gherkin smarter! It allows you to handle Cucumber/Gherkin feature files programmatically in your JavaScript/TypeScript code.
 
 It is based on the AST what is provided by [gherkin-ast](https://www.npmjs.com/package/gherkin-ast)
 
@@ -59,7 +55,7 @@ await save('./features/dist/login.feature', ast, {
 
 ## CLI
 
-The package provides a command line interface to be able to easily precompile feature files.
+The package provides a command-line interface to precompile feature files easily.
 
 ```bash
 # install package globally
@@ -77,7 +73,7 @@ Options:
   -c, --config       The path of the configuration file which contains the
                      precompilers and their configurations.
                                         [string] [default: "./.gherking.json"]
-  -s, --source       The pattern or path of feature files which needs to be
+  -s, --source       The pattern or path of feature files that need to be
                      precompiled.                                       [string]
   -b, --base         The base directory of feature files.               [string]
   -d, --destination  The destination directory of precompiled feature files.
@@ -90,15 +86,15 @@ Options:
 
 #### Important
 
-* `config` is a mandatory option, since that is the only way to specify the precompilers
-* either a **source directory** or **base directory** must be specified either by command line of by configuration
+* `config` is a mandatory option since that is the only way to specify the precompilers
+* either a **source directory** or **base directory** must be specified either by command line or by configuration
 * if one of the location configurations is missing, it is set based on the given other locations, for example
   * if only `base: "e2e/features"` set, then `source` will be `e2e/features/**/*.feature` and `destination` will be `e2e/features/dist`
   * if only `source` directory is set, then `base` will be the source directory, `destination` will be `{source}/dist` and `source` will be modified to a glob pattern: `{source}/**/*.feature`
 
 ### Configuration
 
-The configuration **must** contain the precompilers configuration and optionally all options which could be specified by command line arguments. It can be a JSON file of a JS file
+The configuration **must** contain the precompilers configuration and optionally all options which command-line arguments could specify. It can be a JSON file or a JS file
 
 ```js
 // .gherking.json
@@ -152,17 +148,17 @@ It loads the given feature file to a `GherkinDocument`.
 
 ### `save`
 
-Saves the given AST ast feature file to the given path.
+Saves the given AST as a feature file to the given path.
 
 **Params:**
  
- * `{string|PathGenerator} pathToFile` - the path of the feature file where the AST needs to be saved, or a funtion what can generate the path from the ast and the index
+ * `{string|PathGenerator} pathToFile` - the path of the feature file where the AST needs to be saved, or a function that can generate the path from the AST and the index
  * `{Document|Document[]} ast` - the AST needs to be saved to the file
  * `{FormatterOptions} [options]` - configuration of formatting, see [FormatterConfig](https://github.com/gherking/gherkin-formatter)
  
 ### `process`
 
-Applies the given pre-compilers to the given AST.
+Applies the given precompilers to the given AST.
 
 **Params:**
 
@@ -173,14 +169,14 @@ Applies the given pre-compilers to the given AST.
 
 ## PreCompiler
 
-If you want to create own pre-compiler, you only have to extends the `Default` class and override the filter and/or event methods, that you want to use; or create and object with the desired methods.
+If you want to create your precompiler, you only have to extend the `Default` class and override the filter and event methods you want to use; or create an object with the desired methods.
 
 ### Event methods
 
-Every element can be modified by using it's correspondent event methods.
+Every element can be modified by using its correspondent event methods.
 
-All event methods (except `onFeature`) receives the given element, it's parent and - if applicable - the index of the element.
-Given that all event receives the given element as an `Object`, those can be easily modified by modifying the object itself.
+All event methods (except `onFeature`) receives the given element, its parent, and - if applicable - the index of the element.
+Given that all events receive the given element as an `Object`, they can be easily modified by modifying the object itself.
 
 The following methods are available, to see exact signature of the given method, click on the name of it:
 
@@ -199,16 +195,16 @@ The following methods are available, to see exact signature of the given method,
 If the method returns
  * `null`, then the given element will be deleted
  * an element, then the original element will be replaced with the returned one
- * (only for <sup>1</sup>) an element array, in case of event which process list element (i.e. tag, scenario, examples, step, background, scenario outline), then the original element will be replaced with the returned list
+ * (only for <sup>1</sup>) an element array, in case of an event which process list element (i.e., tag, scenario, examples, step, background, scenario outline), then the original element will be replaced with the returned list
  * nothing, the element won't be replaced
 
 ### Filter methods
 
-Every element (both single and list) in the AST can be filtered by using it's correspondent pre- or post filter methods.
-A pre filter methods is applied before the processing of the event, the post applied after it.
+Every element (both single and list) in the AST can be filtered using its correspondent pre- or post- filter methods.
+A pre-filter method is applied before processing the event; the post is applied after it.
 
-All filter methods receives the given element, it's parent and - if applicable - the index of the element.
-If a filter method is set, the metod **must** return `true` if the element should be kept, otherwise the element will be discarded. If a filter method is not set, no filtering will happen on the given type of element.
+All filter methods receive the given element, its parent, and - if applicable - the element's index.
+If a filter method is set, the method **must** return `true` if the element should be kept; otherwise, the element will be discarded. If a filter method is not set, no filtering will happen on the given type of element.
 
 The following methods are available, to see exact signature of the given method, click on the name of it:
 
@@ -223,3 +219,13 @@ The following methods are available, to see exact signature of the given method,
  * [preDocString](src/PreCompiler.ts#L50), [postDocString](src/PreCompiler.ts#L51)
  * [preDataTable](src/PreCompiler.ts#L52), [postDataTable](src/PreCompiler.ts#L53)
  * [preTableRow](src/PreCompiler.ts#L54), [postTableRow](src/PreCompiler.ts#L55)
+
+## Other
+
+This package uses [debug](https://www.npmjs.com/package/debug) for logging, use `gherking` :
+
+```shell
+DEBUG=gherking* gherking ...
+```
+
+For detailed documentation see the [TypeDocs documentation](https://gherking.github.io/gherking/).
