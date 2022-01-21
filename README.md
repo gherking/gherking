@@ -126,9 +126,17 @@ The configuration **must** contain the precompilers configuration and optionally
     // base can also be set here
     "base": "e2e/features/src",
     // destination can also be set here
-    "destination": "e2e/features/dist"
+    "destination": "e2e/features/dist",
+    // Config file can contain formatting options for
+    // gherkin-formatter, see documentation for more info:
+    // https://github.com/gherking/gherkin-formatter
+    "formatOptions": {
+        "compact": true
+    }
 }
 ```
+
+Note: command line arguments should also support setting `formatOptions`, via object arguments, see [Object@yargs](https://github.com/yargs/yargs/blob/main/docs/tricks.md#objects).
 
 ## API
 
