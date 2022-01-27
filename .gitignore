@@ -3,6 +3,7 @@
 /reports
 /docs
 /tests/cli/data/destination/*.feature
+/tests/cli/data/output/*.feature
 **/dist
 .idea
 *.log

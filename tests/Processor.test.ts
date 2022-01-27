@@ -118,7 +118,7 @@ describe("Processors", () => {
             expect(result.property).toBe("new");
         });
 
-        test("should have idempotet processor", () => {
+        test("should have idempotent processor", () => {
             class IdempotentProcessor extends Processor<Child, Parent> {
                 protected preFilter(e: Child, p: Parent): boolean {
                     // @ts-ignore

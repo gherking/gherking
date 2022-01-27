@@ -14,7 +14,7 @@
     "buildUpdate": "npm run clean && npm run compile && npm run copyToDist",
     "copyToDist": "copyfiles -f *.txt *.md package.json dist",
     "typedoc": "typedoc --out ./docs ./src && touch ./docs/.nojekyll",
-    "clean": "rimraf ./dist ./docs ./reports ./tests/cli/data/destination/*",
+    "clean": "rimraf ./dist ./docs ./reports ./tests/cli/data/destination/* ./tests/cli/data/output/*",
     "test": "cross-env JEST_JUNIT_OUTPUT_DIR=./reports jest --coverage",
     "lint": "eslint . --ext .ts --fix",
     "compile": "tsc && npm run lint"

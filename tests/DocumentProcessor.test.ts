@@ -20,13 +20,13 @@ describe("DocumentProcessor", () => {
         expect(pruneID(result2)).toEqual([pruneID(document2)]);
     });
 
-    test("should handle ", () => {
+    test("should handle when processing returns null", () => {
         const postFeature = jest.fn()
         const documentProcessor = new DocumentProcessor({
             onFeature() {
                 return null;
             },
-            postFeature
+            postFeature,
         });
         const result = documentProcessor.execute(document2)
         expect(result).toEqual([])

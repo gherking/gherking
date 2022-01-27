@@ -48,7 +48,7 @@ export class ElementProcessor<P extends Feature | Rule> extends ListProcessor<El
         );
         if (e instanceof Background) {
             debug("postFilter -> Background");
-            return this.backgroundProcessor.preFilter(e, p);
+            return this.backgroundProcessor.postFilter(e, p);
         }
         if (e instanceof Scenario) {
             debug("postFilter -> Scenario");
