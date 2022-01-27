@@ -334,7 +334,7 @@ describe("Processors", () => {
             expect(result[3].property).toBe("3");
         });
 
-        test("should have idempotet processor", () => {
+        test("should have idempotent processor", () => {
             class IdempotentListProcessor extends ListProcessor<Child, List> {
                 private checkParameters(e: Child, p: List, i: number): void {
                     // @ts-ignore
