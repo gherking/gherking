@@ -15,15 +15,15 @@ import {
 } from "gherkin-ast";
 export type SingleControlType<T> = void | null | undefined | T;
 export type MultiControlType<T> = void | null | undefined | T | T[];
-export type SingleEventHandler<T,P> = (e: T, p?: P) => SingleControlType<T>;
-export type MultiEventHandler<T,P> = (e: T, p?: P, i?: number) => MultiControlType<T>;
-export type FilterEventHandler<T,P> = (e: T, p?: P, i?: number) => boolean;
+export type SingleEventHandler<T, P> = (e: T, p?: P) => SingleControlType<T>;
+export type MultiEventHandler<T, P, R = T> = (e: T, p?: P, i?: number) => MultiControlType<R>;
+export type FilterEventHandler<T, P> = (e: T, p?: P, i?: number) => boolean;
 
 export interface PreCompiler {
     onFeature?: MultiEventHandler<Feature, Document>;
     onRule?: MultiEventHandler<Rule, Feature>;
     onScenario?: MultiEventHandler<Scenario, Feature | Rule>;
-    onScenarioOutline?: MultiEventHandler<ScenarioOutline, Feature | Rule>;
+    onScenarioOutline?: MultiEventHandler<ScenarioOutline, Feature | Rule, ScenarioOutline | Scenario>;
     onBackground?: SingleEventHandler<Background, Feature | Rule>;
     onExamples?: MultiEventHandler<Examples, ScenarioOutline>;
     onStep?: MultiEventHandler<Step, ScenarioOutline | Scenario | Background>;

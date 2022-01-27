@@ -1,4 +1,4 @@
-import { Feature, Rule, ScenarioOutline } from "gherkin-ast";
+import { Feature, Rule, ScenarioOutline, Scenario } from "gherkin-ast";
 import { ExamplesProcessor } from "./ExamplesProcessor";
 import { MultiControlType, PreCompiler } from "./PreCompiler";
 import { PartialListProcessor } from "./Processor";
@@ -8,9 +8,9 @@ import { getDebugger } from "./debug";
 
 const debug = getDebugger("ScenarioOutlineProcessor");
 
-export class ScenarioOutlineProcessor<P extends Feature | Rule> extends PartialListProcessor<ScenarioOutline, P> {
-    private stepProcessor: StepProcessor<ScenarioOutline>;
-    private tagProcessor: TagProcessor<ScenarioOutline>;
+export class ScenarioOutlineProcessor<P extends Feature | Rule> extends PartialListProcessor<ScenarioOutline, P, Scenario | ScenarioOutline> {
+    private stepProcessor: StepProcessor<Scenario | ScenarioOutline>;
+    private tagProcessor: TagProcessor<Scenario | ScenarioOutline>;
     private examplesProcessor: ExamplesProcessor;
 
     constructor(preCompiler?: Partial<PreCompiler>) {
@@ -24,7 +24,7 @@ export class ScenarioOutlineProcessor<P extends Feature | Rule> extends PartialL
     public preFilter(e: ScenarioOutline, p: P, i: number): boolean {
         /* istanbul ignore next */
         debug(
-            "preFilter(hasPostScenarioOutline: %s, e: %s, p: %s, i: %d)", 
+            "preFilter(hasPostScenarioOutline: %s, e: %s, p: %s, i: %d)",
             !!this.preCompiler.preScenarioOutline, e?.constructor.name, p?.constructor.name, i
         );
         return !this.preCompiler.preScenarioOutline || this.preCompiler.preScenarioOutline(e, p, i);
@@ -32,18 +32,18 @@ export class ScenarioOutlineProcessor<P extends Feature | Rule> extends PartialL
     public postFilter(e: ScenarioOutline, p: P, i: number): boolean {
         /* istanbul ignore next */
         debug(
-            "postFilter(hasPostScenarioOutline: %s, e: %s, p: %s, i: %d)", 
+            "postFilter(hasPostScenarioOutline: %s, e: %s, p: %s, i: %d)",
             !!this.preCompiler.postScenarioOutline, e?.constructor.name, p?.constructor.name, i
         );
         return !this.preCompiler.postScenarioOutline || this.preCompiler.postScenarioOutline(e, p, i);
     }
-    public process(e: ScenarioOutline, p: P, i: number): MultiControlType<ScenarioOutline> {
+    public process(e: ScenarioOutline, p: P, i: number): MultiControlType<Scenario | ScenarioOutline> {
         /* istanbul ignore next */
         debug(
-            "process(hasOnScenarioOutline: %s, e: %s, p: %s, i: %d)", 
+            "process(hasOnScenarioOutline: %s, e: %s, p: %s, i: %d)",
             !!this.preCompiler.onScenarioOutline, e?.constructor.name, p?.constructor.name, i
         );
-        let scenarioOutlines: MultiControlType<ScenarioOutline> = e;
+        let scenarioOutlines: MultiControlType<Scenario | ScenarioOutline> = e;
         if (this.preCompiler.onScenarioOutline) {
             const result = this.preCompiler.onScenarioOutline(e, p, i);
             if (typeof result !== "undefined") {
@@ -62,14 +62,15 @@ export class ScenarioOutlineProcessor<P extends Feature | Rule> extends PartialL
         return scenarioOutlines;
     }
 
-    private postProcess(e: ScenarioOutline): ScenarioOutline {
+    private postProcess(e: Scenario | ScenarioOutline): Scenario | ScenarioOutline {
         debug(
-            "postProcess(tags: %s, steps: %s, examples: %s)", 
-            Array.isArray(e.tags), Array.isArray(e.steps), Array.isArray(e.examples),
+            "postProcess(tags: %s, steps: %s, examples: %s)",
+            // @ts-ignore
+            Array.isArray(e.tags), Array.isArray(e.steps), Array.isArray(e?.examples),
         );
         e.tags = this.tagProcessor.execute(e.tags, e);
         e.steps = this.stepProcessor.execute(e.steps, e);
-        if (e.examples) {
+        if (e instanceof ScenarioOutline && e.examples) {
             e.examples = this.examplesProcessor.execute(e.examples, e);
         }
         return e;

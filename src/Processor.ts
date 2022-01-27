@@ -37,7 +37,7 @@ export abstract class Processor<T, P, R = T | null> extends PartialProcessor<T, 
             processorDebug("...!result");
             return null;
         }
-        if(Array.isArray(result)){
+        if (Array.isArray(result)) {
             processorDebug("...!array");
             // @ts-ignore
             result = result.filter(r => this.postFilter(r as T, p));
@@ -58,11 +58,11 @@ export abstract class Processor<T, P, R = T | null> extends PartialProcessor<T, 
     }
 }
 
-export abstract class PartialListProcessor<T, P> extends ProcessorBase {
+export abstract class PartialListProcessor<T, P, R = T> extends ProcessorBase {
     /* eslint-disable no-unused-vars */
     protected abstract preFilter(e: T, p: P, i: number): boolean;
     protected abstract postFilter(e: T, p: P, i: number): boolean;
-    protected abstract process(e: T, p: P, i: number): MultiControlType<T>;
+    protected abstract process(e: T, p: P, i: number): MultiControlType<R>;
 }
 
 export abstract class ListProcessor<T, P> extends PartialListProcessor<T, P> {
@@ -85,7 +85,7 @@ export abstract class ListProcessor<T, P> extends PartialListProcessor<T, P> {
             } else if (Array.isArray(result)) {
                 listProcessorDebug("......Array: %d", result.length);
                 preFiltered.splice(i, 1, ...result);
-                i += result.length-1;
+                i += result.length - 1;
             } else if (result) {
                 listProcessorDebug("......replace: %o", result);
                 preFiltered[i] = result;
