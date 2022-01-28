@@ -1,12 +1,16 @@
 # Changelog
 
-## 1.3.1 - 2018-12-17
+## 2.0.0
+
+The first fully working version, after the TypeScript and API refactor.
+
+## (gherkin-precompiler) 1.3.1 - 2018-12-17
 
 ### Fixed
 
 - Fixed bin EOL issue
 
-## 1.3.0 - 2018-04-19
+## (gherkin-precompiler) 1.3.0 - 2018-04-19
 
 ### Added
 
@@ -17,13 +21,13 @@
 
 - Upgraded for gherkin-assembler @2 and gherkin-ast
 
-## 1.2.1 - 2018-02-14
+## (gherkin-precompiler) 1.2.1 - 2018-02-14
 
 ### Fixed
 
 - Fixed macro precompiler issue on backgrounds ([#27](http://github.com/judit-nahaj/gherkin-precompiler/issues/27))
 
-## 1.2.0 - 2018-01-31
+## (gherkin-precompiler) 1.2.0 - 2018-01-31
 
 ### Added
 
@@ -36,7 +40,7 @@
 
 - CLI commands are not working ([#19](http://github.com/judit-nahaj/gherkin-precompiler/issues/19))
 
-## 1.1.0 - 2017-12-04
+## (gherkin-precompiler) 1.1.0 - 2017-12-04
 
 ### Added
 
@@ -45,7 +49,7 @@
 - Added predefined precompiler: macro ([#9](https://github.com/judit-nahaj/gherkin-precompiler/issues/9))
 - Added predefined precompiler: forLoop ([#8](https://github.com/judit-nahaj/gherkin-precompiler/issues/8))
 
-## 1.0.0 - 2017-09-25
+## (gherkin-precompiler) 1.0.0 - 2017-09-25
 
 ### Added
 

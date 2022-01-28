@@ -1,7 +1,11 @@
 /node_modules
 /coverage
+/reports
+/docs
+/tests/cli/data/destination/*.feature
+/tests/cli/data/output/*.feature
 **/dist
 .idea
 *.log
 *.*~
-package-lock.json
+*.tgz
