@@ -2,6 +2,8 @@
 
 ![Downloads](https://img.shields.io/npm/dw/gherking?style=flat-square) ![Version@npm](https://img.shields.io/npm/v/gherking?label=version%40npm&style=flat-square) ![Version@git](https://img.shields.io/github/package-json/v/gherking/gherking/master?label=version%40git&style=flat-square) ![CI](https://img.shields.io/github/workflow/status/gherking/gherking/CI/master?label=ci&style=flat-square) ![Docs](https://img.shields.io/github/workflow/status/gherking/gherking/Docs/master?label=docs&style=flat-square)
 
+> **IMPORTANT** The `gherking` package - and the `gpc-*` ones - are placements of the original `gherkin-precompiler` package and are not compatible with any code written in it because of the changed API.
+
 GherKing is a tool to make Gherkin smarter! It allows you to handle Cucumber/Gherkin feature files programmatically in your JavaScript/TypeScript code.
 
 It is based on the AST what is provided by [gherkin-ast](https://www.npmjs.com/package/gherkin-ast)
@@ -89,8 +91,8 @@ Options:
 * `config` is a mandatory option since that is the only way to specify the precompilers
 * either a **source directory** or **base directory** must be specified either by command line or by configuration
 * if one of the location configurations is missing, it is set based on the given other locations, for example
-  * if only `base: "e2e/features"` set, then `source` will be `e2e/features/**/*.feature` and `destination` will be `e2e/features/dist`
-  * if only `source` directory is set, then `base` will be the source directory, `destination` will be `{source}/dist` and `source` will be modified to a glob pattern: `{source}/**/*.feature`
+  + if only `base: "e2e/features"` set, then `source` will be `e2e/features/**/*.feature` and `destination` will be `e2e/features/dist`
+  + if only `source` directory is set, then `base` will be the source directory,  `destination` will be `{source}/dist` and `source` will be modified to a glob pattern: `{source}/**/*.feature`
 
 ### Configuration
 
@@ -132,13 +134,13 @@ The configuration **must** contain the precompilers configuration and optionally
 }
 ```
 
-Note: command line arguments should also support setting `formatOptions`, via object arguments, see [Object@yargs](https://github.com/yargs/yargs/blob/main/docs/tricks.md#objects).
+Note: command line arguments should also support setting `formatOptions` , via object arguments, see [Object@yargs](https://github.com/yargs/yargs/blob/main/docs/tricks.md#objects).
 
 ## API
 
 ### `load`
 
-It loads the given feature file to a `GherkinDocument`.
+It loads the given feature file to a `GherkinDocument` .
 
 **Params:**
 
@@ -156,6 +158,7 @@ Saves the given AST as a feature file to the given path.
  * `{Document|Document[]} ast` - the AST needs to be saved to the file
  * `{FormatterOptions} [options]` - configuration of formatting, see [FormatterConfig](https://github.com/gherking/gherkin-formatter)
  
+
 ### `process`
 
 Applies the given precompilers to the given AST.
@@ -175,8 +178,8 @@ If you want to create your precompiler, you only have to extend the `Default` cl
 
 Every element can be modified by using its correspondent event methods.
 
-All event methods (except `onFeature`) receives the given element, its parent, and - if applicable - the index of the element.
-Given that all events receive the given element as an `Object`, they can be easily modified by modifying the object itself.
+All event methods (except `onFeature` ) receives the given element, its parent, and - if applicable - the index of the element.
+Given that all events receive the given element as an `Object` , they can be easily modified by modifying the object itself.
 
 The following methods are available, to see exact signature of the given method, click on the name of it:
 
@@ -193,7 +196,7 @@ The following methods are available, to see exact signature of the given method,
  * [onTableRow](src/PreCompiler.ts#L32)<sup>1</sup>
 
 If the method returns
- * `null`, then the given element will be deleted
+ * `null` , then the given element will be deleted
  * an element, then the original element will be replaced with the returned one
  * (only for <sup>1</sup>) an element array, in case of an event which process list element (i.e., tag, scenario, examples, step, background, scenario outline), then the original element will be replaced with the returned list
  * nothing, the element won't be replaced
