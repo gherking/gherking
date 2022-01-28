@@ -1,0 +1,166 @@
+<!DOCTYPE html><html class="default"><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>gherking</title><meta name="description" content="Documentation for gherking"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="assets/style.css"/><link rel="stylesheet" href="assets/highlight.css"/><script async src="assets/search.js" id="search-script"></script></head><body><script>document.body.classList.add(localStorage.getItem("tsd-theme") || "os")</script><header><div class="tsd-page-toolbar"><div class="container"><div class="table-wrap"><div class="table-cell" id="tsd-search" data-base="."><div class="field"><label for="tsd-search-field" class="tsd-widget search no-caption">Search</label><input type="text" id="tsd-search-field"/></div><ul class="results"><li class="state loading">Preparing search index...</li><li class="state failure">The search index is not available</li></ul><a href="index.html" class="title">gherking</a></div><div class="table-cell" id="tsd-widgets"><div id="tsd-filter"><a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a><div class="tsd-filter-group"><div class="tsd-select" id="tsd-filter-visibility"><span class="tsd-select-label">All</span><ul class="tsd-select-list"><li data-value="public">Public</li><li data-value="protected">Public/Protected</li><li data-value="private" class="selected">All</li></ul></div> <input type="checkbox" id="tsd-filter-inherited" checked/><label class="tsd-widget" for="tsd-filter-inherited">Inherited</label><input type="checkbox" id="tsd-filter-externals" checked/><label class="tsd-widget" for="tsd-filter-externals">Externals</label></div></div><a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a></div></div></div></div><div class="tsd-page-title"><div class="container"><h1>gherking</h1></div></div></header><div class="container container-main"><div class="row"><div class="col-8 col-content"><div class="tsd-panel tsd-typography">
+<a href="#gherking" id="gherking" style="color: inherit; text-decoration: none;">
+  <h1>gherking</h1>
+</a>
+<p><img src="https://img.shields.io/npm/dw/gherking?style=flat-square" alt="Downloads"> <img src="https://img.shields.io/npm/v/gherking?label=version%40npm&style=flat-square" alt="Version@npm"> <img src="https://img.shields.io/github/package-json/v/gherking/gherking/master?label=version%40git&style=flat-square" alt="Version@git"> <img src="https://img.shields.io/github/workflow/status/gherking/gherking/CI/master?label=ci&style=flat-square" alt="CI"> <img src="https://img.shields.io/github/workflow/status/gherking/gherking/Docs/master?label=docs&style=flat-square" alt="Docs"></p>
+<blockquote>
+<p><strong>IMPORTANT</strong> The <code>gherking</code> package - and the <code>gpc-*</code> ones - are placements of the original <code>gherkin-precompiler</code> package and are not compatible with any code written in it because of the changed API.</p>
+</blockquote>
+<p>GherKing is a tool to make Gherkin smarter! It allows you to handle Cucumber/Gherkin feature files programmatically in your JavaScript/TypeScript code.</p>
+<p>It is based on the AST what is provided by <a href="https://www.npmjs.com/package/gherkin-ast">gherkin-ast</a></p>
+
+<a href="#usage" id="usage" style="color: inherit; text-decoration: none;">
+  <h2>Usage</h2>
+</a>
+<pre><code class="language-javascript"><span class="hl-0">&#39;use strict&#39;</span><span class="hl-1">;</span><br/><span class="hl-2">const</span><span class="hl-1"> </span><span class="hl-3">compiler</span><span class="hl-1"> = </span><span class="hl-4">require</span><span class="hl-1">(</span><span class="hl-0">&#39;gherking&#39;</span><span class="hl-1">);</span><br/><span class="hl-2">const</span><span class="hl-1"> </span><span class="hl-3">Replacer</span><span class="hl-1"> = </span><span class="hl-4">require</span><span class="hl-1">(</span><span class="hl-0">&#39;gpc-replacer&#39;</span><span class="hl-1">);</span><br/><br/><span class="hl-2">let</span><span class="hl-1"> </span><span class="hl-5">ast</span><span class="hl-1"> = </span><span class="hl-6">await</span><span class="hl-1"> </span><span class="hl-5">compiler</span><span class="hl-1">.</span><span class="hl-4">load</span><span class="hl-1">(</span><span class="hl-0">&#39;./features/src/login.feature&#39;</span><span class="hl-1">);</span><br/><span class="hl-5">ast</span><span class="hl-1"> = </span><span class="hl-5">compiler</span><span class="hl-1">.</span><span class="hl-4">process</span><span class="hl-1">(</span><br/><span class="hl-1">    </span><span class="hl-5">ast</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-2">new</span><span class="hl-1"> </span><span class="hl-4">Replacer</span><span class="hl-1">({</span><br/><span class="hl-1">        </span><span class="hl-5">name:</span><span class="hl-1"> </span><span class="hl-0">&#39;Hello&#39;</span><br/><span class="hl-1">    })</span><br/><span class="hl-1">);</span><br/><span class="hl-6">await</span><span class="hl-1"> </span><span class="hl-5">compiler</span><span class="hl-1">.</span><span class="hl-4">save</span><span class="hl-1">(</span><span class="hl-0">&#39;./features/dist/login.feature&#39;</span><span class="hl-1">, </span><span class="hl-5">ast</span><span class="hl-1">, {</span><br/><span class="hl-1">    </span><span class="hl-5">lineBreak:</span><span class="hl-1"> </span><span class="hl-0">&#39;</span><span class="hl-7">\r\n</span><span class="hl-0">&#39;</span><br/><span class="hl-1">});</span>
+</code></pre>
+<pre><code class="language-typescript"><span class="hl-0">&#39;use strict&#39;</span><span class="hl-1">;</span><br/><span class="hl-6">import</span><span class="hl-1"> {</span><span class="hl-5">load</span><span class="hl-1">, </span><span class="hl-5">process</span><span class="hl-1">, </span><span class="hl-5">save</span><span class="hl-1">} </span><span class="hl-6">from</span><span class="hl-1"> </span><span class="hl-0">&quot;gherking&quot;</span><span class="hl-1">;</span><br/><span class="hl-6">import</span><span class="hl-1"> </span><span class="hl-5">Replacer</span><span class="hl-1"> = </span><span class="hl-6">require</span><span class="hl-1">(</span><span class="hl-0">&quot;gpc-replacer&quot;</span><span class="hl-1">);</span><br/><br/><span class="hl-2">let</span><span class="hl-1"> </span><span class="hl-5">ast</span><span class="hl-1"> = </span><span class="hl-6">await</span><span class="hl-1"> </span><span class="hl-4">load</span><span class="hl-1">(</span><span class="hl-0">&quot;./features/src/login.feature&quot;</span><span class="hl-1">);</span><br/><span class="hl-5">ast</span><span class="hl-1"> = </span><span class="hl-4">process</span><span class="hl-1">(</span><br/><span class="hl-1">    </span><span class="hl-5">ast</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-2">new</span><span class="hl-1"> </span><span class="hl-4">Replacer</span><span class="hl-1">({</span><br/><span class="hl-1">        </span><span class="hl-5">name:</span><span class="hl-1"> </span><span class="hl-0">&#39;Hello&#39;</span><br/><span class="hl-1">    })</span><br/><span class="hl-1">);</span><br/><span class="hl-6">await</span><span class="hl-1"> </span><span class="hl-4">save</span><span class="hl-1">(</span><span class="hl-0">&#39;./features/dist/login.feature&#39;</span><span class="hl-1">, </span><span class="hl-5">ast</span><span class="hl-1">, {</span><br/><span class="hl-1">    </span><span class="hl-5">lineBreak:</span><span class="hl-1"> </span><span class="hl-0">&#39;</span><span class="hl-7">\r\n</span><span class="hl-0">&#39;</span><br/><span class="hl-1">});</span>
+</code></pre>
+
+<a href="#pre-compilers" id="pre-compilers" style="color: inherit; text-decoration: none;">
+  <h3>Pre-compilers</h3>
+</a>
+<ul>
+<li><a href="https://www.npmjs.com/package/gpc-for-loop">ForLoop</a> - Enables the user to loop scenarios and scenario outlines in order to repeat them.</li>
+<li><a href="https://www.npmjs.com/package/gpc-macro">Macro</a> - Enables the user to create and execute macros.</li>
+<li><a href="https://www.npmjs.com/package/gpc-remove-duplicates">RemoveDuplicates</a> - Removes duplicated tags or example data table rows.</li>
+<li><a href="https://www.npmjs.com/package/gpc-replacer">Replacer</a> - Replaces keywords in the feature files.</li>
+<li><a href="https://www.npmjs.com/package/gpc-scenario-numbering">ScenarioNumbering</a> - Adds an index to all scenario and scenario outline&#39;s name.</li>
+<li><a href="https://www.npmjs.com/package/gpc-scenario-outline-expander">ScenarioOutlineExpander</a> - Expand the Scenario Outlines to actual scenarios.</li>
+<li><a href="https://www.npmjs.com/package/gpc-scenario-outline-numbering">ScenarioOutlineNumbering</a> - Makes all scenario, generated from scenario outlines unique.</li>
+<li><a href="https://www.npmjs.com/package/gpc-step-groups">StepGroups</a> - Corrects the gherkin keywords of steps to make the tests more readable.</li>
+</ul>
+
+<a href="#cli" id="cli" style="color: inherit; text-decoration: none;">
+  <h2>CLI</h2>
+</a>
+<p>The package provides a command-line interface to precompile feature files easily.</p>
+<pre><code class="language-bash"><span class="hl-8"># install package globally</span><br/><span class="hl-1">npm install -g gherking</span><br/><br/><span class="hl-8"># use gherking, precompile or gherkin-precompiler commands</span><br/><span class="hl-1">gherking --config .gherking.json --base e2e/features/src --destination e2e/features/dist</span>
+</code></pre>
+
+<a href="#arguments" id="arguments" style="color: inherit; text-decoration: none;">
+  <h3>Arguments</h3>
+</a>
+<pre><code class="language-shell"><span class="hl-1">Options:</span><br/><span class="hl-1">      --version      Show version number                               [boolean]</span><br/><span class="hl-1">  -c, --config       The path of the configuration file which contains the</span><br/><span class="hl-1">                     precompilers and their configurations.</span><br/><span class="hl-1">                                        [string] [default: </span><span class="hl-0">&quot;./.gherking.json&quot;</span><span class="hl-1">]</span><br/><span class="hl-1">  -s, --source       The pattern or path of feature files that need to be</span><br/><span class="hl-1">                     precompiled.                                       [string]</span><br/><span class="hl-1">  -b, --base         The base directory of feature files.               [string]</span><br/><span class="hl-1">  -d, --destination  The destination directory of precompiled feature files.</span><br/><span class="hl-1">                                                                        [string]</span><br/><span class="hl-1">      --verbose                                                        [boolean]</span><br/><span class="hl-1">      --clean        Whether the destination directory should be clean </span><span class="hl-6">in</span><br/><span class="hl-1">                     advance.                                          [boolean]</span><br/><span class="hl-1">      --help         Show </span><span class="hl-4">help</span><span class="hl-1">                                         [boolean]</span>
+</code></pre>
+
+<a href="#important" id="important" style="color: inherit; text-decoration: none;">
+  <h4>Important</h4>
+</a>
+<ul>
+<li><code>config</code> is a mandatory option since that is the only way to specify the precompilers</li>
+<li>either a <strong>source directory</strong> or <strong>base directory</strong> must be specified either by command line or by configuration</li>
+<li>if one of the location configurations is missing, it is set based on the given other locations, for example<ul>
+<li>if only <code>base: &quot;e2e/features&quot;</code> set, then <code>source</code> will be <code>e2e/features/**/*.feature</code> and <code>destination</code> will be <code>e2e/features/dist</code></li>
+<li>if only <code>source</code> directory is set, then <code>base</code> will be the source directory,  <code>destination</code> will be <code>{source}/dist</code> and <code>source</code> will be modified to a glob pattern: <code>{source}/**/*.feature</code></li>
+</ul>
+</li>
+</ul>
+
+<a href="#configuration" id="configuration" style="color: inherit; text-decoration: none;">
+  <h3>Configuration</h3>
+</a>
+<p>The configuration <strong>must</strong> contain the precompilers configuration and optionally all options which command-line arguments could specify. It can be a JSON file or a JS file</p>
+<pre><code class="language-js"><span class="hl-8">// .gherking.json</span><br/><span class="hl-1">{</span><br/><span class="hl-1">    </span><span class="hl-8">// compilers should be an array of precompiler configurations</span><br/><span class="hl-1">    </span><span class="hl-0">&quot;compilers&quot;</span><span class="hl-1">: [</span><br/><span class="hl-1">        </span><span class="hl-8">// one option is to use precompiler packages,</span><br/><span class="hl-1">        {</span><br/><span class="hl-1">            </span><span class="hl-8">// by setting the package</span><br/><span class="hl-1">            </span><span class="hl-0">&quot;path&quot;</span><span class="hl-5">:</span><span class="hl-1"> </span><span class="hl-0">&quot;gpc-replacer&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">            </span><span class="hl-8">// any by setting the configuration which</span><br/><span class="hl-1">            </span><span class="hl-8">// is passed to the constructor</span><br/><span class="hl-1">            </span><span class="hl-0">&quot;configuration&quot;</span><span class="hl-5">:</span><span class="hl-1"> {</span><br/><span class="hl-1">                </span><span class="hl-0">&quot;user&quot;</span><span class="hl-5">:</span><span class="hl-1"> </span><span class="hl-0">&quot;ta.user1@example.com&quot;</span><br/><span class="hl-1">            }</span><br/><span class="hl-1">        },</span><br/><span class="hl-1">        </span><span class="hl-8">// other option is to set precompiler object</span><br/><span class="hl-1">        {</span><br/><span class="hl-1">            </span><span class="hl-8">// by setting the path to the JS file</span><br/><span class="hl-1">            </span><span class="hl-0">&quot;path&quot;</span><span class="hl-5">:</span><span class="hl-1"> </span><span class="hl-0">&quot;e2e/utils/myCompiler.js&quot;</span><br/><span class="hl-1">        }</span><br/><span class="hl-1">    ],</span><br/><span class="hl-1">    </span><span class="hl-8">// source can also be set here</span><br/><span class="hl-1">    </span><span class="hl-0">&quot;source&quot;</span><span class="hl-1">: </span><span class="hl-0">&quot;e2e/features/src/**/*.feature&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-8">// base can also be set here</span><br/><span class="hl-1">    </span><span class="hl-0">&quot;base&quot;</span><span class="hl-1">: </span><span class="hl-0">&quot;e2e/features/src&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-8">// destination can also be set here</span><br/><span class="hl-1">    </span><span class="hl-0">&quot;destination&quot;</span><span class="hl-1">: </span><span class="hl-0">&quot;e2e/features/dist&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-8">// Config file can contain formatting options for</span><br/><span class="hl-1">    </span><span class="hl-8">// gherkin-formatter, see documentation for more info:</span><br/><span class="hl-1">    </span><span class="hl-8">// https://github.com/gherking/gherkin-formatter</span><br/><span class="hl-1">    </span><span class="hl-0">&quot;formatOptions&quot;</span><span class="hl-1">: {</span><br/><span class="hl-1">        </span><span class="hl-0">&quot;compact&quot;</span><span class="hl-5">:</span><span class="hl-1"> </span><span class="hl-2">true</span><br/><span class="hl-1">    }</span><br/><span class="hl-1">}</span>
+</code></pre>
+<p>Note: command line arguments should also support setting <code>formatOptions</code> , via object arguments, see <a href="https://github.com/yargs/yargs/blob/main/docs/tricks.md#objects">Object@yargs</a>.</p>
+
+<a href="#api" id="api" style="color: inherit; text-decoration: none;">
+  <h2>API</h2>
+</a>
+
+<a href="#load" id="load" style="color: inherit; text-decoration: none;">
+  <h3><code>load</code></h3>
+</a>
+<p>It loads the given feature file to a <code>GherkinDocument</code> .</p>
+<p><strong>Params:</strong></p>
+<ul>
+<li><code>{string} pathToFile</code> - the path of the feature file which needs to be loaded</li>
+</ul>
+<p><strong>Returns:</strong> <code>{Promise&lt;Document[]&gt;}</code> the AST of the given feature file</p>
+
+<a href="#save" id="save" style="color: inherit; text-decoration: none;">
+  <h3><code>save</code></h3>
+</a>
+<p>Saves the given AST as a feature file to the given path.</p>
+<p><strong>Params:</strong></p>
+<ul>
+<li><code>{string|PathGenerator} pathToFile</code> - the path of the feature file where the AST needs to be saved, or a function that can generate the path from the AST and the index</li>
+<li><code>{Document|Document[]} ast</code> - the AST needs to be saved to the file</li>
+<li><code>{FormatterOptions} [options]</code> - configuration of formatting, see <a href="https://github.com/gherking/gherkin-formatter">FormatterConfig</a></li>
+</ul>
+
+<a href="#process" id="process" style="color: inherit; text-decoration: none;">
+  <h3><code>process</code></h3>
+</a>
+<p>Applies the given precompilers to the given AST.</p>
+<p><strong>Params:</strong></p>
+<ul>
+<li><code>{Document|Document[]} ast</code> - the AST needs to be processed</li>
+<li><code>{...PreCompiler} pre-compilers</code> - the pre-compilers needs to be applied to the given AST</li>
+</ul>
+<p><strong>Returns:</strong> <code>{Document[]}</code> the processed AST</p>
+
+<a href="#precompiler" id="precompiler" style="color: inherit; text-decoration: none;">
+  <h2>PreCompiler</h2>
+</a>
+<p>If you want to create your precompiler, you only have to extend the <code>Default</code> class and override the filter and event methods you want to use; or create an object with the desired methods.</p>
+
+<a href="#event-methods" id="event-methods" style="color: inherit; text-decoration: none;">
+  <h3>Event methods</h3>
+</a>
+<p>Every element can be modified by using its correspondent event methods.</p>
+<p>All event methods (except <code>onFeature</code> ) receives the given element, its parent, and - if applicable - the index of the element.
+Given that all events receive the given element as an <code>Object</code> , they can be easily modified by modifying the object itself.</p>
+<p>The following methods are available, to see exact signature of the given method, click on the name of it:</p>
+<ul>
+<li><a href="src/PreCompiler.ts#L22">onFeature</a><sup>1</sup></li>
+<li><a href="src/PreCompiler.ts#L23">onRule</a><sup>1</sup></li>
+<li><a href="src/PreCompiler.ts#L24">onScenario</a><sup>1</sup></li>
+<li><a href="src/PreCompiler.ts#L25">onScenarioOutline</a><sup>1</sup></li>
+<li><a href="src/PreCompiler.ts#L26">onBackground</a></li>
+<li><a href="src/PreCompiler.ts#L27">onExamples</a><sup>1</sup></li>
+<li><a href="src/PreCompiler.ts#L28">onStep</a><sup>1</sup></li>
+<li><a href="src/PreCompiler.ts#L29">onTag</a><sup>1</sup></li>
+<li><a href="src/PreCompiler.ts#L30">onDocString</a></li>
+<li><a href="src/PreCompiler.ts#L31">onDataTable</a></li>
+<li><a href="src/PreCompiler.ts#L32">onTableRow</a><sup>1</sup></li>
+</ul>
+<p>If the method returns</p>
+<ul>
+<li><code>null</code> , then the given element will be deleted</li>
+<li>an element, then the original element will be replaced with the returned one</li>
+<li>(only for <sup>1</sup>) an element array, in case of an event which process list element (i.e., tag, scenario, examples, step, background, scenario outline), then the original element will be replaced with the returned list</li>
+<li>nothing, the element won&#39;t be replaced</li>
+</ul>
+
+<a href="#filter-methods" id="filter-methods" style="color: inherit; text-decoration: none;">
+  <h3>Filter methods</h3>
+</a>
+<p>Every element (both single and list) in the AST can be filtered using its correspondent pre- or post- filter methods.
+A pre-filter method is applied before processing the event; the post is applied after it.</p>
+<p>All filter methods receive the given element, its parent, and - if applicable - the element&#39;s index.
+If a filter method is set, the method <strong>must</strong> return <code>true</code> if the element should be kept; otherwise, the element will be discarded. If a filter method is not set, no filtering will happen on the given type of element.</p>
+<p>The following methods are available, to see exact signature of the given method, click on the name of it:</p>
+<ul>
+<li><a href="src/PreCompiler.ts#L34">preFeature</a>, <a href="src/PreCompiler.ts#L35">postFeature</a></li>
+<li><a href="src/PreCompiler.ts#L36">preRule</a>, <a href="src/PreCompiler.ts#L37">postRule</a></li>
+<li><a href="src/PreCompiler.ts#L38">preScenario</a>, <a href="src/PreCompiler.ts#L39">postScenario</a></li>
+<li><a href="src/PreCompiler.ts#L40">preScenarioOutline</a>, <a href="src/PreCompiler.ts#L41">postScenarioOutline</a></li>
+<li><a href="src/PreCompiler.ts#L42">preBackground</a>, <a href="src/PreCompiler.ts#L43">postBackground</a></li>
+<li><a href="src/PreCompiler.ts#L44">preExamples</a>, <a href="src/PreCompiler.ts#L45">postExamples</a></li>
+<li><a href="src/PreCompiler.ts#L46">preStep</a>, <a href="src/PreCompiler.ts#L47">postStep</a></li>
+<li><a href="src/PreCompiler.ts#L48">preTag</a>, <a href="src/PreCompiler.ts#L49">postTag</a></li>
+<li><a href="src/PreCompiler.ts#L50">preDocString</a>, <a href="src/PreCompiler.ts#L51">postDocString</a></li>
+<li><a href="src/PreCompiler.ts#L52">preDataTable</a>, <a href="src/PreCompiler.ts#L53">postDataTable</a></li>
+<li><a href="src/PreCompiler.ts#L54">preTableRow</a>, <a href="src/PreCompiler.ts#L55">postTableRow</a></li>
+</ul>
+
+<a href="#other" id="other" style="color: inherit; text-decoration: none;">
+  <h2>Other</h2>
+</a>
+<p>This package uses <a href="https://www.npmjs.com/package/debug">debug</a> for logging, use <code>gherking</code> :</p>
+<pre><code class="language-shell"><span class="hl-1">DEBUG=gherking* gherking ...</span>
+</code></pre>
+<p>For detailed documentation see the <a href="https://gherking.github.io/gherking/">TypeDocs documentation</a>.</p>
+</div></div><div class="col-4 col-menu menu-sticky-wrap menu-highlight"><nav class="tsd-navigation primary"><ul><li class="current"><a href="modules.html">Exports</a></li></ul></nav><nav class="tsd-navigation secondary menu-sticky"><ul><li class="tsd-kind-class tsd-is-external"><a href="classes/Background.html" class="tsd-kind-icon">Background</a></li><li class="tsd-kind-class tsd-is-external"><a href="classes/DataTable.html" class="tsd-kind-icon">Data<wbr/>Table</a></li><li class="tsd-kind-class tsd-is-external"><a href="classes/DocString.html" class="tsd-kind-icon">Doc<wbr/>String</a></li><li class="tsd-kind-class tsd-is-external"><a href="classes/Document.html" class="tsd-kind-icon">Document</a></li><li class="tsd-kind-class tsd-is-external"><a href="classes/Element.html" class="tsd-kind-icon">Element</a></li><li class="tsd-kind-class tsd-is-external"><a href="classes/Examples.html" class="tsd-kind-icon">Examples</a></li><li class="tsd-kind-class tsd-is-external"><a href="classes/Feature.html" class="tsd-kind-icon">Feature</a></li><li class="tsd-kind-class tsd-is-external"><a href="classes/Rule.html" class="tsd-kind-icon">Rule</a></li><li class="tsd-kind-class tsd-is-external"><a href="classes/Scenario.html" class="tsd-kind-icon">Scenario</a></li><li class="tsd-kind-class tsd-is-external"><a href="classes/ScenarioOutline.html" class="tsd-kind-icon">Scenario<wbr/>Outline</a></li><li class="tsd-kind-class tsd-is-external"><a href="classes/Step.html" class="tsd-kind-icon">Step</a></li><li class="tsd-kind-class tsd-is-external"><a href="classes/TableCell.html" class="tsd-kind-icon">Table<wbr/>Cell</a></li><li class="tsd-kind-class tsd-is-external"><a href="classes/TableRow.html" class="tsd-kind-icon">Table<wbr/>Row</a></li><li class="tsd-kind-class tsd-is-external"><a href="classes/Tag.html" class="tsd-kind-icon">Tag</a></li><li class="tsd-kind-interface tsd-is-external"><a href="interfaces/FormatOptions.html" class="tsd-kind-icon">Format<wbr/>Options</a></li><li class="tsd-kind-interface tsd-is-external"><a href="interfaces/GherkinBackground.html" class="tsd-kind-icon">Gherkin<wbr/>Background</a></li><li class="tsd-kind-interface tsd-is-external"><a href="interfaces/GherkinDataTable.html" class="tsd-kind-icon">Gherkin<wbr/>Data<wbr/>Table</a></li><li class="tsd-kind-interface tsd-is-external"><a href="interfaces/GherkinDocString.html" class="tsd-kind-icon">Gherkin<wbr/>Doc<wbr/>String</a></li><li class="tsd-kind-interface tsd-is-external"><a href="interfaces/GherkinDocument.html" class="tsd-kind-icon">Gherkin<wbr/>Document</a></li><li class="tsd-kind-interface tsd-is-external"><a href="interfaces/GherkinExamples.html" class="tsd-kind-icon">Gherkin<wbr/>Examples</a></li><li class="tsd-kind-interface tsd-is-external"><a href="interfaces/GherkinFeature.html" class="tsd-kind-icon">Gherkin<wbr/>Feature</a></li><li class="tsd-kind-interface tsd-is-external"><a href="interfaces/GherkinLocation.html" class="tsd-kind-icon">Gherkin<wbr/>Location</a></li><li class="tsd-kind-interface tsd-is-external"><a href="interfaces/GherkinRule.html" class="tsd-kind-icon">Gherkin<wbr/>Rule</a></li><li class="tsd-kind-interface tsd-is-external"><a href="interfaces/GherkinScenario.html" class="tsd-kind-icon">Gherkin<wbr/>Scenario</a></li><li class="tsd-kind-interface tsd-is-external"><a href="interfaces/GherkinStep.html" class="tsd-kind-icon">Gherkin<wbr/>Step</a></li><li class="tsd-kind-interface tsd-is-external"><a href="interfaces/GherkinTableCell.html" class="tsd-kind-icon">Gherkin<wbr/>Table<wbr/>Cell</a></li><li class="tsd-kind-interface tsd-is-external"><a href="interfaces/GherkinTableRow.html" class="tsd-kind-icon">Gherkin<wbr/>Table<wbr/>Row</a></li><li class="tsd-kind-interface tsd-is-external"><a href="interfaces/GherkinTag.html" class="tsd-kind-icon">Gherkin<wbr/>Tag</a></li><li class="tsd-kind-interface"><a href="interfaces/PreCompiler.html" class="tsd-kind-icon">Pre<wbr/>Compiler</a></li><li class="tsd-kind-type-alias tsd-is-external"><a href="modules.html#Argument" class="tsd-kind-icon">Argument</a></li><li class="tsd-kind-type-alias tsd-has-type-parameter"><a href="modules.html#FilterEventHandler" class="tsd-kind-icon">Filter<wbr/>Event<wbr/>Handler</a></li><li class="tsd-kind-type-alias tsd-has-type-parameter"><a href="modules.html#MultiControlType" class="tsd-kind-icon">Multi<wbr/>Control<wbr/>Type</a></li><li class="tsd-kind-type-alias tsd-has-type-parameter"><a href="modules.html#MultiEventHandler" class="tsd-kind-icon">Multi<wbr/>Event<wbr/>Handler</a></li><li class="tsd-kind-type-alias"><a href="modules.html#PathGenerator" class="tsd-kind-icon">Path<wbr/>Generator</a></li><li class="tsd-kind-type-alias tsd-has-type-parameter"><a href="modules.html#SingleControlType" class="tsd-kind-icon">Single<wbr/>Control<wbr/>Type</a></li><li class="tsd-kind-type-alias tsd-has-type-parameter"><a href="modules.html#SingleEventHandler" class="tsd-kind-icon">Single<wbr/>Event<wbr/>Handler</a></li><li class="tsd-kind-variable tsd-is-external"><a href="modules.html#REPEAT_STEP_KEYWORDS" class="tsd-kind-icon">REPEAT_<wbr/>STEP_<wbr/>KEYWORDS</a></li><li class="tsd-kind-function tsd-has-type-parameter tsd-is-external"><a href="modules.html#cloneArray" class="tsd-kind-icon">clone<wbr/>Array</a></li><li class="tsd-kind-function"><a href="modules.html#load" class="tsd-kind-icon">load</a></li><li class="tsd-kind-function tsd-is-external"><a href="modules.html#normalizeString" class="tsd-kind-icon">normalize<wbr/>String</a></li><li class="tsd-kind-function"><a href="modules.html#process" class="tsd-kind-icon">process</a></li><li class="tsd-kind-function tsd-has-type-parameter tsd-is-external"><a href="modules.html#pruneID" class="tsd-kind-icon">pruneID</a></li><li class="tsd-kind-function tsd-is-external"><a href="modules.html#removeDuplicateTags" class="tsd-kind-icon">remove<wbr/>Duplicate<wbr/>Tags</a></li><li class="tsd-kind-function tsd-is-external"><a href="modules.html#replaceAll" class="tsd-kind-icon">replace<wbr/>All</a></li><li class="tsd-kind-function tsd-has-type-parameter tsd-is-external"><a href="modules.html#replaceArray" class="tsd-kind-icon">replace<wbr/>Array</a></li><li class="tsd-kind-function tsd-is-external"><a href="modules.html#safeString" class="tsd-kind-icon">safe<wbr/>String</a></li><li class="tsd-kind-function"><a href="modules.html#save" class="tsd-kind-icon">save</a></li><li class="tsd-kind-function tsd-is-external"><a href="modules.html#tag" class="tsd-kind-icon">tag</a></li></ul></nav></div></div></div><footer class="with-border-bottom"><div class="container"><h2>Legend</h2><div class="tsd-legend-group"><ul class="tsd-legend"><li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li></ul></div><h2>Settings</h2><p>Theme <select id="theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></p></div></footer><div class="container tsd-generator"><p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></div><div class="overlay"></div><script src="assets/main.js"></script></body></html>
