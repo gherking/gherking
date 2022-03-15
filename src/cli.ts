@@ -185,6 +185,12 @@ const loadCompilers = (compilers: CompilerConfig[]): PreCompiler[] => {
         if (typeof preCompiler !== "object") {
             throw new Error(`Precompiler (${compiler.path}) must be a class or a PreCompiler object: ${preCompiler}!`);
         }
+        if (typeof preCompiler.default === "function") {
+            return new preCompiler.default(compiler.configuration || {});
+        }
+        if (typeof preCompiler.default === "object") {
+            return preCompiler.default;
+        }
         return preCompiler;
     });
 };
@@ -199,12 +205,15 @@ const getSources = (config: Config): IOConfig[] => {
 }
 
 const processSource = async (source: IOConfig, compilers: PreCompiler[], formatOptions: FormatOptions): Promise<void> => {
-    const ast: Document[] = await load(source.input);
-    const outputAst = processAst(ast[0], ...compilers);
     const outputDir = dirname(source.output);
     if (!fs.existsSync(outputDir)) {
         fs.mkdirSync(outputDir, { recursive: true });
     }
+
+    const documents: Document[] = await load(source.input);
+    const document = documents[0];
+    document.targetFolder = outputDir;
+    const outputAst = processAst(document, ...compilers);
     await save(source.output, outputAst, formatOptions);
 }
 

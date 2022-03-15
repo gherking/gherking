@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.1.0
+
+### Added
+
+- Added support for default export of precompiler object or class
+- Upgraded dependencies to support comments
+- Added `onDocument`
+
 ## 2.0.0
 
 The first fully working version, after the TypeScript and API refactor.

@@ -38,7 +38,15 @@ export class DocumentProcessor extends ProcessorBase {
             debug("...map(i: %d)", i);
             const newDocument = e.clone();
             newDocument.feature = feature;
-            return newDocument;
-        });
+            if (!this.preCompiler.onDocument) {
+                return newDocument;
+            }
+            const result = this.preCompiler.onDocument(newDocument);
+            debug("...onDocument(result: %s)", typeof result);
+            if (result === null) {
+                return null;
+            }
+            return result || newDocument;
+        }).filter(Boolean);
     }
 }

@@ -197,6 +197,28 @@ describe("CLI", () => {
         expect(results[0].feature.elements).toEqual(sources[0].feature.elements);
     });
 
+    test("should use compiler as default object", async () => {
+        await runWithArgs({
+            config: "tests/cli/data/config-w-default-object.json",
+        });
+        const sources: Document[] = await getSources();
+        const results: Document[] = await getResult();
+        expect(results).toHaveLength(2);
+        expect(results[0].feature.name).toMatch(/DEFAULT$/);
+        expect(results[0].feature.elements).toEqual(sources[0].feature.elements);
+    });
+
+    test("should use compiler as default class", async () => {
+        await runWithArgs({
+            config: "tests/cli/data/config-w-default-class.json",
+        });
+        const sources: Document[] = await getSources();
+        const results: Document[] = await getResult();
+        expect(results).toHaveLength(2);
+        expect(results[0].feature.name).toMatch(/DEFAULT$/);
+        expect(results[0].feature.elements).toEqual(sources[0].feature.elements);
+    });
+
     test("should fail if compiler is neither class nor object", async () => {
         await expect(() => runWithArgs({
             config: "tests/cli/data/config-w-invalid.json"
