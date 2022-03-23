@@ -32,6 +32,26 @@ describe("DocumentProcessor", () => {
         expect(result).toEqual([])
     });
 
+    test("should handle when onDocument returns null", () => {
+        const documentProcessor = new DocumentProcessor({
+            onDocument() {
+                return null;
+            }
+        });
+        const result = documentProcessor.execute(document2);
+        expect(result).toEqual([]);
+    });
+
+    test("should handle when onDocument modifies document", () => {
+        const documentProcessor = new DocumentProcessor({
+            onDocument(d: Document) {
+                d.targetFolder = "TARGET";
+            }
+        });
+        const result = documentProcessor.execute(document2);
+        expect(result[0].targetFolder).toEqual("TARGET");
+    });
+
     test("should handle null document", () => {
         const documentProcessor = new DocumentProcessor();
 

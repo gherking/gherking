@@ -46,6 +46,7 @@ await save('./features/dist/login.feature', ast, {
 
 ### Pre-compilers
 
+ * [Filter](https://www.npmjs.com/package/gpc-filter) - Enables the user to filter out scenarios, based on cucumber-tag-expressions.
  * [ForLoop](https://www.npmjs.com/package/gpc-for-loop) - Enables the user to loop scenarios and scenario outlines in order to repeat them.
  * [Macro](https://www.npmjs.com/package/gpc-macro) - Enables the user to create and execute macros.
  * [RemoveDuplicates](https://www.npmjs.com/package/gpc-remove-duplicates) - Removes duplicated tags or example data table rows.
@@ -183,17 +184,18 @@ Given that all events receive the given element as an `Object` , they can be eas
 
 The following methods are available, to see exact signature of the given method, click on the name of it:
 
- * [onFeature](src/PreCompiler.ts#L22)<sup>1</sup>
- * [onRule](src/PreCompiler.ts#L23)<sup>1</sup>
- * [onScenario](src/PreCompiler.ts#L24)<sup>1</sup>
- * [onScenarioOutline](src/PreCompiler.ts#L25)<sup>1</sup>
- * [onBackground](src/PreCompiler.ts#L26)
- * [onExamples](src/PreCompiler.ts#L27)<sup>1</sup>
- * [onStep](src/PreCompiler.ts#L28)<sup>1</sup>
- * [onTag](src/PreCompiler.ts#L29)<sup>1</sup>
- * [onDocString](src/PreCompiler.ts#L30)
- * [onDataTable](src/PreCompiler.ts#L31)
- * [onTableRow](src/PreCompiler.ts#L32)<sup>1</sup>
+ * [onDocument](src/PreCompiler.ts#L23)
+ * [onFeature](src/PreCompiler.ts#L24)<sup>1</sup>
+ * [onRule](src/PreCompiler.ts#L25)<sup>1</sup>
+ * [onScenario](src/PreCompiler.ts#L26)<sup>1</sup>
+ * [onScenarioOutline](src/PreCompiler.ts#L27)<sup>1</sup>
+ * [onBackground](src/PreCompiler.ts#L28)
+ * [onExamples](src/PreCompiler.ts#L29)<sup>1</sup>
+ * [onStep](src/PreCompiler.ts#L30)<sup>1</sup>
+ * [onTag](src/PreCompiler.ts#L31)<sup>1</sup>
+ * [onDocString](src/PreCompiler.ts#L32)
+ * [onDataTable](src/PreCompiler.ts#L33)
+ * [onTableRow](src/PreCompiler.ts#L34)<sup>1</sup>
 
 If the method returns
  * `null` , then the given element will be deleted
@@ -203,7 +205,7 @@ If the method returns
 
 ### Filter methods
 
-Every element (both single and list) in the AST can be filtered using its correspondent pre- or post- filter methods.
+Every element (both single and list) in the AST can be filtered using its correspondent pre- or post filter methods.
 A pre-filter method is applied before processing the event; the post is applied after it.
 
 All filter methods receive the given element, its parent, and - if applicable - the element's index.
@@ -211,17 +213,21 @@ If a filter method is set, the method **must** return `true` if the element shou
 
 The following methods are available, to see exact signature of the given method, click on the name of it:
 
- * [preFeature](src/PreCompiler.ts#L34), [postFeature](src/PreCompiler.ts#L35)
- * [preRule](src/PreCompiler.ts#L36), [postRule](src/PreCompiler.ts#L37)
- * [preScenario](src/PreCompiler.ts#L38), [postScenario](src/PreCompiler.ts#L39)
- * [preScenarioOutline](src/PreCompiler.ts#L40), [postScenarioOutline](src/PreCompiler.ts#L41)
- * [preBackground](src/PreCompiler.ts#L42), [postBackground](src/PreCompiler.ts#L43)
- * [preExamples](src/PreCompiler.ts#L44), [postExamples](src/PreCompiler.ts#L45)
- * [preStep](src/PreCompiler.ts#L46), [postStep](src/PreCompiler.ts#L47)
- * [preTag](src/PreCompiler.ts#L48), [postTag](src/PreCompiler.ts#L49)
- * [preDocString](src/PreCompiler.ts#L50), [postDocString](src/PreCompiler.ts#L51)
- * [preDataTable](src/PreCompiler.ts#L52), [postDataTable](src/PreCompiler.ts#L53)
- * [preTableRow](src/PreCompiler.ts#L54), [postTableRow](src/PreCompiler.ts#L55)
+ * [preFeature](src/PreCompiler.ts#L36), [postFeature](src/PreCompiler.ts#L37)
+ * [preRule](src/PreCompiler.ts#L38), [postRule](src/PreCompiler.ts#L39)
+ * [preScenario](src/PreCompiler.ts#L40), [postScenario](src/PreCompiler.ts#L41)
+ * [preScenarioOutline](src/PreCompiler.ts#L42), [postScenarioOutline](src/PreCompiler.ts#L43)
+ * [preBackground](src/PreCompiler.ts#L44), [postBackground](src/PreCompiler.ts#L45)
+ * [preExamples](src/PreCompiler.ts#L46), [postExamples](src/PreCompiler.ts#L47)
+ * [preStep](src/PreCompiler.ts#L48), [postStep](src/PreCompiler.ts#L49)
+ * [preTag](src/PreCompiler.ts#L50), [postTag](src/PreCompiler.ts#L51)
+ * [preDocString](src/PreCompiler.ts#L52), [postDocString](src/PreCompiler.ts#L53)
+ * [preDataTable](src/PreCompiler.ts#L54), [postDataTable](src/PreCompiler.ts#L55)
+ * [preTableRow](src/PreCompiler.ts#L56), [postTableRow](src/PreCompiler.ts#L57)
+
+### Comments
+
+The semantic comments in the Gerhkin AST do not have their event and filter methods in Gherking because of their various types. You can use the respective owner object methods (e.g., to work with a Feature's comments, use `onFeature` to access them).
 
 ## Other
 

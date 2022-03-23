@@ -20,6 +20,7 @@ export type MultiEventHandler<T, P, R = T> = (e: T, p?: P, i?: number) => MultiC
 export type FilterEventHandler<T, P> = (e: T, p?: P, i?: number) => boolean;
 
 export interface PreCompiler {
+    onDocument?: SingleEventHandler<Document, null>;
     onFeature?: MultiEventHandler<Feature, Document>;
     onRule?: MultiEventHandler<Rule, Feature>;
     onScenario?: MultiEventHandler<Scenario, Feature | Rule>;
