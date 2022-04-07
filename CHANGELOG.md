@@ -5,6 +5,7 @@
 ### Added
 
 - Added JSON Schema for the configuration file
+- Added description about the precompilers
 
 ## 2.1.0
 
