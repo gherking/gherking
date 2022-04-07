@@ -97,11 +97,13 @@ Options:
 
 ### Configuration
 
-The configuration **must** contain the precompilers configuration and optionally all options which command-line arguments could specify. It can be a JSON file or a JS file
+The configuration **must** contain the precompilers configuration and optionally all options that command-line arguments could specify. It can be a JSON file or a JS file
 
 ```js
 // .gherking.json
 {
+    // you can set this schema, so that the IDE will help with the config
+    "$schema": "https://gherking.github.io/gherking/gherking.schema.json",
     // compilers should be an array of precompiler configurations
     "compilers": [
         // one option is to use precompiler packages,
