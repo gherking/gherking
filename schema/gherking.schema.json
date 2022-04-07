@@ -362,28 +362,36 @@
       "description": "This precompiler can load external data (JSON, CSV, or XLS/XLSX) into exmaples table.",
       "type": "object",
       "properties": {
-        "keepTag": {
-          "type": "boolean",
-          "description": "Whether the load-tags should be kept or removed.",
-          "default": false
+        "path": {
+          "const": "gpc-test-data"
         },
-        "defaultValue": {
-          "type": [
-            "string",
-            "number"
-          ],
-          "description": "The default value to be added to the table if a column/value is not found.",
-          "default": ""
-        },
-        "appendData": {
-          "type": "boolean",
-          "description": "Whether the loaded data should be appended to the existing rows of the examples table or overwritten.",
-          "default": true
-        },
-        "ignoreKeyCase": {
-          "type": "boolean",
-          "description": "Whether the casing of the example columns and data columns should be ignored.",
-          "default": true
+        "configuration": {
+          "type": "object",
+          "properties": {
+            "keepTag": {
+              "type": "boolean",
+              "description": "Whether the load-tags should be kept or removed.",
+              "default": false
+            },
+            "defaultValue": {
+              "type": [
+                "string",
+                "number"
+              ],
+              "description": "The default value to be added to the table if a column/value is not found.",
+              "default": ""
+            },
+            "appendData": {
+              "type": "boolean",
+              "description": "Whether the loaded data should be appended to the existing rows of the examples table or overwritten.",
+              "default": true
+            },
+            "ignoreKeyCase": {
+              "type": "boolean",
+              "description": "Whether the casing of the example columns and data columns should be ignored.",
+              "default": true
+            }
+          }
         }
       },
       "required": [
@@ -411,7 +419,10 @@
           "default": false
         },
         "lineBreak": {
-          "type": "string",
+          "type": [
+            "string",
+            "null"
+          ],
           "description": "The line break character(s).",
           "default": null
         },
