@@ -24,13 +24,13 @@
             "$ref": "#/definitions/gpcCustom"
           },
           {
-            "$ref": "#/definitions/gpcReplacer"
-          },
-          {
             "$ref": "#/definitions/gpcFilter"
           },
           {
             "$ref": "#/definitions/gpcForLoop"
+          },
+          {
+            "$ref": "#/definitions/gpcLicense"
           },
           {
             "$ref": "#/definitions/gpcMacro"
@@ -40,6 +40,9 @@
           },
           {
             "$ref": "#/definitions/gpcRemoveDuplicates"
+          },
+          {
+            "$ref": "#/definitions/gpcReplacer"
           },
           {
             "$ref": "#/definitions/gpcScenarioNumbering"
@@ -390,6 +393,41 @@
               "type": "boolean",
               "description": "Whether the casing of the example columns and data columns should be ignored.",
               "default": true
+            }
+          }
+        }
+      },
+      "required": [
+        "path"
+      ],
+      "additionalProperties": false
+    },
+    "gpcLicense": {
+      "title": "gpc-license",
+      "description": "This precompiler can be used to inject License statement into the feature files.",
+      "type": "object",
+      "properties": {
+        "path": {
+          "const": "gpc-license"
+        },
+        "configuration": {
+          "type": "object",
+          "properties": {
+            "licenseFile": {
+              "type": "string",
+              "description": "The file's path where the license is stored."
+            },
+            "licenseText": {
+              "type": "string",
+              "description": "The exact license text. It can contain the ${LICENSE} token to set the content of the license file."
+            },
+            "placement": {
+              "type": "string",
+              "description": "The place to inject the license text, either in start or end comment.",
+              "enum": [
+                "start",
+                "end"
+              ]
             }
           }
         }
