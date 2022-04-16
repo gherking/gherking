@@ -1,0 +1,475 @@
+{
+  "$schema": "http://json-schema.org/schema",
+  "$id": "https://gherking.github.io/gherking/gherking.schema.json",
+  "title": "GherKing configuration",
+  "properties": {
+    "source": {
+      "type": "string",
+      "description": "The source folder or glob pattern of the input feature files."
+    },
+    "base": {
+      "type": "string",
+      "description": "The base folder of the input feature files."
+    },
+    "destination": {
+      "type": "string",
+      "description": "The destination folder to put the output feature files."
+    },
+    "compilers": {
+      "type": "array",
+      "description": "The precompilers to use and their configuration.",
+      "items": {
+        "anyOf": [
+          {
+            "$ref": "#/definitions/gpcCustom"
+          },
+          {
+            "$ref": "#/definitions/gpcFilter"
+          },
+          {
+            "$ref": "#/definitions/gpcForLoop"
+          },
+          {
+            "$ref": "#/definitions/gpcLicense"
+          },
+          {
+            "$ref": "#/definitions/gpcMacro"
+          },
+          {
+            "$ref": "#/definitions/gpcRemoveComments"
+          },
+          {
+            "$ref": "#/definitions/gpcRemoveDuplicates"
+          },
+          {
+            "$ref": "#/definitions/gpcReplacer"
+          },
+          {
+            "$ref": "#/definitions/gpcScenarioNumbering"
+          },
+          {
+            "$ref": "#/definitions/gpcScenarioOutlineExpander"
+          },
+          {
+            "$ref": "#/definitions/gpcScenarioOutlineNumbering"
+          },
+          {
+            "$ref": "#/definitions/gpcStepGroups"
+          },
+          {
+            "$ref": "#/definitions/gpcTestData"
+          }
+        ]
+      },
+      "minItems": 1
+    },
+    "formatOptions": {
+      "$ref": "#/definitions/formatOptions"
+    }
+  },
+  "required": [
+    "compilers"
+  ],
+  "definitions": {
+    "gpcCustom": {
+      "title": "custom precompiler",
+      "description": "A custom precompiler configuration, implemented either as an object or a PreCompiler class.",
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string"
+        },
+        "configuration": {
+          "type": "object",
+          "description": "The configuration object, if necessary, to be passed to the custom precompiler class."
+        }
+      },
+      "required": [
+        "path"
+      ],
+      "additionalProperties": false
+    },
+    "gpcReplacer": {
+      "title": "gpc-replacer",
+      "description": "This GherKing Precompiler is responsible to replace keys in feature files with given values.",
+      "type": "object",
+      "properties": {
+        "path": {
+          "const": "gpc-replacer"
+        },
+        "configuration": {
+          "type": "object",
+          "description": "The key-value pairs to replace in the feature files."
+        }
+      },
+      "required": [
+        "path",
+        "configuration"
+      ],
+      "additionalProperties": false
+    },
+    "gpcFilter": {
+      "title": "gpc-filter",
+      "description": "The Filter precompiler is responsible for including or excluding the elements of a feature file in the result, which match a cucumber-tag-expression (e.g., has a given tag, does not have a given tag).",
+      "type": "object",
+      "properties": {
+        "path": {
+          "const": "gpc-filter"
+        },
+        "configuration": {
+          "type": "string",
+          "description": "Cucumber-tag-expression the filtering is based on",
+          "default": "not @wip"
+        }
+      },
+      "required": [
+        "path"
+      ],
+      "additionalProperties": false
+    },
+    "gpcForLoop": {
+      "title": "gpc-for-loop",
+      "description": "A precompiler of GherKing to loop scenarios and scenario outlines to repeat them.",
+      "type": "object",
+      "properties": {
+        "path": {
+          "const": "gpc-for-loop"
+        },
+        "configuration": {
+          "type": "object",
+          "properties": {
+            "maxValue": {
+              "type": "integer",
+              "description": "Maximum value of iteration.",
+              "default": 10
+            },
+            "tagName": {
+              "type": "string",
+              "description": "Tag used to mark scenarios or outlines to be repeated.",
+              "default": "loop"
+            },
+            "format": {
+              "type": "string",
+              "description": "Format of the scenario or outline name after repeating. These tokens can be used: ${name}, ${i}.",
+              "default": "${name} (${i})"
+            },
+            "limitToMaxValue": {
+              "type": "boolean",
+              "description": "Whether higher iteration values than the max should be limited to the max or error should be thrown (false).",
+              "default": true
+            }
+          }
+        }
+      },
+      "required": [
+        "path"
+      ],
+      "additionalProperties": false
+    },
+    "gpcMacro": {
+      "title": "gpc-macro",
+      "description": "This precompiler is responsible for defining macros in feature files and then executing them.",
+      "type": "object",
+      "properties": {
+        "path": {
+          "const": "gpc-macro"
+        }
+      },
+      "required": [
+        "path"
+      ],
+      "additionalProperties": false
+    },
+    "gpcRemoveComments": {
+      "title": "gpc-remove-comments",
+      "description": "This precompiler removes all or particular type of semantic comments from the feature file.",
+      "type": "object",
+      "properties": {
+        "path": {
+          "const": "gpc-remove-comments"
+        },
+        "configuration": {
+          "type": "object",
+          "properties": {
+            "keep": {
+              "type": "array",
+              "description": "To set which comment types should be kept, not removed.",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "NONE",
+                  "BEFORE_TAGS",
+                  "PRECEDING",
+                  "DESCRIPTION",
+                  "TAG",
+                  "ROW",
+                  "DOC_STRING",
+                  "STEP",
+                  "START",
+                  "END",
+                  "ALL"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "required": [
+        "path",
+        "configuration"
+      ],
+      "additionalProperties": false
+    },
+    "gpcRemoveDuplicates": {
+      "title": "gpc-remove-duplicates",
+      "description": "The RemoveDuplicates precompiler is responsible for having only a reasonable amount of tags and/or rows in each feature file.",
+      "type": "object",
+      "properties": {
+        "path": {
+          "const": "gpc-remove-duplicates"
+        },
+        "configuration": {
+          "type": "object",
+          "properties": {
+            "processTags": {
+              "type": "boolean",
+              "description": "Should tags on the same level and from parent be de-duplicated.",
+              "default": true
+            },
+            "processRows": {
+              "type": "boolean",
+              "description": "Should table rows be de-duplicated.",
+              "default": false
+            }
+          }
+        }
+      },
+      "required": [
+        "path"
+      ],
+      "additionalProperties": false
+    },
+    "gpcScenarioNumbering": {
+      "title": "gpc-scenario-numbering",
+      "description": "The ScenarioNumbering precompiler is responsible for adding an index to all scenarios and scenario outlines.",
+      "type": "object",
+      "properties": {
+        "path": {
+          "const": "gpc-scenario-numbering"
+        },
+        "configuration": {
+          "type": "object",
+          "properties": {
+            "format": {
+              "type": "string",
+              "description": "The format, how index should be added to the name of the scenario/scenairo outline. Possible tokens: ${name} the original name, ${i} the index",
+              "default": "${i}. ${name}"
+            }
+          }
+        }
+      },
+      "required": [
+        "path"
+      ],
+      "additionalProperties": false
+    },
+    "gpcScenarioOutlineExpander": {
+      "title": "gpc-scenario-outline-expander",
+      "description": "This precompiler is responsible for converting Scenario Outlines to single Scenarios as Cucumber would do and adds the first column as a tag.",
+      "type": "object",
+      "properties": {
+        "path": {
+          "const": "gpc-scenario-outline-expander"
+        },
+        "configuration": {
+          "type": "object",
+          "properties": {
+            "ignoreTag": {
+              "type": "string",
+              "description": "Tag used to mark scenarios to be ignored during expanding Scenario Outlines.",
+              "default": "@notExpand"
+            }
+          }
+        }
+      },
+      "required": [
+        "path"
+      ],
+      "additionalProperties": false
+    },
+    "gpcScenarioOutlineNumbering": {
+      "title": "gpc-scenario-outline-numbering",
+      "description": "This precompiler can add numbering column to Examples tables, and apply formatting to the name of the Scenario Outline.",
+      "type": "object",
+      "properties": {
+        "path": {
+          "const": "gpc-scenario-outline-numbering"
+        },
+        "configuration": {
+          "type": "object",
+          "properties": {
+            "addParameters": {
+              "type": "boolean",
+              "description": "Should the example parameters be added to the name of the Scenario Outline.",
+              "default": false
+            },
+            "parameterDelimiter": {
+              "type": "string",
+              "description": "The delimiter to use when adding the parameters to the name of the Scenario Outline.",
+              "default": ","
+            },
+            "parameterFormat": {
+              "type": "string",
+              "description": "The format how the output Scenario Outline name should look with the parameters. Tokens to use: ${name}, ${parameters}",
+              "default": "${name} - ${parameters}"
+            },
+            "addNumbering": {
+              "type": "boolean",
+              "description": "Should an index be added to the name of the Scenario Outline.",
+              "default": true
+            },
+            "numberingFormat": {
+              "type": "string",
+              "description": "The format how the output Scenario Outline name should look with the index. Tokens to use: ${name}, ${i}",
+              "default": "${i} - ${name}"
+            },
+            "strictNaming": {
+              "type": "boolean",
+              "description": "Should the existing numbering field (num) block execution (true) or be used for numbering (false).",
+              "default": false
+            }
+          }
+        }
+      },
+      "required": [
+        "path"
+      ],
+      "additionalProperties": false
+    },
+    "gpcStepGroups": {
+      "title": "gpc-step-groups",
+      "description": "The StepGroups precompiler is responsible for correcting the gherkin keywords of steps to make the tests more readable.",
+      "type": "object",
+      "properties": {
+        "path": {
+          "const": "gpc-step-groups"
+        }
+      },
+      "required": [
+        "path"
+      ],
+      "additionalProperties": false
+    },
+    "gpcTestData": {
+      "title": "gpc-test-data",
+      "description": "This precompiler can load external data (JSON, CSV, or XLS/XLSX) into exmaples table.",
+      "type": "object",
+      "properties": {
+        "path": {
+          "const": "gpc-test-data"
+        },
+        "configuration": {
+          "type": "object",
+          "properties": {
+            "keepTag": {
+              "type": "boolean",
+              "description": "Whether the load-tags should be kept or removed.",
+              "default": false
+            },
+            "defaultValue": {
+              "type": [
+                "string",
+                "number"
+              ],
+              "description": "The default value to be added to the table if a column/value is not found.",
+              "default": ""
+            },
+            "appendData": {
+              "type": "boolean",
+              "description": "Whether the loaded data should be appended to the existing rows of the examples table or overwritten.",
+              "default": true
+            },
+            "ignoreKeyCase": {
+              "type": "boolean",
+              "description": "Whether the casing of the example columns and data columns should be ignored.",
+              "default": true
+            }
+          }
+        }
+      },
+      "required": [
+        "path"
+      ],
+      "additionalProperties": false
+    },
+    "gpcLicense": {
+      "title": "gpc-license",
+      "description": "This precompiler can be used to inject License statement into the feature files.",
+      "type": "object",
+      "properties": {
+        "path": {
+          "const": "gpc-license"
+        },
+        "configuration": {
+          "type": "object",
+          "properties": {
+            "licenseFile": {
+              "type": "string",
+              "description": "The file's path where the license is stored."
+            },
+            "licenseText": {
+              "type": "string",
+              "description": "The exact license text. It can contain the ${LICENSE} token to set the content of the license file."
+            },
+            "placement": {
+              "type": "string",
+              "description": "The place to inject the license text, either in start or end comment.",
+              "enum": [
+                "start",
+                "end"
+              ]
+            }
+          }
+        }
+      },
+      "required": [
+        "path"
+      ],
+      "additionalProperties": false
+    },
+    "formatOptions": {
+      "type": "object",
+      "description": "Options to pass to gherkin-formatter, on how to format the output feature files.",
+      "properties": {
+        "oneTagPerLine": {
+          "type": "boolean",
+          "description": "Should the tags be rendered separately, one by line?",
+          "default": false
+        },
+        "separateStepGroups": {
+          "type": "boolean",
+          "description": "Should step groups (when-then) be separated?",
+          "default": false
+        },
+        "compact": {
+          "type": "boolean",
+          "description": "Should empty lines be skipped, removed from the result?",
+          "default": false
+        },
+        "lineBreak": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The line break character(s).",
+          "default": null
+        },
+        "indentation": {
+          "type": "string",
+          "description": "The indentation character(s).",
+          "default": "  "
+        }
+      }
+    }
+  }
+}

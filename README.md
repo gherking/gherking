@@ -46,6 +46,8 @@ await save('./features/dist/login.feature', ast, {
 
 ### Pre-compilers
 
+Some of our base precompilers:
+
  * [Filter](https://www.npmjs.com/package/gpc-filter) - Enables the user to filter out scenarios, based on cucumber-tag-expressions.
  * [ForLoop](https://www.npmjs.com/package/gpc-for-loop) - Enables the user to loop scenarios and scenario outlines in order to repeat them.
  * [Macro](https://www.npmjs.com/package/gpc-macro) - Enables the user to create and execute macros.
@@ -55,6 +57,8 @@ await save('./features/dist/login.feature', ast, {
  * [ScenarioOutlineExpander](https://www.npmjs.com/package/gpc-scenario-outline-expander) - Expand the Scenario Outlines to actual scenarios.
  * [ScenarioOutlineNumbering](https://www.npmjs.com/package/gpc-scenario-outline-numbering) - Makes all scenario, generated from scenario outlines unique.
  * [StepGroups](https://www.npmjs.com/package/gpc-step-groups) - Corrects the gherkin keywords of steps to make the tests more readable.
+
+You can find all our precompilers [in this list](https://github.com/search?q=topic%3Agpc+org%3Agherking&type=Repositories) or on our [home page](https://gherking.github.io/).
 
 ## CLI
 
@@ -97,11 +101,13 @@ Options:
 
 ### Configuration
 
-The configuration **must** contain the precompilers configuration and optionally all options which command-line arguments could specify. It can be a JSON file or a JS file
+The configuration **must** contain the precompilers configuration and optionally all options that command-line arguments could specify. It can be a JSON file or a JS file
 
 ```js
 // .gherking.json
 {
+    // you can set this schema, so that the IDE will help with the config
+    "$schema": "https://gherking.github.io/gherking/gherking.schema.json",
     // compilers should be an array of precompiler configurations
     "compilers": [
         // one option is to use precompiler packages,
