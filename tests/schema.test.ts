@@ -12,4 +12,9 @@ describe(".gherking.json schema", () => {
 
     expect(config).toMatchSchema(schema);
   });
+  test("should handle minimal valid .gherking.json", () => {
+    const config = readJSON("./data/.gherking.min.json");
+
+    expect(config).toMatchSchema(schema);
+  });
 });
