@@ -1,10 +1,11 @@
 # Changelog
 
-## Unreleased
+## 2.1.2
 
 ### Changed
 
 - Updated schema to draft-07
+- Registered schema in [schemastore](http://schemastore.org/)
 
 ## 2.1.1
 

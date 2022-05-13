@@ -101,13 +101,21 @@ Options:
 
 ### Configuration
 
-The configuration **must** contain the precompilers configuration and optionally all options that command-line arguments could specify. It can be a JSON file or a JS file
+The configuration **must** contain the precompilers configuration and optionally all options that command-line arguments could specify. It can be a JSON file or a JS file.
 
-```js
+> The configuration should be recognized by most of the IDE (as GherKing is added to the [schemastore](http://schemastore.org/)), but if it is not recognized, please update your IDE or add the `$schema` key to the configuration:
+> ```json
+> // .gherking.json
+> {
+>    // you can set this schema, so that the IDE will help with the config
+>    "$schema": "https://gherking.github.io/gherking/gherking.schema.json",
+>   // ...
+> }
+> ```
+
+```json
 // .gherking.json
 {
-    // you can set this schema, so that the IDE will help with the config
-    "$schema": "https://gherking.github.io/gherking/gherking.schema.json",
     // compilers should be an array of precompiler configurations
     "compilers": [
         // one option is to use precompiler packages,
