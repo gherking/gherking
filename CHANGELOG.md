@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Changed
+
+- Updated schema to draft-07
+
 ## 2.1.1
 
 ### Added

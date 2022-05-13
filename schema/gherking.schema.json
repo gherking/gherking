@@ -1,19 +1,26 @@
 {
-  "$schema": "http://json-schema.org/schema",
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://gherking.github.io/gherking/gherking.schema.json",
   "title": "GherKing configuration",
   "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "The explicit schema set. It is optional, as GherKing is supported by schemastore.org, thus most IDE."
+    },
     "source": {
       "type": "string",
-      "description": "The source folder or glob pattern of the input feature files."
+      "description": "The source folder or glob pattern of the input feature files.",
+      "minLength": 1
     },
     "base": {
       "type": "string",
-      "description": "The base folder of the input feature files."
+      "description": "The base folder of the input feature files.",
+      "minLength": 1
     },
     "destination": {
       "type": "string",
-      "description": "The destination folder to put the output feature files."
+      "description": "The destination folder to put the output feature files.",
+      "minLength": 1
     },
     "compilers": {
       "type": "array",
@@ -70,6 +77,7 @@
   "required": [
     "compilers"
   ],
+  "additionalProperties": false,
   "definitions": {
     "gpcCustom": {
       "title": "custom precompiler",
@@ -77,7 +85,9 @@
       "type": "object",
       "properties": {
         "path": {
-          "type": "string"
+          "type": "string",
+          "description": "Either the NPM package name to use, or the path to a JS file containing a PreCompiler.",
+          "minLength": 1
         },
         "configuration": {
           "type": "object",
@@ -99,7 +109,18 @@
         },
         "configuration": {
           "type": "object",
-          "description": "The key-value pairs to replace in the feature files."
+          "description": "The key-value pairs to replace in the feature files.",
+          "minProperties": 1,
+          "patternProperties": {
+            "^[a-zA-Z0-9_-]+$": {
+              "type": [
+                "string",
+                "integer",
+                "boolean",
+                "number"
+              ]
+            }
+          }
         }
       },
       "required": [
@@ -119,7 +140,10 @@
         "configuration": {
           "type": "string",
           "description": "Cucumber-tag-expression the filtering is based on",
-          "default": "not @wip"
+          "default": "not @wip",
+          "minLength": 1,
+          "pattern": "^.*@[^ ]+.*$",
+          "$comment": "The pattern must contain at least one cucumber tag."
         }
       },
       "required": [
@@ -141,24 +165,37 @@
             "maxValue": {
               "type": "integer",
               "description": "Maximum value of iteration.",
-              "default": 10
+              "default": 10,
+              "minimum": 0
             },
             "tagName": {
               "type": "string",
               "description": "Tag used to mark scenarios or outlines to be repeated.",
-              "default": "loop"
+              "default": "loop",
+              "pattern": "^[^ ]+$",
+              "minLength": 1
             },
             "format": {
               "type": "string",
-              "description": "Format of the scenario or outline name after repeating. These tokens can be used: ${name}, ${i}.",
-              "default": "${name} (${i})"
+              "description": "Format of the scenario or outline name after repeating. These tokens must be used: ${name}, ${i}.",
+              "default": "${name} (${i})",
+              "minLength": 11,
+              "allOf": [
+                {
+                  "pattern": "^.*\\$\\{name\\}.*$"
+                },
+                {
+                  "pattern": "^.*\\$\\{i\\}.*$"
+                }
+              ]
             },
             "limitToMaxValue": {
               "type": "boolean",
               "description": "Whether higher iteration values than the max should be limited to the max or error should be thrown (false).",
               "default": true
             }
-          }
+          },
+          "additionalProperties": false
         }
       },
       "required": [
@@ -209,14 +246,15 @@
                   "END",
                   "ALL"
                 ]
-              }
+              },
+              "minItems": 1
             }
-          }
+          },
+          "additionalProperties": false
         }
       },
       "required": [
-        "path",
-        "configuration"
+        "path"
       ],
       "additionalProperties": false
     },
@@ -241,7 +279,8 @@
               "description": "Should table rows be de-duplicated.",
               "default": false
             }
-          }
+          },
+          "additionalProperties": false
         }
       },
       "required": [
@@ -263,9 +302,19 @@
             "format": {
               "type": "string",
               "description": "The format, how index should be added to the name of the scenario/scenairo outline. Possible tokens: ${name} the original name, ${i} the index",
-              "default": "${i}. ${name}"
+              "default": "${i}. ${name}",
+              "minLength": 11,
+              "allOf": [
+                {
+                  "pattern": "^.*\\$\\{name\\}.*$"
+                },
+                {
+                  "pattern": "^.*\\$\\{i\\}.*$"
+                }
+              ]
             }
-          }
+          },
+          "additionalProperties": false
         }
       },
       "required": [
@@ -287,9 +336,12 @@
             "ignoreTag": {
               "type": "string",
               "description": "Tag used to mark scenarios to be ignored during expanding Scenario Outlines.",
-              "default": "@notExpand"
+              "default": "@notExpand",
+              "minLength": 2,
+              "pattern": "^@[^ ]+$"
             }
-          }
+          },
+          "additionalProperties": false
         }
       },
       "required": [
@@ -316,12 +368,22 @@
             "parameterDelimiter": {
               "type": "string",
               "description": "The delimiter to use when adding the parameters to the name of the Scenario Outline.",
-              "default": ","
+              "default": ",",
+              "minLength": 1
             },
             "parameterFormat": {
               "type": "string",
               "description": "The format how the output Scenario Outline name should look with the parameters. Tokens to use: ${name}, ${parameters}",
-              "default": "${name} - ${parameters}"
+              "default": "${name} - ${parameters}",
+              "minLength": 20,
+              "allOf": [
+                {
+                  "pattern": "^.*\\$\\{name\\}.*$"
+                },
+                {
+                  "pattern": "^.*\\$\\{parameters\\}.*$"
+                }
+              ]
             },
             "addNumbering": {
               "type": "boolean",
@@ -331,14 +393,24 @@
             "numberingFormat": {
               "type": "string",
               "description": "The format how the output Scenario Outline name should look with the index. Tokens to use: ${name}, ${i}",
-              "default": "${i} - ${name}"
+              "default": "${i} - ${name}",
+              "minLength": 11,
+              "allOf": [
+                {
+                  "pattern": "^.*\\$\\{name\\}.*$"
+                },
+                {
+                  "pattern": "^.*\\$\\{i\\}.*$"
+                }
+              ]
             },
             "strictNaming": {
               "type": "boolean",
               "description": "Should the existing numbering field (num) block execution (true) or be used for numbering (false).",
               "default": false
             }
-          }
+          },
+          "additionalProperties": false
         }
       },
       "required": [
@@ -394,7 +466,8 @@
               "description": "Whether the casing of the example columns and data columns should be ignored.",
               "default": true
             }
-          }
+          },
+          "additionalProperties": false
         }
       },
       "required": [
@@ -415,11 +488,13 @@
           "properties": {
             "licenseFile": {
               "type": "string",
-              "description": "The file's path where the license is stored."
+              "description": "The file's path where the license is stored.",
+              "minLength": 1
             },
             "licenseText": {
               "type": "string",
-              "description": "The exact license text. It can contain the ${LICENSE} token to set the content of the license file."
+              "description": "The exact license text. It can contain the ${LICENSE} token to set the content of the license file.",
+              "minLength": 1
             },
             "placement": {
               "type": "string",
@@ -429,7 +504,21 @@
                 "end"
               ]
             }
-          }
+          },
+          "$comment": "Either licenseFile or licenseText must be set!",
+          "additionalProperties": false,
+          "anyOf": [
+            {
+              "required": [
+                "licenseFile"
+              ]
+            },
+            {
+              "required": [
+                "licenseText"
+              ]
+            }
+          ]
         }
       },
       "required": [
@@ -469,7 +558,8 @@
           "description": "The indentation character(s).",
           "default": "  "
         }
-      }
+      },
+      "additionalProperties": false
     }
   }
 }

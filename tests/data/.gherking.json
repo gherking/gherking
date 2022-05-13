@@ -1,0 +1,81 @@
+{
+  "$schema": "../../schema/gherking.schema.json",
+  "base": "base path",
+  "destination": "destination path",
+  "source": "source path",
+  "formatOptions": {
+    "compact": false,
+    "indentation": "  ",
+    "lineBreak": null,
+    "oneTagPerLine": false,
+    "separateStepGroups": false
+  },
+  "compilers": [
+    {
+      "path": "gpc-filter",
+      "configuration": "not @wip"
+    },
+    {
+      "path": "gpc-for-loop",
+      "configuration": {
+        "format": "${name} (${i})",
+        "limitToMaxValue": true,
+        "maxValue": 10,
+        "tagName": "loop"
+      }
+    },
+    {
+      "path": "gpc-license",
+      "configuration": {
+        "licenseFile": "LICENSE.md",
+        "licenseText": "LICENSE",
+        "placement": "start"
+      }
+    },
+    {
+      "path": "gpc-macro"
+    },
+    {
+      "path": "gpc-remove-duplicates",
+      "configuration": {
+        "processRows": false,
+        "processTags": true
+      }
+    },
+    {
+      "path": "gpc-scenario-numbering",
+      "configuration": {
+        "format": "${i}. ${name}"
+      }
+    },
+    {
+      "path": "gpc-scenario-outline-expander",
+      "configuration": {
+        "ignoreTag": "@notExpand"
+      }
+    },
+    {
+      "path": "gpc-scenario-outline-numbering",
+      "configuration": {
+        "addNumbering": true,
+        "addParameters": false,
+        "numberingFormat": "${i} - ${name}",
+        "parameterDelimiter": ",",
+        "parameterFormat": "${name} - ${parameters}",
+        "strictNaming": false
+      }
+    },
+    {
+      "path": "gpc-step-groups"
+    },
+    {
+      "path": "gpc-test-data",
+      "configuration": {
+        "appendData": true,
+        "defaultValue": "",
+        "ignoreKeyCase": true,
+        "keepTag": false
+      }
+    }
+  ]
+}
