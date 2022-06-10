@@ -15,7 +15,7 @@ export class DocumentProcessor extends ProcessorBase {
         this.featureProcessor = new FeatureProcessor(preCompiler);
     }
 
-    public execute(e: Document): Document[] {
+    public async execute(e: Document): Promise<Document[]> {
         /* istanbul ignore next */
         debug("execute(e: %s)", e?.constructor.name);
         if (!e) {
@@ -26,7 +26,7 @@ export class DocumentProcessor extends ProcessorBase {
             debug("...!feature");
             return [];
         }
-        const features: Feature[] = this.featureProcessor.execute(document.feature, document) as Feature[];
+        const features: Feature[] = await this.featureProcessor.execute(document.feature, document) as Feature[];
         if (!features) {
             debug("...!features");
             return [];
@@ -34,19 +34,22 @@ export class DocumentProcessor extends ProcessorBase {
 
         debug("...Array %d", features.length);
 
-        return features.map((feature, i) => {
+        const newDocuments: Document[] = [];
+        for (let i = 0; i < features.length; ++i) {
+            const feature = features[i];
+
             debug("...map(i: %d)", i);
             const newDocument = e.clone();
             newDocument.feature = feature;
             if (!this.preCompiler.onDocument) {
-                return newDocument;
+                newDocuments.push(newDocument);
+                continue;
             }
-            const result = this.preCompiler.onDocument(newDocument);
+
+            const result = await this.preCompiler.onDocument(newDocument);
             debug("...onDocument(result: %s)", typeof result);
-            if (result === null) {
-                return null;
-            }
-            return result || newDocument;
-        }).filter(Boolean);
+            newDocuments.push(result === null ? null : result || newDocument);
+        }
+        return newDocuments.filter(Boolean);
     }
 }

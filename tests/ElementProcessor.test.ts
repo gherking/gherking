@@ -16,14 +16,14 @@ describe("ElementProcessor", () => {
         feature.elements = [background, scenario, scenarioOutline];
     })
 
-    test("should handle if no pre/post-filter or event handler is set", () => {
+    test("should handle if no pre/post-filter or event handler is set", async () => {
         const elements = feature.elements as Element[];
         const elementProcessor = new ElementProcessor<Feature>();
-        const results = elementProcessor.execute(elements, feature);
+        const results = await elementProcessor.execute(elements, feature);
         expect(results).toEqual(elements);
     });
 
-    test("should filter by pre-filter", () => {
+    test("should filter by pre-filter", async () => {
         const onBackground = jest.fn();
         const onScenario = jest.fn();
         const onScenarioOutline = jest.fn();
@@ -42,7 +42,7 @@ describe("ElementProcessor", () => {
             onScenario,
             onScenarioOutline
         });
-        const results = elementProcessor.execute(elements, feature);
+        const results = await elementProcessor.execute(elements, feature);
 
         expect(results).not.toContain(elements[0])
         expect(results).toContain(elements[1])
@@ -53,7 +53,7 @@ describe("ElementProcessor", () => {
         expect(onScenarioOutline).not.toHaveBeenCalled();
     });
 
-    test("should filter by post-filter", () => {
+    test("should filter by post-filter", async () => {
         const onBackground = jest.fn();
         const onScenario = jest.fn();
         const onScenarioOutline = jest.fn();
@@ -72,7 +72,7 @@ describe("ElementProcessor", () => {
             onScenario,
             onScenarioOutline
         });
-        const results = elementProcessor.execute(elements, feature);
+        const results = await elementProcessor.execute(elements, feature);
 
         expect(results).not.toContain(elements[0])
         expect(results).toContain(elements[1])
@@ -83,10 +83,10 @@ describe("ElementProcessor", () => {
         expect(onScenarioOutline).toHaveBeenCalled();
     });
 
-    test("should handle if incorrect object type is passed", () => {
+    test("should handle if incorrect object type is passed", async () => {
         const elements = {};
         const elementProcessor = new ElementProcessor<Feature>();
-        const results = elementProcessor.execute(elements as Element[], feature);
+        const results = await elementProcessor.execute(elements as Element[], feature);
         expect(results).toEqual([]);
     });
 })

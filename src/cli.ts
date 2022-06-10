@@ -80,21 +80,18 @@ const parseConfig = (): Config => {
         .option("source", {
             type: "string",
             alias: "s",
-            coerce: resolvePath,
             description: "The pattern or path of feature files which needs to be precompiled.",
             normalize: true
         })
         .option("base", {
             type: "string",
             alias: "b",
-            coerce: resolvePath,
             description: "The base directory of feature files.",
             normalize: true
         })
         .option("destination", {
             type: "string",
             alias: "d",
-            coerce: resolvePath,
             description: "The destination directory of precompiled feature files.",
             normalize: true
         })
@@ -196,12 +193,16 @@ const loadCompilers = (compilers: CompilerConfig[]): PreCompiler[] => {
 };
 
 const getSources = (config: Config): IOConfig[] => {
-    return sync(config.source, { absolute: true })
+    debug("getSources(source: %s, base: %s, dest: %s)", config.source, config.base, config.destination);
+    return sync(config.source.replace(/\\/g, "/"))
         .map(normalize)
-        .map(file => ({
-            input: file,
-            output: config.destination + file.replace(config.base, ""),
-        }));
+        .map(file => {
+            debug("getSources:source: %s", file)
+            return ({
+                input: file,
+                output: config.destination + file.replace(config.base, ""),
+            });
+        });
 }
 
 const processSource = async (source: IOConfig, compilers: PreCompiler[], formatOptions: FormatOptions): Promise<void> => {
@@ -213,14 +214,14 @@ const processSource = async (source: IOConfig, compilers: PreCompiler[], formatO
     const documents: Document[] = await load(source.input);
     const document = documents[0];
     document.targetFolder = outputDir;
-    const outputAst = processAst(document, ...compilers);
+    const outputAst = await processAst(document, ...compilers);
     await save(source.output, outputAst, formatOptions);
 }
 
 export async function run(): Promise<void> {
     debug("run");
     const config = parseConfig();
-    debug("...config: %o", config);
+    debug("...config: %s", JSON.stringify(config));
 
     const compilers = loadCompilers(config.compilers);
     debug("...compilers: %o", compilers);
@@ -229,12 +230,14 @@ export async function run(): Promise<void> {
     debug("...sources: %o", sources);
 
     if (config.clean && fs.existsSync(config.destination)) {
+        debug("...clean: %s", config.destination);
         config.verbose && console.log(`Cleaning ${config.destination}`);
         (fs.rmSync ? fs.rmSync : fs.rmdirSync)(config.destination, { recursive: true });
         fs.mkdirSync(config.destination, { recursive: true });
     }
 
     for (const source of sources) {
+        debug("...processing: %o", source);
         config.verbose && console.log(`Processing ${source.input}`);
         await processSource(source, compilers, config.formatOptions);
         config.verbose && console.log(`Processed file written out ${source.output}`);

@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.2.0
+
+### BREAKING CHANGE
+
+**As the main intended use-case of this tool is to use it as a CLI tool, the major version did not change, as from CLI point of view, nothing has change.**
+The `process` function is async from now on to support new async precompilers. 
+
 ## 2.1.2
 
 ### Changed

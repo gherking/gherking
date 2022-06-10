@@ -11,12 +11,11 @@ It is based on the AST what is provided by [gherkin-ast](https://www.npmjs.com/p
 ## Usage
 
 ```javascript
-'use strict';
 const compiler = require('gherking');
 const Replacer = require('gpc-replacer');
 
 let ast = await compiler.load('./features/src/login.feature');
-ast = compiler.process(
+ast = await compiler.process(
     ast,
     new Replacer({
         name: 'Hello'
@@ -28,12 +27,11 @@ await compiler.save('./features/dist/login.feature', ast, {
 ```
 
 ```typescript
-'use strict';
 import {load, process, save} from "gherking";
 import Replacer = require("gpc-replacer");
 
 let ast = await load("./features/src/login.feature");
-ast = process(
+ast = await process(
     ast,
     new Replacer({
         name: 'Hello'
@@ -151,6 +149,7 @@ The configuration **must** contain the precompilers configuration and optionally
 
 Note: command line arguments should also support setting `formatOptions` , via object arguments, see [Object@yargs](https://github.com/yargs/yargs/blob/main/docs/tricks.md#objects).
 
+<!--
 ## API
 
 ### `load`
@@ -183,7 +182,8 @@ Applies the given precompilers to the given AST.
  * `{Document|Document[]} ast` - the AST needs to be processed
  * `{...PreCompiler} pre-compilers` - the pre-compilers needs to be applied to the given AST
  
-**Returns:** `{Document[]}` the processed AST
+**Returns:** `{Promise<Document[]>}` the processed AST
+-->
 
 ## PreCompiler
 

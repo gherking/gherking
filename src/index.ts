@@ -16,7 +16,7 @@ export const load = (pattern: string): Promise<Document[]> => {
     return read(pattern) as Document[];
 }
 
-export const process = (ast: Document, ...preCompilers: PreCompiler[]): Document[] => {
+export const process = async (ast: Document, ...preCompilers: PreCompiler[]): Promise<Document[]> => {
     /* istanbul ignore next */
     debug("process(ast: %s, preCompilers: %d)", ast?.constructor.name, preCompilers.length);
     const documents = [ast];
@@ -25,7 +25,7 @@ export const process = (ast: Document, ...preCompilers: PreCompiler[]): Document
         const processor = new DocumentProcessor(preCompiler);
         for (let i = 0; i < documents.length; ++i) {
             debug("......document: %d", i);
-            const newDocuments = processor.execute(documents[i]);
+            const newDocuments = await processor.execute(documents[i]);
             debug("......new documents: %d", newDocuments.length);
             documents.splice(i, 1, ...newDocuments);
             i += newDocuments.length - 1;

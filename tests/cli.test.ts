@@ -1,26 +1,27 @@
 import { run, CLIConfig } from "../src/cli";
 import { Document, read } from "gherkin-io";
 import * as fs from "fs";
+import * as rimraf from "rimraf";
 import { pruneID } from "gherkin-ast";
-
-console.error = jest.fn();
-console.log = jest.fn();
 
 describe("CLI", () => {
     let prevArgs: string[];
 
     beforeEach(() => {
+        jest.spyOn(console, "error").mockReturnValue();
+        jest.spyOn(console, "log").mockReturnValue();
         prevArgs = process.argv;
     });
 
     afterEach(() => {
+        jest.resetAllMocks();
         process.argv = prevArgs;
     });
 
     const runWithArgs = (config: CLIConfig = {}) => {
         config = {
             config: "tests/cli/data/config.json",
-            source: "tests/cli/data/source/**/*",
+            source: "tests/cli/data/source/**/*.feature",
             base: "tests/cli/data/source",
             destination: "tests/cli/data/destination",
             verbose: true,
@@ -43,8 +44,13 @@ describe("CLI", () => {
     const getResult = (destination = "destination") => readFeatureFiles(`tests/cli/data/${destination}/**/*.feature`);
     const deleteDirectory = (dir: string) => {
         dir = `tests/cli/data/${dir}`;
+        console.log("DELETE", dir, fs.existsSync(dir));
         if (fs.existsSync(dir)) {
-            (fs.rmSync ? fs.rmSync : fs.rmdirSync)(dir, { recursive: true });
+            try {
+                rimraf.sync(dir);
+            } catch (e) {
+                // TODO: cannot delete
+            }
         }
     };
 

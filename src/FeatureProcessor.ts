@@ -21,23 +21,23 @@ export class FeatureProcessor extends Processor<Feature, Document, MultiControlT
         this.elementProcessor = new ElementProcessor<Feature>(preCompiler);
     }
 
-    protected preFilter(e: Feature, p: Document): boolean {
+    protected async preFilter(e: Feature, p: Document): Promise<boolean> {
         /* istanbul ignore next */
         debug(
             "preFilter(hasPreFeature: %s, e: %s, p: %s)",
             !!this.preCompiler.preFeature, e?.constructor.name, p?.constructor.name
         );
-        return !this.preCompiler.preFeature || this.preCompiler.preFeature(e, p);
+        return !this.preCompiler.preFeature || await this.preCompiler.preFeature(e, p);
     }
-    protected postFilter(e: Feature, p: Document): boolean {
+    protected async postFilter(e: Feature, p: Document): Promise<boolean> {
         /* istanbul ignore next */
         debug(
             "postFilter(hasPreFeature: %s, e: %s, p: %s)",
             !!this.preCompiler.postFeature, e?.constructor.name, p?.constructor.name
         );
-        return !this.preCompiler.postFeature || this.preCompiler.postFeature(e, p);
+        return !this.preCompiler.postFeature || await this.preCompiler.postFeature(e, p);
     }
-    protected process(e: Feature, p: Document): Feature[] {
+    protected async process(e: Feature, p: Document): Promise<Feature[]> {
         /* istanbul ignore next */
         debug(
             "process(hasOnFeature: %s, e: %s, p: %s)",
@@ -46,7 +46,7 @@ export class FeatureProcessor extends Processor<Feature, Document, MultiControlT
 
         let features = [e];
         if (this.preCompiler.onFeature) {
-            const result = this.preCompiler.onFeature(e, p);
+            const result = await this.preCompiler.onFeature(e, p);
             if (result === null) {
                 debug("...delete");
                 return [];
@@ -60,19 +60,21 @@ export class FeatureProcessor extends Processor<Feature, Document, MultiControlT
             }
         }
 
-        features.forEach((feature, i) => {
+        for (let i = 0; i < features.length; ++i) {
+            const feature = features[i];
+
             debug("...forEach %d", i);
-            feature.tags = this.tagProcessor.execute(feature?.tags, feature);
+            feature.tags = await this.tagProcessor.execute(feature?.tags, feature);
 
             const elements = feature.elements;
             if (this.hasRule(elements)) {
                 debug("......hasRule %d", i);
-                feature.elements = this.ruleProcessor.execute(elements, feature);
+                feature.elements = await this.ruleProcessor.execute(elements, feature);
             } else {
                 debug("......noRule %d", i);
-                feature.elements = this.elementProcessor.execute(elements as Element[], feature)
+                feature.elements = await this.elementProcessor.execute(elements as Element[], feature)
             }
-        });
+        }
 
         return features;
 

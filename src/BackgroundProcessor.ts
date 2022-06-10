@@ -15,23 +15,23 @@ export class BackgroundProcessor<P extends Feature | Rule> extends PartialProces
         this.stepProcessor = new StepProcessor(preCompiler);
     }
 
-    public preFilter(e: Background, p: P): boolean {
+    public async preFilter(e: Background, p: P): Promise<boolean> {
         /* istanbul ignore next */
         debug(
             "preFilter(hasPreBackground: %s, e: %s, p: %s)",
             !!this.preCompiler.preBackground, e?.constructor.name, p?.constructor.name
         );
-        return !this.preCompiler.preBackground || this.preCompiler.preBackground(e, p);
+        return !this.preCompiler.preBackground || await this.preCompiler.preBackground(e, p);
     }
-    public postFilter(e: Background, p: P): boolean {
+    public async postFilter(e: Background, p: P): Promise<boolean> {
         /* istanbul ignore next */
         debug(
             "postFilter(hasPostBackground: %s, e: %s, p: %s)", 
             !!this.preCompiler.postBackground, e?.constructor.name, p?.constructor.name
         );
-        return !this.preCompiler.postBackground || this.preCompiler.postBackground(e, p);
+        return !this.preCompiler.postBackground || await this.preCompiler.postBackground(e, p);
     }
-    public process(e: Background, p: P): SingleControlType<Background> {
+    public async process(e: Background, p: P): Promise<SingleControlType<Background>> {
         /* istanbul ignore next */
         debug(
             "process(hasOnBackground: %s, e: %s, p: %s)", 
@@ -39,14 +39,14 @@ export class BackgroundProcessor<P extends Feature | Rule> extends PartialProces
         );
         let background: SingleControlType<Background> = e;
         if (this.preCompiler.onBackground) {
-            const result = this.preCompiler.onBackground(e, p);
+            const result = await this.preCompiler.onBackground(e, p);
             if (typeof result !== "undefined") {
                 background = result;
             }
         }
         if (background) {
             debug("...step %s", Array.isArray(background.steps));
-            background.steps = this.stepProcessor.execute(background.steps, background);
+            background.steps = await this.stepProcessor.execute(background.steps, background);
         }
         return background;
     }

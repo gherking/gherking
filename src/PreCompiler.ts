@@ -15,9 +15,9 @@ import {
 } from "gherkin-ast";
 export type SingleControlType<T> = void | null | undefined | T;
 export type MultiControlType<T> = void | null | undefined | T | T[];
-export type SingleEventHandler<T, P> = (e: T, p?: P) => SingleControlType<T>;
-export type MultiEventHandler<T, P, R = T> = (e: T, p?: P, i?: number) => MultiControlType<R>;
-export type FilterEventHandler<T, P> = (e: T, p?: P, i?: number) => boolean;
+export type SingleEventHandler<T, P> = (e: T, p?: P) => SingleControlType<T> | Promise<SingleControlType<T>>;
+export type MultiEventHandler<T, P, R = T> = (e: T, p?: P, i?: number) => MultiControlType<R> | Promise<MultiControlType<R>>;
+export type FilterEventHandler<T, P> = (e: T, p?: P, i?: number) => boolean | Promise<boolean>;
 
 export interface PreCompiler {
     onDocument?: SingleEventHandler<Document, null>;

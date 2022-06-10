@@ -22,13 +22,13 @@ describe("FeatureProcessor", () => {
         document2.feature = feature2;
     })
 
-    test("should handle if no pre/post-filter or event handler is set", () => {
+    test("should handle if no pre/post-filter or event handler is set", async () => {
         const featureProcessor = new FeatureProcessor();
-        const result = featureProcessor.execute(feature1, document1);
+        const result = await featureProcessor.execute(feature1, document1);
         expect(result).toEqual([feature1]);
     });
 
-    test("should filter by pre-filter", () => {
+    test("should filter by pre-filter", async () => {
         const onFeature = jest.fn();
         const featureProcessor = new FeatureProcessor({
             preFeature(e: Feature): boolean {
@@ -36,13 +36,13 @@ describe("FeatureProcessor", () => {
             },
             onFeature
         });
-        const result1 = featureProcessor.execute(feature1, document1);
-        const result2 = featureProcessor.execute(feature2, document2);
+        const result1 = await featureProcessor.execute(feature1, document1);
+        const result2 = await featureProcessor.execute(feature2, document2);
         expect(result1).toEqual(null);
         expect(result2).toEqual([feature2]);
     });
 
-    test("should filter by post-filter", () => {
+    test("should filter by post-filter", async () => {
         const onFeature = jest.fn();
         const featureProcessor = new FeatureProcessor({
             onFeature,
@@ -50,13 +50,13 @@ describe("FeatureProcessor", () => {
                 return e.name === "2"
             },
         });
-        const result1 = featureProcessor.execute(feature1, document1);
-        const result2 = featureProcessor.execute(feature2, document2);
+        const result1 = await featureProcessor.execute(feature1, document1);
+        const result2 = await featureProcessor.execute(feature2, document2);
         expect(result1).toEqual([feature1]);
         expect(result2).toEqual(null);
     });
 
-    test("should handle when processing returns array", () => {
+    test("should handle when processing returns array", async () => {
         const featureProcessor = new FeatureProcessor({
             onFeature(e: Feature): Feature[] {
                 const f = e.clone();
@@ -66,12 +66,12 @@ describe("FeatureProcessor", () => {
                 return true
             },
         });
-        const result1 = featureProcessor.execute(feature1, document1);
+        const result1 = await featureProcessor.execute(feature1, document1);
         // @ts-ignore
         expect(pruneID(result1)).toEqual([pruneID(feature1), pruneID(feature1)]);
     });
 
-    test("should handle when processing returns single feature", () => {
+    test("should handle when processing returns single feature", async () => {
         const featureProcessor = new FeatureProcessor({
             onFeature(e: Feature): Feature {
                 return e;
@@ -80,11 +80,11 @@ describe("FeatureProcessor", () => {
                 return true
             },
         });
-        const result1 = featureProcessor.execute(feature1, document1);
+        const result1 = await featureProcessor.execute(feature1, document1);
         expect(result1).toEqual([feature1]);
     });
 
-    test("should handle null", () => {
+    test("should handle null", async () => {
         const onFeature = jest.fn()
         const featureProcessor = new FeatureProcessor({
             preFeature(): boolean {
@@ -93,7 +93,7 @@ describe("FeatureProcessor", () => {
             onFeature
         });
 
-        const result = featureProcessor.execute(feature1, document1);
+        const result = await featureProcessor.execute(feature1, document1);
         expect(result).toBeNull()
     })
 })

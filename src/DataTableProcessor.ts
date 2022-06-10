@@ -15,23 +15,23 @@ export class DataTableProcessor extends Processor<DataTable, Step> {
         this.tableRowProcessor = new TableRowProcessor<DataTable>(preCompiler);
     }
 
-    protected preFilter(e: DataTable, p: Step): boolean {
+    protected async preFilter(e: DataTable, p: Step): Promise<boolean> {
         /* istanbul ignore next */
         debug(
             "preFilter(hasPreDataTable: %s, e: %s, p: %s)", 
             !!this.preCompiler.postDataTable, e?.constructor.name, p?.constructor.name
         );
-        return !this.preCompiler.preDataTable || this.preCompiler.preDataTable(e, p);
+        return !this.preCompiler.preDataTable || await this.preCompiler.preDataTable(e, p);
     }
-    protected postFilter(e: DataTable, p: Step): boolean {
+    protected async postFilter(e: DataTable, p: Step): Promise<boolean> {
         /* istanbul ignore next */
         debug(
             "postFilter(hasPostDataTable: %s, e: %s, p: %s)", 
             !!this.preCompiler.postDataTable, e?.constructor.name, p?.constructor.name
         );
-        return !this.preCompiler.postDataTable || this.preCompiler.postDataTable(e, p);
+        return !this.preCompiler.postDataTable || await this.preCompiler.postDataTable(e, p);
     }
-    protected process(e: DataTable, p: Step): SingleControlType<DataTable> {
+    protected async process(e: DataTable, p: Step): Promise<SingleControlType<DataTable>> {
         /* istanbul ignore next */
         debug(
             "process(hasOnDataTable: %s, e: %s, p: %s)", 
@@ -39,14 +39,14 @@ export class DataTableProcessor extends Processor<DataTable, Step> {
         );
         let dataTable: SingleControlType<DataTable> = e;
         if (this.preCompiler.onDataTable) {
-            const result = this.preCompiler.onDataTable(e, p);
+            const result = await this.preCompiler.onDataTable(e, p);
             if (typeof result !== "undefined") {
                 dataTable = result;
             }
         }
         if (dataTable) {
             debug("...rows %s", Array.isArray(dataTable.rows));
-            dataTable.rows = this.tableRowProcessor.execute(dataTable.rows, dataTable);
+            dataTable.rows = await this.tableRowProcessor.execute(dataTable.rows, dataTable);
         }
         return dataTable;
     }
