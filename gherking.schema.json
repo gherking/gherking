@@ -22,6 +22,15 @@
       "description": "The destination folder to put the output feature files.",
       "minLength": 1
     },
+    "clean": {
+      "type": "boolean",
+      "description": "Whether the destination directory should be clean in advance.",
+      "default": false
+    },
+    "verbose": {
+      "type": "boolean",
+      "default": false
+    },
     "compilers": {
       "type": "array",
       "description": "The precompilers to use and their configuration.",
