@@ -531,7 +531,8 @@
         }
       },
       "required": [
-        "path"
+        "path",
+        "configuration"
       ],
       "additionalProperties": false
     },
