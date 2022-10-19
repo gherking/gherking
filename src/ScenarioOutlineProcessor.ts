@@ -24,7 +24,7 @@ export class ScenarioOutlineProcessor<P extends Feature | Rule> extends PartialL
     public async preFilter(e: ScenarioOutline, p: P, i: number): Promise<boolean> {
         /* istanbul ignore next */
         debug(
-            "preFilter(hasPostScenarioOutline: %s, e: %s, p: %s, i: %d)",
+            "preFilter(hasPreScenarioOutline: %s, e: %s, p: %s, i: %d)",
             !!this.preCompiler.preScenarioOutline, e?.constructor.name, p?.constructor.name, i
         );
         return !this.preCompiler.preScenarioOutline || await this.preCompiler.preScenarioOutline(e, p, i);
