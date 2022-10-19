@@ -136,7 +136,7 @@ describe("CLI", () => {
         expect(results[0].feature.elements).toEqual(sources[0].feature.elements);
     });
 
-    retryTest("should use dirname of source if no base ser and source if a file", async () => {
+    retryTest("should use dirname of source if no base set and source is a file", async () => {
         await runWithArgs({
             config: "tests/cli/data/config.json",
             base: null,
