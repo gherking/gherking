@@ -101,7 +101,10 @@ Options:
 
 The configuration **must** contain the precompilers configuration and optionally all options that command-line arguments could specify. It can be a JSON file or a JS file.
 
-> The configuration should be recognized by most of the IDE (as GherKing is added to the [schemastore](http://schemastore.org/)), but if it is not recognized, please update your IDE or add the `$schema` key to the configuration:
+> The configuration should be recognized by most of the IDE (as GherKing is added to the [schemastore](http://schemastore.org/)).
+>  - IntelliJ Idea, WebStorm, etc: <https://www.jetbrains.com/help/webstorm/json.html#ws_json_using_schemas>
+>  - VSCode: use the following plugin: <https://marketplace.visualstudio.com/items?itemName=remcohaszing.schemastore>
+> If the schema is not recognized even after that, please update your IDE or add the `$schema` key to the configuration:
 > ```json
 > // .gherking.json
 > {
