@@ -32,7 +32,7 @@ export class FeatureProcessor extends Processor<Feature, Document, MultiControlT
     protected async postFilter(e: Feature, p: Document): Promise<boolean> {
         /* istanbul ignore next */
         debug(
-            "postFilter(hasPreFeature: %s, e: %s, p: %s)",
+            "postFilter(hasPostFeature: %s, e: %s, p: %s)",
             !!this.preCompiler.postFeature, e?.constructor.name, p?.constructor.name
         );
         return !this.preCompiler.postFeature || await this.preCompiler.postFeature(e, p);
