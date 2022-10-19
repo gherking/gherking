@@ -3,6 +3,14 @@ import { Document, read } from "gherkin-io";
 import * as fs from "fs";
 import * as rimraf from "rimraf";
 import { pruneID } from "gherkin-ast";
+// @ts-ignore
+import * as retry from "jest-retries";
+
+const DEFAULT_RETRY = 5;
+
+const retryTest = (name: string, fn: () => Promise<void>): void => {
+    retry(name, DEFAULT_RETRY, fn);
+};
 
 describe("CLI", () => {
     let prevArgs: string[];
@@ -115,7 +123,7 @@ describe("CLI", () => {
         })).rejects.toThrow("Path must be either a NPM package name or a JS file: test/cli/compilers!");
     });
 
-    test("should use source if no base set and source is a directory", async () => {
+    retryTest("should use source if no base set and source is a directory", async () => {
         await runWithArgs({
             config: "tests/cli/data/config.json",
             base: null,
@@ -128,7 +136,7 @@ describe("CLI", () => {
         expect(results[0].feature.elements).toEqual(sources[0].feature.elements);
     });
 
-    test("should use dirname of source if no base ser and source if a file", async () => {
+    retryTest("should use dirname of source if no base ser and source if a file", async () => {
         await runWithArgs({
             config: "tests/cli/data/config.json",
             base: null,
@@ -141,7 +149,7 @@ describe("CLI", () => {
         expect(results[0].feature.elements).toEqual(sources[0].feature.elements);
     });
 
-    test("should set source using base", async () => {
+    retryTest("should set source using base", async () => {
         await runWithArgs({
             config: "tests/cli/data/config.json",
             base: "tests/cli/data/source",
@@ -154,7 +162,7 @@ describe("CLI", () => {
         expect(results[0].feature.elements).toEqual(sources[0].feature.elements);
     });
 
-    test("should set destination if not set based on the base", async () => {
+    retryTest("should set destination if not set based on the base", async () => {
         await runWithArgs({
             config: "tests/cli/data/config.json",
             base: "tests/cli/data/source",
@@ -167,7 +175,7 @@ describe("CLI", () => {
         expect(results[0].feature.elements).toEqual(sources[0].feature.elements);
     });
 
-    test("should log configuration if verbose set", async () => {
+    retryTest("should log configuration if verbose set", async () => {
         await runWithArgs({
             config: "tests/cli/data/config.json",
             verbose: false,
@@ -181,7 +189,7 @@ describe("CLI", () => {
         expect(console.log).toHaveBeenCalled();
     });
 
-    test("should use package as compiler", async () => {
+    retryTest("should use package as compiler", async () => {
         await runWithArgs({
             config: "tests/cli/data/config-w-package.json",
         });
@@ -192,7 +200,7 @@ describe("CLI", () => {
         expect(results[0].feature.elements).toEqual(sources[0].feature.elements);
     });
 
-    test("should use compiler object", async () => {
+    retryTest("should use compiler object", async () => {
         await runWithArgs({
             config: "tests/cli/data/config-w-object.json",
         });
@@ -203,7 +211,7 @@ describe("CLI", () => {
         expect(results[0].feature.elements).toEqual(sources[0].feature.elements);
     });
 
-    test("should use compiler as default object", async () => {
+    retryTest("should use compiler as default object", async () => {
         await runWithArgs({
             config: "tests/cli/data/config-w-default-object.json",
         });
@@ -214,7 +222,7 @@ describe("CLI", () => {
         expect(results[0].feature.elements).toEqual(sources[0].feature.elements);
     });
 
-    test("should use compiler as default class", async () => {
+    retryTest("should use compiler as default class", async () => {
         await runWithArgs({
             config: "tests/cli/data/config-w-default-class.json",
         });
@@ -231,7 +239,7 @@ describe("CLI", () => {
         })).rejects.toThrow(/Precompiler \(.*gpc-test-invalid.js\) must be a class or a PreCompiler object: 1!/);
     });
 
-    test("should clean destination directory if clean is set", async () => {
+    retryTest("should clean destination directory if clean is set", async () => {
         fs.copyFileSync("tests/cli/data/source/1.feature", "tests/cli/data/destination/0.feature");
         await runWithArgs({
             config: "tests/cli/data/config.json",
@@ -248,7 +256,7 @@ describe("CLI", () => {
         expect(results).toHaveLength(2);
     });
 
-    test("should create destination directory if it does not exist", async () => {
+    retryTest("should create destination directory if it does not exist", async () => {
         deleteDirectory("destination");
         await runWithArgs({
             config: "tests/cli/data/config.json",
