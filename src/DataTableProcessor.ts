@@ -19,7 +19,7 @@ export class DataTableProcessor extends Processor<DataTable, Step> {
         /* istanbul ignore next */
         debug(
             "preFilter(hasPreDataTable: %s, e: %s, p: %s)", 
-            !!this.preCompiler.postDataTable, e?.constructor.name, p?.constructor.name
+            !!this.preCompiler.preDataTable, e?.constructor.name, p?.constructor.name
         );
         return !this.preCompiler.preDataTable || await this.preCompiler.preDataTable(e, p);
     }
