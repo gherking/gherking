@@ -200,7 +200,7 @@ const getSources = (config: Config): IOConfig[] => {
             debug("getSources:source: %s", file)
             return ({
                 input: file,
-                output: config.destination + file.replace(config.base, ""),
+                output: join(config.destination, file.replace(config.base, "")),
             });
         });
 }

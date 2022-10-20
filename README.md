@@ -105,7 +105,7 @@ The configuration **must** contain the precompilers configuration and optionally
 >  - IntelliJ Idea, WebStorm, etc: <https://www.jetbrains.com/help/webstorm/json.html#ws_json_using_schemas>
 >  - VSCode: use the following plugin: <https://marketplace.visualstudio.com/items?itemName=remcohaszing.schemastore>
 > If the schema is not recognized even after that, please update your IDE or add the `$schema` key to the configuration:
-> ```json5
+> ```js
 > // .gherking.json
 > {
 >    // you can set this schema, so that the IDE will help with the config
@@ -114,7 +114,7 @@ The configuration **must** contain the precompilers configuration and optionally
 > }
 > ```
 
-```json5
+```js
 // .gherking.json
 {
     // compilers should be an array of precompiler configurations
