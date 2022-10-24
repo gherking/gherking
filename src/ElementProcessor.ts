@@ -20,7 +20,7 @@ export class ElementProcessor<P extends Feature | Rule> extends ListProcessor<El
         this.scenarioOutlineProcessor = new ScenarioOutlineProcessor<P>(preCompiler);
     }
 
-    protected preFilter(e: Element, p: P, i: number): boolean {
+    protected async preFilter(e: Element, p: P, i: number): Promise<boolean> {
         /* istanbul ignore next */
         debug(
             "preFilter(e: %s, p: %s, i: %d)", 
@@ -40,7 +40,7 @@ export class ElementProcessor<P extends Feature | Rule> extends ListProcessor<El
             return this.scenarioOutlineProcessor.preFilter(e, p, i);
         }
     }
-    protected postFilter(e: Element, p: P, i: number): boolean {
+    protected async postFilter(e: Element, p: P, i: number): Promise<boolean> {
         /* istanbul ignore next */
         debug(
             "postFilter(e: %s, p: %s, i: %d)", 
@@ -60,7 +60,7 @@ export class ElementProcessor<P extends Feature | Rule> extends ListProcessor<El
             return this.scenarioOutlineProcessor.postFilter(e, p, i);
         }
     }
-    protected process(e: Element, p: P, i: number): MultiControlType<Element> {
+    protected async process(e: Element, p: P, i: number): Promise<MultiControlType<Element>> {
         /* istanbul ignore next */
         debug(
             "process(e: %s, p: %s, i: %d)", 

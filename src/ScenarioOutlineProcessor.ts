@@ -21,23 +21,23 @@ export class ScenarioOutlineProcessor<P extends Feature | Rule> extends PartialL
         this.examplesProcessor = new ExamplesProcessor(preCompiler);
     }
 
-    public preFilter(e: ScenarioOutline, p: P, i: number): boolean {
+    public async preFilter(e: ScenarioOutline, p: P, i: number): Promise<boolean> {
         /* istanbul ignore next */
         debug(
-            "preFilter(hasPostScenarioOutline: %s, e: %s, p: %s, i: %d)",
+            "preFilter(hasPreScenarioOutline: %s, e: %s, p: %s, i: %d)",
             !!this.preCompiler.preScenarioOutline, e?.constructor.name, p?.constructor.name, i
         );
-        return !this.preCompiler.preScenarioOutline || this.preCompiler.preScenarioOutline(e, p, i);
+        return !this.preCompiler.preScenarioOutline || await this.preCompiler.preScenarioOutline(e, p, i);
     }
-    public postFilter(e: ScenarioOutline, p: P, i: number): boolean {
+    public async postFilter(e: ScenarioOutline, p: P, i: number): Promise<boolean> {
         /* istanbul ignore next */
         debug(
             "postFilter(hasPostScenarioOutline: %s, e: %s, p: %s, i: %d)",
             !!this.preCompiler.postScenarioOutline, e?.constructor.name, p?.constructor.name, i
         );
-        return !this.preCompiler.postScenarioOutline || this.preCompiler.postScenarioOutline(e, p, i);
+        return !this.preCompiler.postScenarioOutline || await this.preCompiler.postScenarioOutline(e, p, i);
     }
-    public process(e: ScenarioOutline, p: P, i: number): MultiControlType<Scenario | ScenarioOutline> {
+    public async process(e: ScenarioOutline, p: P, i: number): Promise<MultiControlType<Scenario | ScenarioOutline>> {
         /* istanbul ignore next */
         debug(
             "process(hasOnScenarioOutline: %s, e: %s, p: %s, i: %d)",
@@ -45,7 +45,7 @@ export class ScenarioOutlineProcessor<P extends Feature | Rule> extends PartialL
         );
         let scenarioOutlines: MultiControlType<Scenario | ScenarioOutline> = e;
         if (this.preCompiler.onScenarioOutline) {
-            const result = this.preCompiler.onScenarioOutline(e, p, i);
+            const result = await this.preCompiler.onScenarioOutline(e, p, i);
             if (typeof result !== "undefined") {
                 scenarioOutlines = result;
             }
@@ -53,25 +53,25 @@ export class ScenarioOutlineProcessor<P extends Feature | Rule> extends PartialL
         if (scenarioOutlines) {
             if (Array.isArray(scenarioOutlines)) {
                 debug("...Array: %d", scenarioOutlines.length);
-                scenarioOutlines = scenarioOutlines.map(this.postProcess.bind(this));
+                scenarioOutlines = await ScenarioOutlineProcessor.map(scenarioOutlines, this.postProcess.bind(this));
             } else {
                 debug("...replace");
-                scenarioOutlines = this.postProcess(scenarioOutlines);
+                scenarioOutlines = await this.postProcess(scenarioOutlines);
             }
         }
         return scenarioOutlines;
     }
 
-    private postProcess(e: Scenario | ScenarioOutline): Scenario | ScenarioOutline {
+    private async postProcess(e: Scenario | ScenarioOutline): Promise<Scenario | ScenarioOutline> {
         debug(
             "postProcess(tags: %s, steps: %s, examples: %s)",
             // @ts-ignore
             Array.isArray(e.tags), Array.isArray(e.steps), Array.isArray(e?.examples),
         );
-        e.tags = this.tagProcessor.execute(e.tags, e);
-        e.steps = this.stepProcessor.execute(e.steps, e);
+        e.tags = await this.tagProcessor.execute(e.tags, e);
+        e.steps = await this.stepProcessor.execute(e.steps, e);
         if (e instanceof ScenarioOutline && e.examples) {
-            e.examples = this.examplesProcessor.execute(e.examples, e);
+            e.examples = await this.examplesProcessor.execute(e.examples, e);
         }
         return e;
     }

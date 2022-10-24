@@ -6,23 +6,23 @@ import { getDebugger } from "./debug";
 const debug = getDebugger("DocStringProcessor");
 
 export class DocStringProcessor extends Processor<DocString, Step> {
-    protected preFilter(e: DocString, p: Step): boolean {
+    protected async preFilter(e: DocString, p: Step): Promise<boolean> {
         /* istanbul ignore next */
         debug(
             "preFilter(hasPreDocString: %s, e: %s, p: %s)",
             !!this.preCompiler.preDocString, e?.constructor.name, p?.constructor.name
         );
-        return !this.preCompiler.preDocString || this.preCompiler.preDocString(e, p);
+        return !this.preCompiler.preDocString || await this.preCompiler.preDocString(e, p);
     }
-    protected postFilter(e: DocString, p: Step): boolean {
+    protected async postFilter(e: DocString, p: Step): Promise<boolean> {
         /* istanbul ignore next */
         debug(
             "postFilter(hasPostDocString: %s, e: %s, p: %s)",
             !!this.preCompiler.postDocString, e?.constructor.name, p?.constructor.name
         );
-        return !this.preCompiler.postDocString || this.preCompiler.postDocString(e, p);
+        return !this.preCompiler.postDocString || await this.preCompiler.postDocString(e, p);
     }
-    protected process(e: DocString, p: Step): SingleControlType<DocString> {
+    protected async process(e: DocString, p: Step): Promise<SingleControlType<DocString>> {
         /* istanbul ignore next */
         debug(
             "process(hasOnDocString: %s, e: %s, p: %s)",

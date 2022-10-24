@@ -17,14 +17,14 @@ describe("DataTableProcessor", () => {
         step.dataTable = dataTable;
     });
 
-    test("should work if no pre/post-filter or event handler is set", () => {
+    test("should work if no pre/post-filter or event handler is set", async () => {
         const dataTableProcessor = new DataTableProcessor();
-        const result = dataTableProcessor.execute(dataTable, step);
+        const result = await dataTableProcessor.execute(dataTable, step);
 
         expect(result).toEqual(dataTable);
     });
 
-    test("should filter by pre-filter", () => {
+    test("should filter by pre-filter", async () => {
         const onDataTable = jest.fn();
         const dataTableProcessor = new DataTableProcessor({
             preDataTable(_e: DataTable): boolean {
@@ -32,13 +32,13 @@ describe("DataTableProcessor", () => {
             },
             onDataTable,
         });
-        const result = dataTableProcessor.execute(dataTable, step);
+        const result = await dataTableProcessor.execute(dataTable, step);
 
         expect(result).toBeNull();
         expect(onDataTable).not.toHaveBeenCalled();
     });
 
-    test("should filter by post-filter", () => {
+    test("should filter by post-filter", async () => {
         const onDataTable = jest.fn();
         const dataTableProcessor = new DataTableProcessor({
             postDataTable(_e: DataTable): boolean {
@@ -46,13 +46,13 @@ describe("DataTableProcessor", () => {
             },
             onDataTable,
         });
-        const result = dataTableProcessor.execute(dataTable, step);
+        const result = await dataTableProcessor.execute(dataTable, step);
 
         expect(result).toBeNull();
         expect(onDataTable).toHaveBeenCalledWith(dataTable, step);
     });
 
-    test("should process with event handler", () => {
+    test("should process with event handler", async () => {
         const onTableRow = jest.fn();
         const dataTableProcessor = new DataTableProcessor({
             onDataTable(_e: DataTable): SingleControlType<DataTable> {
@@ -60,13 +60,13 @@ describe("DataTableProcessor", () => {
             },
             onTableRow,
         });
-        const result = dataTableProcessor.execute(dataTable, step);
+        const result = await dataTableProcessor.execute(dataTable, step);
 
         expect(result).toBeNull();
         expect(onTableRow).not.toHaveBeenCalled();
     });
 
-    test("should process rows", () => {
+    test("should process rows", async () => {
         const dataTableProcessor = new DataTableProcessor({
             onDataTable(e: DataTable): void {
                 e.rows.push(new TableRow([]));
@@ -75,7 +75,7 @@ describe("DataTableProcessor", () => {
                 e.cells.push(new TableCell("new"));
             },
         });
-        const result = dataTableProcessor.execute(dataTable, step);
+        const result = await dataTableProcessor.execute(dataTable, step);
 
         expect(result.rows).toHaveLength(3);
         for (const row of result.rows) {

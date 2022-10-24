@@ -43,50 +43,50 @@ describe("ScenarioOutlineProcessor", () => {
 
     })
 
-    test("should handle if no pre/post-filter or event handler is set", () => {
+    test("should handle if no pre/post-filter or event handler is set", async () => {
         const scenarioOutlineProcessor = new ScenarioOutlineProcessor<Feature>();
-        const results = scenarioOutlineProcessor.process(scenarioOutline1, feature, 1);
+        const results = await scenarioOutlineProcessor.process(scenarioOutline1, feature, 1);
         expect(results).toEqual(scenarioOutline1);
     });
 
-    test("should filter by pre-filter", () => {
+    test("should filter by pre-filter", async () => {
         const scenarioProcessor = new ScenarioOutlineProcessor<Feature>({
             preScenarioOutline(e: ScenarioOutline): boolean {
                 return e.name === "2"
             },
         });
-        const result1 = scenarioProcessor.preFilter(scenarioOutline1, feature, 1);
-        const result2 = scenarioProcessor.preFilter(scenarioOutline2, feature, 1);
+        const result1 = await scenarioProcessor.preFilter(scenarioOutline1, feature, 1);
+        const result2 = await scenarioProcessor.preFilter(scenarioOutline2, feature, 1);
         expect(result1).toBe(true);
-        expect(result2).toBe(false);        
+        expect(result2).toBe(false);
     });
-    
-    test("should filter by post-filter", () => {
+
+    test("should filter by post-filter", async () => {
         const scenarioOutlineProcessor = new ScenarioOutlineProcessor<Feature>({
             postScenarioOutline(e: ScenarioOutline): boolean {
                 return e.keyword === "4"
             },
         });
-        const result1 = scenarioOutlineProcessor.postFilter(scenarioOutline1, feature, 1);
-        const result2 = scenarioOutlineProcessor.postFilter(scenarioOutline2, feature, 1);
+        const result1 = await scenarioOutlineProcessor.postFilter(scenarioOutline1, feature, 1);
+        const result2 = await scenarioOutlineProcessor.postFilter(scenarioOutline2, feature, 1);
         expect(result1).toBe(false);
-        expect(result2).toBe(true);        
+        expect(result2).toBe(true);
     });
-    
-    test("should process scenarios", () => {
+
+    test("should process scenarios", async () => {
         const scenarioOutlineProcessor = new ScenarioOutlineProcessor<Feature>({
             onScenarioOutline(e: ScenarioOutline): ScenarioOutline {
                 e.description += "1"
                 return e;
             },
         });
-        const result1 = scenarioOutlineProcessor.process(scenarioOutline1, feature, 1) as ScenarioOutline;
-        const result2 = scenarioOutlineProcessor.process(scenarioOutline2, feature, 1) as ScenarioOutline;
+        const result1 = await scenarioOutlineProcessor.process(scenarioOutline1, feature, 1) as ScenarioOutline;
+        const result2 = await scenarioOutlineProcessor.process(scenarioOutline2, feature, 1) as ScenarioOutline;
         expect(result1.description).toBe("31");
-        expect(result2.description).toBe("61");        
+        expect(result2.description).toBe("61");
     });
-    
-    test("should process array of steps with event handler", () => {
+
+    test("should process array of steps with event handler", async () => {
         const scenarioOutlineProcessor = new ScenarioOutlineProcessor<Feature>({
             onScenarioOutline(e: ScenarioOutline): Array<ScenarioOutline> {
                 const c = e.clone();
@@ -94,7 +94,7 @@ describe("ScenarioOutlineProcessor", () => {
                 return [c, c];
             },
         });
-        const results = scenarioOutlineProcessor.process(scenarioOutline1, feature, 1) as ScenarioOutline[];
+        const results = await scenarioOutlineProcessor.process(scenarioOutline1, feature, 1) as ScenarioOutline[];
 
         const keywords = results.map(s => s.keyword)
 
@@ -102,18 +102,18 @@ describe("ScenarioOutlineProcessor", () => {
         expect(keywords).toEqual(["11", "11"]);
     });
 
-    test("should handle null value", () => {
+    test("should handle null value", async () => {
         const scenarioOutlineProcessor = new ScenarioOutlineProcessor<Feature>({
             onScenarioOutline(): Array<ScenarioOutline> {
                 return null;
             },
         });
-        const results = scenarioOutlineProcessor.process(scenarioOutline1, feature, 1) as ScenarioOutline[];
+        const results = await scenarioOutlineProcessor.process(scenarioOutline1, feature, 1) as ScenarioOutline[];
 
         expect(results).toBeNull();
     });
-    
-    test("should handle present examples", () => {
+
+    test("should handle present examples", async () => {
         const scenarioOutlineProcessor = new ScenarioOutlineProcessor<Feature>({
             onScenarioOutline(e: ScenarioOutline): ScenarioOutline {
                 const c = e.clone();
@@ -121,24 +121,24 @@ describe("ScenarioOutlineProcessor", () => {
                 return c;
             },
         });
-        const result = scenarioOutlineProcessor.process(scenarioOutline2, feature, 1) as ScenarioOutline;
+        const result = await scenarioOutlineProcessor.process(scenarioOutline2, feature, 1) as ScenarioOutline;
         expect(result.examples.map(example => example.keyword)).toEqual(["11", "21", "31"]);
     });
 
-    test("should handle missing examples", () => {
+    test("should handle missing examples", async () => {
         const scenarioOutlineProcessor = new ScenarioOutlineProcessor<Feature>({
             // @ts-ignore
             onScenarioOutline(e: ScenarioOutline) {
                 return e.toScenario();
             },
         });
-        const results = scenarioOutlineProcessor.process(scenarioOutline1, feature, 1) as Scenario[];
+        const results = await scenarioOutlineProcessor.process(scenarioOutline1, feature, 1) as Scenario[];
         expect(results).toBeInstanceOf(Array);
         expect(results.length).toEqual(3);
         expect(results[0]).toBeInstanceOf(Scenario);
     });
 
-    test("should handle steps", () => {
+    test("should handle steps", async () => {
         const scenarioOutlineProcessor = new ScenarioOutlineProcessor<Feature>({
             onScenarioOutline(e: ScenarioOutline) {
                 e.name += "PROCESSED";
@@ -147,7 +147,7 @@ describe("ScenarioOutlineProcessor", () => {
                 e.text += "PROCESSED";
             }
         });
-        const result = scenarioOutlineProcessor.process(scenarioOutline1, feature, 0) as Scenario;
+        const result = await scenarioOutlineProcessor.process(scenarioOutline1, feature, 0) as Scenario;
         expect(result.name).toContain("PROCESSED");
         expect(result.steps).toHaveLength(3);
 

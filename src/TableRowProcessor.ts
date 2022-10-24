@@ -6,23 +6,23 @@ import { ListProcessor } from "./Processor";
 const debug = getDebugger("TableRowProcessor");
 
 export class TableRowProcessor<P extends DataTable | Examples> extends ListProcessor<TableRow, P> {
-    protected preFilter(e: TableRow, p: P, i: number): boolean {
+    protected async preFilter(e: TableRow, p: P, i: number): Promise<boolean> {
         /* istanbul ignore next */
         debug(
             "preFilter(hasPreTableRow: %s, e: %s, p: %s, i: %d)", 
             !!this.preCompiler.preTableRow, e?.constructor.name, p?.constructor.name, i
         );
-        return !this.preCompiler.preTableRow || this.preCompiler.preTableRow(e, p, i);
+        return !this.preCompiler.preTableRow || await this.preCompiler.preTableRow(e, p, i);
     }
-    protected postFilter(e: TableRow, p: P, i: number): boolean {
+    protected async postFilter(e: TableRow, p: P, i: number): Promise<boolean> {
         /* istanbul ignore next */
         debug(
             "postFilter(hasPostTableRow: %s, e: %s, p: %s, i: %d)",
             !!this.preCompiler.postTableRow, e?.constructor.name, p?.constructor.name, i
         );
-        return !this.preCompiler.postTableRow || this.preCompiler.postTableRow(e, p, i);
+        return !this.preCompiler.postTableRow || await this.preCompiler.postTableRow(e, p, i);
     }
-    protected process(e: TableRow, p: P, i: number): MultiControlType<TableRow> {
+    protected async process(e: TableRow, p: P, i: number): Promise<MultiControlType<TableRow>> {
         /* istanbul ignore next */
         debug(
             "process(hasOnTableRow: %s, e: %s, p: %s, i: %d)",

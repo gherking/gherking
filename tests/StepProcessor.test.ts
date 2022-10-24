@@ -22,14 +22,14 @@ describe("StepProcessor", () => {
         background.steps = steps;
     })
 
-    test("should handle if no pre/post-filter or event handler is set", () => {
+    test("should handle if no pre/post-filter or event handler is set", async () => {
         const stepProcessor = new StepProcessor<Background>();
-        const results = stepProcessor.execute(steps, background);
+        const results = await stepProcessor.execute(steps, background);
 
         expect(results).toEqual(steps);
     });
 
-    test("should filter by pre-filter", () => {
+    test("should filter by pre-filter", async () => {
         const onStep = jest.fn();
         const stepProcessor = new StepProcessor<Background>({
             preStep(e: Step): boolean {
@@ -37,13 +37,13 @@ describe("StepProcessor", () => {
             },
             onStep
         });
-        const results = stepProcessor.execute(steps, background);
+        const results = await stepProcessor.execute(steps, background);
 
         expect(results).toEqual([]);
         expect(onStep).not.toHaveBeenCalled();
     });
 
-    test("should filter by post-filter", () => {
+    test("should filter by post-filter", async () => {
         const onStep = jest.fn();
         const stepProcessor = new StepProcessor<Background>({
             postStep(e: Step): boolean {
@@ -51,20 +51,20 @@ describe("StepProcessor", () => {
             },
             onStep
         });
-        const results = stepProcessor.execute(steps, background);
+        const results = await stepProcessor.execute(steps, background);
 
         expect(results).toEqual([]);
         expect(onStep).not.toHaveBeenCalledWith(steps, background);
     });
 
-    test("should process step with event handler", () => {
+    test("should process step with event handler", async () => {
 
         const stepProcessor = new StepProcessor<Background>({
             onStep(e: Step): void {
                 e.text += "1";
             },
         });
-        const results = stepProcessor.execute(steps, background);
+        const results = await stepProcessor.execute(steps, background);
 
         expect(results).toHaveLength(3);
         expect(results[0].text).toEqual("11");
@@ -72,7 +72,7 @@ describe("StepProcessor", () => {
         expect(results[2].text).toEqual("31");
     });
 
-    test("should process array of steps with event handler", () => {
+    test("should process array of steps with event handler", async () => {
         const stepProcessor = new StepProcessor<Background>({
             onStep(e: Step): Array<Step> {
                 const c = e.clone();
@@ -80,7 +80,7 @@ describe("StepProcessor", () => {
                 return [c, c];
             },
         });
-        const results = stepProcessor.execute(steps, background);
+        const results = await stepProcessor.execute(steps, background);
 
         const texts = results.map(s => s.text)
 
@@ -88,7 +88,7 @@ describe("StepProcessor", () => {
         expect(texts).toEqual(["11", "11", "21", "21", "31", "31"]);
     });
 
-    test("should process docString of step", () => {
+    test("should process docString of step", async () => {
         const stepProcessor = new StepProcessor<Background>({
             onStep(e: Step): void {
                 e.text += "PROCESSED";
@@ -99,21 +99,21 @@ describe("StepProcessor", () => {
             }
         });
 
-        const results = stepProcessor.execute(steps, background);
+        const results = await stepProcessor.execute(steps, background);
         expect(results[0].docString.content).toEqual("11");
         expect(results[1].docString).toBeNull();
         expect(results[2].docString.content).toEqual("31");
         expect(results).not.toBeNull();
     });
 
-    test("should process dataTable of step", () => {
+    test("should process dataTable of step", async () => {
         const stepProcessor = new StepProcessor<Background>({
             onDataTable(e: DataTable): void {
                 e.rows[0].cells[0].value += "1"
             },
         });
 
-        const results = stepProcessor.execute(steps, background);
+        const results = await stepProcessor.execute(steps, background);
         expect(results[0].dataTable.rows[0].cells[0].value).toEqual("11");
         expect(results[1].dataTable.rows[0].cells[0].value).toEqual("21");
         expect(results[2].dataTable).toBeNull();

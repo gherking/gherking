@@ -11,12 +11,11 @@ It is based on the AST what is provided by [gherkin-ast](https://www.npmjs.com/p
 ## Usage
 
 ```javascript
-'use strict';
 const compiler = require('gherking');
 const Replacer = require('gpc-replacer');
 
 let ast = await compiler.load('./features/src/login.feature');
-ast = compiler.process(
+ast = await compiler.process(
     ast,
     new Replacer({
         name: 'Hello'
@@ -28,12 +27,11 @@ await compiler.save('./features/dist/login.feature', ast, {
 ```
 
 ```typescript
-'use strict';
 import {load, process, save} from "gherking";
 import Replacer = require("gpc-replacer");
 
 let ast = await load("./features/src/login.feature");
-ast = process(
+ast = await process(
     ast,
     new Replacer({
         name: 'Hello'
@@ -103,8 +101,11 @@ Options:
 
 The configuration **must** contain the precompilers configuration and optionally all options that command-line arguments could specify. It can be a JSON file or a JS file.
 
-> The configuration should be recognized by most of the IDE (as GherKing is added to the [schemastore](http://schemastore.org/)), but if it is not recognized, please update your IDE or add the `$schema` key to the configuration:
-> ```json
+> The configuration should be recognized by most of the IDE (as GherKing is added to the [schemastore](http://schemastore.org/)).
+>  - IntelliJ Idea, WebStorm, etc: <https://www.jetbrains.com/help/webstorm/json.html#ws_json_using_schemas>
+>  - VSCode: use the following plugin: <https://marketplace.visualstudio.com/items?itemName=remcohaszing.schemastore>
+> If the schema is not recognized even after that, please update your IDE or add the `$schema` key to the configuration:
+> ```js
 > // .gherking.json
 > {
 >    // you can set this schema, so that the IDE will help with the config
@@ -113,7 +114,7 @@ The configuration **must** contain the precompilers configuration and optionally
 > }
 > ```
 
-```json
+```js
 // .gherking.json
 {
     // compilers should be an array of precompiler configurations
@@ -151,6 +152,7 @@ The configuration **must** contain the precompilers configuration and optionally
 
 Note: command line arguments should also support setting `formatOptions` , via object arguments, see [Object@yargs](https://github.com/yargs/yargs/blob/main/docs/tricks.md#objects).
 
+<!--
 ## API
 
 ### `load`
@@ -183,7 +185,8 @@ Applies the given precompilers to the given AST.
  * `{Document|Document[]} ast` - the AST needs to be processed
  * `{...PreCompiler} pre-compilers` - the pre-compilers needs to be applied to the given AST
  
-**Returns:** `{Document[]}` the processed AST
+**Returns:** `{Promise<Document[]>}` the processed AST
+-->
 
 ## PreCompiler
 

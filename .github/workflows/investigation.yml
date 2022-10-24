@@ -14,6 +14,9 @@ jobs:
         run: node -e "console.log('CWD', process.cwd())"
       - name: Checkout
         uses: actions/checkout@v3
+      - name: RMDIR
+        run: |
+          node -e "const fs = require('fs'); (fs.rmSync ? fs.rmSync : fs.rmdirSync)(process.cwd() + '\\tests\\cli\\data\\destination', { recursive: true });"
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:

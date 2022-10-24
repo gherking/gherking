@@ -23,61 +23,61 @@ describe("BackgroundProcessor", () => {
 
     })
 
-    test("should handle if no pre/post-filter or event handler is set", () => {
+    test("should handle if no pre/post-filter or event handler is set", async () => {
         const backgroundProcessor = new BackgroundProcessor<Feature>();
-        const results = backgroundProcessor.process(background1, feature);
+        const results = await backgroundProcessor.process(background1, feature);
         expect(results).toEqual(background1);
     });
 
-    test("should filter by pre-filter", () => {
+    test("should filter by pre-filter", async () => {
         const backgroundProcessor = new BackgroundProcessor<Feature>({
             preBackground(e: Background): boolean {
                 return e.name === "2"
             },
         });
-        const result1 = backgroundProcessor.preFilter(background1, feature);
-        const result2 = backgroundProcessor.preFilter(background2, feature);
+        const result1 = await backgroundProcessor.preFilter(background1, feature);
+        const result2 = await backgroundProcessor.preFilter(background2, feature);
         expect(result1).toBe(true);
-        expect(result2).toBe(false);        
+        expect(result2).toBe(false);
     });
-    
-    test("should filter by post-filter", () => {
+
+    test("should filter by post-filter", async () => {
         const backgroundProcessor = new BackgroundProcessor<Feature>({
             postBackground(e: Background): boolean {
                 return e.keyword === "4"
             },
         });
-        const result1 = backgroundProcessor.postFilter(background1, feature);
-        const result2 = backgroundProcessor.postFilter(background2, feature);
+        const result1 = await backgroundProcessor.postFilter(background1, feature);
+        const result2 = await backgroundProcessor.postFilter(background2, feature);
         expect(result1).toBe(false);
-        expect(result2).toBe(true);        
+        expect(result2).toBe(true);
     });
-    
-    test("should process Backgrounds", () => {
+
+    test("should process Backgrounds", async () => {
         const backgroundProcessor = new BackgroundProcessor<Feature>({
             onBackground(e: Background): Background {
                 e.description += "1"
                 return e;
             },
         });
-        const result1 = backgroundProcessor.process(background1, feature) as Background;
-        const result2 = backgroundProcessor.process(background2, feature) as Background;
+        const result1 = await backgroundProcessor.process(background1, feature) as Background;
+        const result2 = await backgroundProcessor.process(background2, feature) as Background;
         expect(result1.description).toBe("31");
-        expect(result2.description).toBe("61");        
+        expect(result2.description).toBe("61");
     });
 
-    test("should handle null value", () => {
+    test("should handle null value", async () => {
         const backgroundProcessor = new BackgroundProcessor<Feature>({
             onBackground(): Background {
                 return null;
             },
         });
-        const results = backgroundProcessor.process(background1, feature) as Background;
+        const results = await backgroundProcessor.process(background1, feature) as Background;
 
         expect(results).toBeNull();
     });
 
-    test("should handle steps", () => {
+    test("should handle steps", async () => {
         const backgroundProcessor = new BackgroundProcessor<Feature>({
             onBackground(e: Background) {
                 e.name += "PROCESSED";
@@ -86,7 +86,7 @@ describe("BackgroundProcessor", () => {
                 e.text += "PROCESSED";
             }
         });
-        const result = backgroundProcessor.process(background1, feature) as Background;
+        const result = await backgroundProcessor.process(background1, feature) as Background;
         expect(result.name).toContain("PROCESSED");
         expect(result.steps).toHaveLength(3);
 

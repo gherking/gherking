@@ -16,14 +16,14 @@ describe("TagProcessor", () => {
         feature.tags = tags;
     });
 
-    test("should handle if no pre/post-filter or event handler is set", () => {
+    test("should handle if no pre/post-filter or event handler is set", async () => {
         const tagProcessor = new TagProcessor<Feature>();
-        const results = tagProcessor.execute(tags, feature);
+        const results = await tagProcessor.execute(tags, feature);
 
         expect(results).toEqual(tags);
     });
 
-    test("should filter by pre-filter", () => {
+    test("should filter by pre-filter", async () => {
         const tagProcessor = new TagProcessor<Feature>({
             preTag(e: Tag): boolean {
                 return e.value !== "2";
@@ -32,14 +32,14 @@ describe("TagProcessor", () => {
                 e.value = String(+e.value * 2);
             }
         });
-        const results = tagProcessor.execute(tags, feature);
+        const results = await tagProcessor.execute(tags, feature);
 
         expect(results).toHaveLength(2);
         expect(results[0].value).toBe("2");
         expect(results[1].value).toBe("6");
     });
 
-    test("should filter by post-filter", () => {
+    test("should filter by post-filter", async () => {
         const tagProcessor = new TagProcessor<Feature>({
             postTag(e: Tag): boolean {
                 return e.value !== "2";
@@ -48,20 +48,20 @@ describe("TagProcessor", () => {
                 e.value = String(+e.value * 2);
             }
         });
-        const results = tagProcessor.execute(tags, feature);
+        const results = await tagProcessor.execute(tags, feature);
 
         expect(results).toHaveLength(2);
         expect(results[0].value).toBe("4");
         expect(results[1].value).toBe("6");
     });
 
-    test("should process with event handler", () => {
+    test("should process with event handler", async () => {
         const tagProcessor = new TagProcessor<Feature>({
             onTag(e: Tag): MultiControlType<Tag> {
                 e.value = String(+e.value * 2);
             }
         });
-        const results = tagProcessor.execute(tags, feature);
+        const results = await tagProcessor.execute(tags, feature);
 
         expect(results).toHaveLength(3);
         expect(results[0].value).toBe("2");
