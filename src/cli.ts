@@ -2,6 +2,7 @@ import { hasMagic, sync } from "glob";
 import * as fs from "fs";
 import { join, resolve, dirname, normalize } from "path";
 import yargs = require("yargs/yargs");
+import lazy = require("lazy-require");
 import { getDebugger } from "./debug";
 import { PreCompiler } from "./PreCompiler";
 import { process as processAst, load, save } from ".";
@@ -30,6 +31,7 @@ export interface CLIConfig {
     destination?: string;
     verbose?: boolean;
     clean?: boolean;
+    install?: boolean;
 }
 
 interface Config extends CLIConfig {
@@ -38,6 +40,9 @@ interface Config extends CLIConfig {
 }
 
 const isPackage = (name: string): boolean => {
+    if (/^gpc-[a-z-]+$/.test(name)) {
+        return true;
+    }
     try {
         require(name);
         return true;
@@ -94,6 +99,10 @@ const parseConfig = (): Config => {
             alias: "d",
             description: "The destination directory of precompiled feature files.",
             normalize: true
+        })
+        .option("install", {
+            type: "boolean",
+            description: "Whether the missing precompilers should be installed and added to package.json.",
         })
         .option("verbose", {
             type: "boolean",
@@ -168,11 +177,15 @@ const prepareConfig = (argv: Config): Config => {
     return argv;
 }
 
-const loadCompilers = (compilers: CompilerConfig[]): PreCompiler[] => {
+const loadCompilers = (compilers: CompilerConfig[], installMissing = false): PreCompiler[] => {
     return compilers.map(compiler => {
         let preCompiler;
         if (isPackage(compiler.path)) {
-            preCompiler = require(compiler.path);
+            if (installMissing) {
+                preCompiler = lazy(compiler.path);
+            } else {
+                preCompiler = require(compiler.path);
+            }
         } else {
             preCompiler = require(resolve(compiler.path));
         }
@@ -223,7 +236,13 @@ export async function run(): Promise<void> {
     const config = parseConfig();
     debug("...config: %s", JSON.stringify(config));
 
-    const compilers = loadCompilers(config.compilers);
+    lazy._installSync = lazy.installSync;
+    lazy.installSync = function (...args: unknown[]): void {
+        config.verbose && console.log(`Installing ${args[0]}`);
+        return lazy._installSync(...args);
+    };
+
+    const compilers = loadCompilers(config.compilers, config.install);
     debug("...compilers: %o", compilers);
 
     const sources = getSources(config);
