@@ -104,6 +104,7 @@ OOptions:
 * if one of the location configurations is missing, it is set based on the given other locations, for example
   + if only `base: "e2e/features"` set, then `source` will be `e2e/features/**/*.feature` and `destination` will be `e2e/features/dist`
   + if only `source` directory is set, then `base` will be the source directory,  `destination` will be `{source}/dist` and `source` will be modified to a glob pattern: `{source}/**/*.feature`
+* the feature of installing the missing packages relies on the NPM used on the execution platform, thus whether the installed package is added to the package.json or not, depends on it
 
 ### Configuration
 
