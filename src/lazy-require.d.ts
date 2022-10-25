@@ -4,7 +4,7 @@ declare module "lazy-require" {
     cwd?: string;
   }
   interface LazyRequire {
-    (name: string, options: LazyRequireOptions): unknown;
+    (name: string, options?: LazyRequireOptions): unknown;
     installSync: (...args: unknown[]) => void;
     _installSync: (...args: unknown[]) => void
   }

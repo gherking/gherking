@@ -33,7 +33,6 @@ export interface CLIConfig {
     verbose?: boolean;
     clean?: boolean;
     install?: boolean;
-    save?: boolean;
 }
 
 interface Config extends CLIConfig {
@@ -74,7 +73,7 @@ const resolvePath = (path: string): string => path ? resolve(path) : null;
 const parseConfig = (): Config => {
     debug("parseConfig %o", process.argv);
     return yargs(process.argv)
-        .usage("Usage: $0 --config <path> [options]")
+        .usage("Usage: gherking --config <path> [options]")
         .option("config", {
             type: "string",
             alias: "c",
@@ -105,15 +104,8 @@ const parseConfig = (): Config => {
         })
         .option("install", {
             type: "boolean",
-            description: "Whether the missing precompilers (gpc-* packages) should be installed. "
+            description: "Whether the missing precompilers (gpc-* packages) should be installed and save to the package.json. "
                 + "Packages will be installed in the current folder, and package.json created if it is not there yet.",
-            default: false,
-        })
-        .option("save", {
-            type: "boolean",
-            description: "Whether the missing precompilers (gpc-* packages) should be saved to the package.json, "
-                + "after installation. Only applies if --install is set. If package.json does not exist in the "
-                + "current working directory, it will be created.",
             default: false,
         })
         .option("verbose", {
@@ -128,6 +120,7 @@ const parseConfig = (): Config => {
         })
         .check(argv => prepareConfig(argv as unknown as Config))
         .help("help")
+        .locale("en")
         .fail((msg, err, ya) => {
             console.error(msg);
             console.error(ya.help())
@@ -194,7 +187,6 @@ const prepareConfig = (argv: Config): Config => {
 
 export interface LoadOptions {
     install?: boolean;
-    save?: boolean;
 }
 
 const loadCompilers = (compilers: CompilerConfig[], options: LoadOptions = {}): PreCompiler[] => {
@@ -203,7 +195,7 @@ const loadCompilers = (compilers: CompilerConfig[], options: LoadOptions = {}): 
         let preCompiler;
         if (isPackage(compiler.path)) {
             if (options?.install) {
-                preCompiler = lazy(compiler.path, { save: options.save });
+                preCompiler = lazy(compiler.path);
             } else {
                 preCompiler = require(compiler.path);
             }
@@ -261,7 +253,7 @@ export async function run(): Promise<void> {
     /* istanbul ignore next */
     lazy.installSync = function (...args: unknown[]): void {
         debug("...installSync: %o", args);
-        config.verbose && console.log(`Installing ${config.save ? "and saving " : ""}${args[0]}`);
+        config.verbose && console.log(`Installing ${args[0]}`);
         return lazy._installSync(...args);
     };
 

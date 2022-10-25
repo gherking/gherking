@@ -4,7 +4,7 @@
 
 ### Added
 
-- Added feature to install the missing `gpc-*` precompilers. It can be controlled with the `install` and `save` options.
+- Added feature to install the missing `gpc-*` precompilers. It can be controlled with the `install` option.
 
 ## 2.2.0
 

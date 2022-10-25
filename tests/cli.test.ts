@@ -226,16 +226,7 @@ describe("CLI", () => {
             config: "tests/cli/data/config-w-non-existing-package.json",
             install: true,
         })).rejects.toThrow("Precompiler (gpc-no-such-package) must be a class or a PreCompiler object: undefined!");
-        expect(lazyRequire).toHaveBeenCalledWith("gpc-no-such-package", { save: false });
-    });
-
-    retryTest("should install and save missing package is set", async () => {
-        await expect(() => runWithArgs({
-            config: "tests/cli/data/config-w-non-existing-package.json",
-            install: true,
-            save: true,
-        })).rejects.toThrow("Precompiler (gpc-no-such-package) must be a class or a PreCompiler object: undefined!");
-        expect(lazyRequire).toHaveBeenCalledWith("gpc-no-such-package", { save: true });
+        expect(lazyRequire).toHaveBeenCalledWith("gpc-no-such-package");
     });
 
     retryTest("should use compiler object", async () => {
