@@ -32,6 +32,7 @@ export interface CLIConfig {
     verbose?: boolean;
     clean?: boolean;
     install?: boolean;
+    save?: boolean;
 }
 
 interface Config extends CLIConfig {
@@ -102,7 +103,14 @@ const parseConfig = (): Config => {
         })
         .option("install", {
             type: "boolean",
-            description: "Whether the missing precompilers should be installed and added to package.json.",
+            description: "Whether the missing precompilers (gpc-* packages) should be installed. "
+                + "Packages will be installed in the current folder, and package.json created if it is not there yet.",
+        })
+        .option("save", {
+            type: "boolean",
+            description: "Whether the missing precompilers (gpc-* packages) should be saved to the package.json, "
+                + "after installation. Only applies with --install is set. If package.json does not exist in the "
+                + "current working directory, it will be created."
         })
         .option("verbose", {
             type: "boolean",
@@ -177,12 +185,17 @@ const prepareConfig = (argv: Config): Config => {
     return argv;
 }
 
-const loadCompilers = (compilers: CompilerConfig[], installMissing = false): PreCompiler[] => {
+export interface LoadOptions {
+    install?: boolean;
+    save?: boolean;
+}
+
+const loadCompilers = (compilers: CompilerConfig[], options: LoadOptions = {}): PreCompiler[] => {
     return compilers.map(compiler => {
         let preCompiler;
         if (isPackage(compiler.path)) {
-            if (installMissing) {
-                preCompiler = lazy(compiler.path);
+            if (options?.install) {
+                preCompiler = lazy(compiler.path, { save: options.save });
             } else {
                 preCompiler = require(compiler.path);
             }
@@ -238,11 +251,11 @@ export async function run(): Promise<void> {
 
     lazy._installSync = lazy.installSync;
     lazy.installSync = function (...args: unknown[]): void {
-        config.verbose && console.log(`Installing ${args[0]}`);
+        config.verbose && console.log(`Installing ${config.save && "and saving "}${args[0]}`);
         return lazy._installSync(...args);
     };
 
-    const compilers = loadCompilers(config.compilers, config.install);
+    const compilers = loadCompilers(config.compilers, config);
     debug("...compilers: %o", compilers);
 
     const sources = getSources(config);
