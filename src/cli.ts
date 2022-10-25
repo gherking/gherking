@@ -190,7 +190,7 @@ export interface LoadOptions {
 }
 
 const loadCompilers = (compilers: CompilerConfig[], options: LoadOptions = {}): PreCompiler[] => {
-    debug("loadCompilers(compilers: %d, options: %o)", compilers?.length, options);
+    debug("loadCompilers(compilers: %d, options: %o)", compilers.length, options);
     return compilers.map(compiler => {
         let preCompiler;
         if (isPackage(compiler.path)) {
