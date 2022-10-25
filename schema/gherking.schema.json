@@ -29,6 +29,12 @@
     },
     "verbose": {
       "type": "boolean",
+      "description": "Whether some information should be displayed on the screen.",
+      "default": false
+    },
+    "install": {
+      "type": "boolean",
+      "description": "Whether the missing precompilers (gpc-* packages) should be installed and save to the package.json. Packages will be installed in the current folder, and package.json created if it is not there yet.",
       "default": false
     },
     "compilers": {

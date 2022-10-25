@@ -1,0 +1,10 @@
+{
+    "compilers": [
+        {
+            "path": "gpc-no-such-package",
+            "configuration": {
+                "name": "PACKAGE"
+            }
+        }
+    ]
+}
