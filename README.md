@@ -53,6 +53,7 @@ Some of our base precompilers:
  * [Replacer](https://www.npmjs.com/package/gpc-replacer) - Replaces keywords in the feature files.
  * [ScenarioNumbering](https://www.npmjs.com/package/gpc-scenario-numbering) - Adds an index to all scenario and scenario outline's name.
  * [ScenarioOutlineExpander](https://www.npmjs.com/package/gpc-scenario-outline-expander) - Expand the Scenario Outlines to actual scenarios.
+ * [ScenarioOutlineNumbering](https://www.npmjs.com/package/gpc-scenario-outline-numbering) - Makes all scenario, generated from scenario outlines unique.
  * [StepGroups](https://www.npmjs.com/package/gpc-step-groups) - Corrects the gherkin keywords of steps to make the tests more readable.
 
 You can find all our precompilers [in this list](https://github.com/search?q=topic%3Agpc+org%3Agherking&type=Repositories) or on our [home page](https://gherking.github.io/).
