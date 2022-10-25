@@ -29,7 +29,17 @@
     },
     "verbose": {
       "type": "boolean",
+      "description": "Whether some information should be displayed on the screen.",
       "default": false
+    },
+    "install": {
+      "type": "boolean",
+      "description": "Whether the missing precompilers (gpc-* packages) should be installed. Packages will be installed in the current folder, and package.json created if it is not there yet.",
+      "default": false
+    },
+    "save": {
+      "type": "boolean",
+      "description": "Whether the missing precompilers (gpc-* packages) should be saved to the package.json, after installation. Only applies if 'install' is set. If package.json does not exist in the current working directory, it will be created."
     },
     "compilers": {
       "type": "array",

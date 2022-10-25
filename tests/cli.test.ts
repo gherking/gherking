@@ -6,6 +6,8 @@ import { pruneID } from "gherkin-ast";
 // @ts-ignore
 import * as retry from "jest-retries";
 
+jest.mock("lazy-require");
+
 const DEFAULT_RETRY = 5;
 
 const retryTest = (name: string, fn: () => Promise<void>): void => {
@@ -14,6 +16,7 @@ const retryTest = (name: string, fn: () => Promise<void>): void => {
 
 describe("CLI", () => {
     let prevArgs: string[];
+    const lazyRequire = jest.requireMock("lazy-require");
 
     beforeEach(() => {
         jest.spyOn(console, "error").mockReturnValue();
@@ -189,7 +192,7 @@ describe("CLI", () => {
         expect(console.log).toHaveBeenCalled();
     });
 
-    retryTest("should use package as compiler", async () => {
+    retryTest("should use gpc-package as compiler", async () => {
         await runWithArgs({
             config: "tests/cli/data/config-w-package.json",
         });
@@ -198,6 +201,41 @@ describe("CLI", () => {
         expect(results).toHaveLength(2);
         expect(results[0].feature.name).toMatch(/PACKAGE$/);
         expect(results[0].feature.elements).toEqual(sources[0].feature.elements);
+    });
+
+    retryTest("should use custom package as compiler", async () => {
+        await runWithArgs({
+            config: "tests/cli/data/config-w-custom-package.json",
+        });
+        const sources: Document[] = await getSources();
+        const results: Document[] = await getResult();
+        expect(results).toHaveLength(2);
+        expect(results[0].feature.name).toMatch(/PACKAGE$/);
+        expect(results[0].feature.elements).toEqual(sources[0].feature.elements);
+    });
+
+    retryTest("should fail if package as compiler cannot be found", async () => {
+        await expect(() => runWithArgs({
+            config: "tests/cli/data/config-w-non-existing-package.json",
+        })).rejects.toThrow("Cannot find module 'gpc-no-such-package' from 'src/cli.ts'");
+        expect(lazyRequire).not.toHaveBeenCalled();
+    });
+
+    retryTest("should install missing package is set", async () => {
+        await expect(() => runWithArgs({
+            config: "tests/cli/data/config-w-non-existing-package.json",
+            install: true,
+        })).rejects.toThrow("Precompiler (gpc-no-such-package) must be a class or a PreCompiler object: undefined!");
+        expect(lazyRequire).toHaveBeenCalledWith("gpc-no-such-package", { save: false });
+    });
+
+    retryTest("should install and save missing package is set", async () => {
+        await expect(() => runWithArgs({
+            config: "tests/cli/data/config-w-non-existing-package.json",
+            install: true,
+            save: true,
+        })).rejects.toThrow("Precompiler (gpc-no-such-package) must be a class or a PreCompiler object: undefined!");
+        expect(lazyRequire).toHaveBeenCalledWith("gpc-no-such-package", { save: true });
     });
 
     retryTest("should use compiler object", async () => {

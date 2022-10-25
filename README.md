@@ -53,7 +53,7 @@ Some of our base precompilers:
  * [Replacer](https://www.npmjs.com/package/gpc-replacer) - Replaces keywords in the feature files.
  * [ScenarioNumbering](https://www.npmjs.com/package/gpc-scenario-numbering) - Adds an index to all scenario and scenario outline's name.
  * [ScenarioOutlineExpander](https://www.npmjs.com/package/gpc-scenario-outline-expander) - Expand the Scenario Outlines to actual scenarios.
- * [ScenarioOutlineNumbering](https://www.npmjs.com/package/gpc-scenario-outline-numbering) - Makes all scenario, generated from scenario outlines unique.
+ * [ScenarioOutlineNumbering](https://www.npmjs.com/package/gpc-scenario-outline-numbering) - Makes all scenarios, generated from scenario outlines unique.
  * [StepGroups](https://www.npmjs.com/package/gpc-step-groups) - Corrects the gherkin keywords of steps to make the tests more readable.
 
 You can find all our precompilers [in this list](https://github.com/search?q=topic%3Agpc+org%3Agherking&type=Repositories) or on our [home page](https://gherking.github.io/).
@@ -73,20 +73,33 @@ gherking --config .gherking.json --base e2e/features/src --destination e2e/featu
 ### Arguments
 
 ```shell
-Options:
-      --version      Show version number                               [boolean]
+Usage: precompiler.ts --config <path> [options]
+
+Opciók:
+      --version      Verziószám megjelenítése                          [boolean]
   -c, --config       The path of the configuration file which contains the
                      precompilers and their configurations.
-                                        [string] [default: "./.gherking.json"]
-  -s, --source       The pattern or path of feature files that need to be
-                     precompiled.                                       [string]
-  -b, --base         The base directory of feature files.               [string]
+                                  [szöveg] [alapértelmezett: "./.gherking.json"]
+  -s, --source       The pattern or path of feature files which needs to be
+                     precompiled.                                       [szöveg]
+  -b, --base         The base directory of feature files.               [szöveg]
   -d, --destination  The destination directory of precompiled feature files.
-                                                                        [string]
-      --verbose                                                        [boolean]
+                                                                        [szöveg]
+      --install      Whether the missing precompilers (gpc-* packages) should be
+                     installed. Packages will be installed in the current
+                     folder, and package.json created if it is not there yet.
+                                              [boolean] [alapértelmezett: false]
+      --save         Whether the missing precompilers (gpc-* packages) should be
+                     saved to the package.json, after installation. Only applies
+                     if --install is set. If package.json does not exist in the
+                     current working directory, it will be created.
+                                              [boolean] [alapértelmezett: false]
+      --verbose      Whether some information should be displayed on the screen.
+                                              [boolean] [alapértelmezett: false]
       --clean        Whether the destination directory should be clean in
-                     advance.                                          [boolean]
-      --help         Show help                                         [boolean]
+                     advance.                 [boolean] [alapértelmezett: false]
+      --help         Súgo megjelenítése                                [boolean]
+
 ```
 
 #### Important

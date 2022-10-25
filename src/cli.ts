@@ -2,6 +2,7 @@ import { hasMagic, sync } from "glob";
 import * as fs from "fs";
 import { join, resolve, dirname, normalize } from "path";
 import yargs = require("yargs/yargs");
+// @ts-ignore
 import lazy = require("lazy-require");
 import { getDebugger } from "./debug";
 import { PreCompiler } from "./PreCompiler";
@@ -73,6 +74,7 @@ const resolvePath = (path: string): string => path ? resolve(path) : null;
 const parseConfig = (): Config => {
     debug("parseConfig %o", process.argv);
     return yargs(process.argv)
+        .usage("Usage: $0 --config <path> [options]")
         .option("config", {
             type: "string",
             alias: "c",
@@ -105,19 +107,24 @@ const parseConfig = (): Config => {
             type: "boolean",
             description: "Whether the missing precompilers (gpc-* packages) should be installed. "
                 + "Packages will be installed in the current folder, and package.json created if it is not there yet.",
+            default: false,
         })
         .option("save", {
             type: "boolean",
             description: "Whether the missing precompilers (gpc-* packages) should be saved to the package.json, "
-                + "after installation. Only applies with --install is set. If package.json does not exist in the "
-                + "current working directory, it will be created."
+                + "after installation. Only applies if --install is set. If package.json does not exist in the "
+                + "current working directory, it will be created.",
+            default: false,
         })
         .option("verbose", {
             type: "boolean",
+            description: "Whether some information should be displayed on the screen.",
+            default: false,
         })
         .option("clean", {
             type: "boolean",
             description: "Whether the destination directory should be clean in advance.",
+            default: false,
         })
         .check(argv => prepareConfig(argv as unknown as Config))
         .help("help")
@@ -191,6 +198,7 @@ export interface LoadOptions {
 }
 
 const loadCompilers = (compilers: CompilerConfig[], options: LoadOptions = {}): PreCompiler[] => {
+    debug("loadCompilers(compilers: %d, options: %o)", compilers?.length, options);
     return compilers.map(compiler => {
         let preCompiler;
         if (isPackage(compiler.path)) {
@@ -250,8 +258,10 @@ export async function run(): Promise<void> {
     debug("...config: %s", JSON.stringify(config));
 
     lazy._installSync = lazy.installSync;
+    /* istanbul ignore next */
     lazy.installSync = function (...args: unknown[]): void {
-        config.verbose && console.log(`Installing ${config.save && "and saving "}${args[0]}`);
+        debug("...installSync: %o", args);
+        config.verbose && console.log(`Installing ${config.save ? "and saving " : ""}${args[0]}`);
         return lazy._installSync(...args);
     };
 

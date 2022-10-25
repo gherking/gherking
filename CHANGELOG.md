@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.3.0
+
+### Added
+
+- Added feature to install the missing `gpc-*` precompilers. It can be controlled with the `install` and `save` options.
+
 ## 2.2.0
 
 ### BREAKING CHANGE

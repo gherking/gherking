@@ -61,6 +61,7 @@
     "dotenv-ng": "^1.1.1",
     "eslint": "^8.25.0",
     "gpc-test": "file:./tests/cli/compilers/gpc-test",
+    "custom-precompiler": "file:./tests/cli/compilers/gpc-test",
     "jest": "^29.2.0",
     "jest-expect-message": "^1.1.3",
     "jest-json-schema": "^6.1.0",
