@@ -75,7 +75,7 @@ gherking --config .gherking.json --base e2e/features/src --destination e2e/featu
 ```shell
 Usage: gherking --config <path> [options]
 
-OOptions:
+Options:
       --version      Show version number                               [boolean]
   -c, --config       The path of the configuration file which contains the
                      precompilers and their configurations.
