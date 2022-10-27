@@ -1,0 +1,10 @@
+{
+    "compilers": [
+        {
+            "path": "custom-precompiler",
+            "configuration": {
+                "name": "PACKAGE"
+            }
+        }
+    ]
+}

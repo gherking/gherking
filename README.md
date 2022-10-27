@@ -73,20 +73,28 @@ gherking --config .gherking.json --base e2e/features/src --destination e2e/featu
 ### Arguments
 
 ```shell
+Usage: gherking --config <path> [options]
+
 Options:
       --version      Show version number                               [boolean]
   -c, --config       The path of the configuration file which contains the
                      precompilers and their configurations.
-                                        [string] [default: "./.gherking.json"]
-  -s, --source       The pattern or path of feature files that need to be
+                                          [string] [default: "./.gherking.json"]
+  -s, --source       The pattern or path of feature files which needs to be
                      precompiled.                                       [string]
   -b, --base         The base directory of feature files.               [string]
   -d, --destination  The destination directory of precompiled feature files.
                                                                         [string]
-      --verbose                                                        [boolean]
+      --install      Whether the missing precompilers (gpc-* packages) should be
+                     installed and save to the package.json. Packages will be
+                     installed in the current folder, and package.json created
+                     if it is not there yet.          [boolean] [default: false]
+      --verbose      Whether some information should be displayed on the screen.
+                                                      [boolean] [default: false]
       --clean        Whether the destination directory should be clean in
-                     advance.                                          [boolean]
+                     advance.                         [boolean] [default: false]
       --help         Show help                                         [boolean]
+
 ```
 
 #### Important
@@ -96,6 +104,7 @@ Options:
 * if one of the location configurations is missing, it is set based on the given other locations, for example
   + if only `base: "e2e/features"` set, then `source` will be `e2e/features/**/*.feature` and `destination` will be `e2e/features/dist`
   + if only `source` directory is set, then `base` will be the source directory,  `destination` will be `{source}/dist` and `source` will be modified to a glob pattern: `{source}/**/*.feature`
+* the feature of installing the missing packages relies on the NPM used on the execution platform, thus whether the installed package is added to the package.json or not, depends on it
 
 ### Configuration
 
