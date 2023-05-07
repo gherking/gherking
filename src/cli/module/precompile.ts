@@ -1,14 +1,17 @@
-import { hasMagic, sync } from "glob";
+import type {Argv} from "yargs";
+import {dirname, join, normalize, resolve} from "path";
 import * as fs from "fs";
-import { join, resolve, dirname, normalize } from "path";
-import yargs = require("yargs/yargs");
-import { getDebugger } from "./debug";
-import { PreCompiler } from "./PreCompiler";
-import { process as processAst, load, save } from ".";
-import { Document } from "gherkin-ast";
-import { FormatOptions } from "gherkin-io";
+import {FormatOptions} from "gherkin-io";
+import {hasMagic, sync} from "glob";
+import {getDebugger} from "../../debug";
+import {PreCompiler} from "../../PreCompiler";
+import {Document} from "gherkin-ast";
+import {load, process as processAst, save} from "../../index";
 
-const debug = getDebugger("cli");
+const debug = getDebugger("cli:precompile");
+
+export const command = "$0";
+export const description = "Precompile the feature files";
 
 interface CompilerConfig {
     path?: string;
@@ -60,59 +63,6 @@ const isFile = (path: string): boolean => {
     } catch (e) {
         return false;
     }
-}
-
-const resolvePath = (path: string): string => path ? resolve(path) : null;
-
-const parseConfig = (): Config => {
-    debug("parseConfig %o", process.argv);
-    return yargs(process.argv)
-        .option("config", {
-            type: "string",
-            alias: "c",
-            coerce: resolvePath,
-            default: "./.gherking.json",
-            description: "The path of the configuration file which contains the precompilers and their configurations.",
-            normalize: true,
-            config: true,
-            configParser: path => require(path)
-        })
-        .option("source", {
-            type: "string",
-            alias: "s",
-            coerce: resolvePath,
-            description: "The pattern or path of feature files which needs to be precompiled.",
-            normalize: true
-        })
-        .option("base", {
-            type: "string",
-            alias: "b",
-            coerce: resolvePath,
-            description: "The base directory of feature files.",
-            normalize: true
-        })
-        .option("destination", {
-            type: "string",
-            alias: "d",
-            coerce: resolvePath,
-            description: "The destination directory of precompiled feature files.",
-            normalize: true
-        })
-        .option("verbose", {
-            type: "boolean",
-        })
-        .option("clean", {
-            type: "boolean",
-            description: "Whether the destination directory should be clean in advance.",
-        })
-        .check(argv => prepareConfig(argv as unknown as Config))
-        .help("help")
-        .fail((msg, err, ya) => {
-            console.error(msg);
-            console.error(ya.help())
-            if (err) throw err;
-        })
-        .argv as unknown as Config;
 }
 
 const prepareConfig = (argv: Config): Config => {
@@ -171,6 +121,56 @@ const prepareConfig = (argv: Config): Config => {
     return argv;
 }
 
+const resolvePath = (path: string): string => path ? resolve(path) : null;
+
+export function builder(yargs: Argv) {
+    return yargs
+        .option("config", {
+            type: "string",
+            alias: "c",
+            coerce: resolvePath,
+            default: "./.gherking.json",
+            description: "The path of the configuration file which contains the precompilers and their configurations.",
+            normalize: true,
+            config: true,
+            configParser: (path: string) => require(path)
+        })
+        .option("source", {
+            type: "string",
+            alias: "s",
+            coerce: resolvePath,
+            description: "The pattern or path of feature files which needs to be precompiled.",
+            normalize: true
+        })
+        .option("base", {
+            type: "string",
+            alias: "b",
+            coerce: resolvePath,
+            description: "The base directory of feature files.",
+            normalize: true
+        })
+        .option("destination", {
+            type: "string",
+            alias: "d",
+            coerce: resolvePath,
+            description: "The destination directory of precompiled feature files.",
+            normalize: true
+        })
+        .option("verbose", {
+            type: "boolean",
+        })
+        .option("clean", {
+            type: "boolean",
+            description: "Whether the destination directory should be clean in advance.",
+        })
+        .help("help")
+        .fail((msg: string, err: Error, ya: Argv) => {
+            console.error(msg);
+            console.error(ya.help())
+            if (err) throw err;
+        });
+}
+
 const loadCompilers = (compilers: CompilerConfig[]): PreCompiler[] => {
     return compilers.map(compiler => {
         let preCompiler;
@@ -195,15 +195,6 @@ const loadCompilers = (compilers: CompilerConfig[]): PreCompiler[] => {
     });
 };
 
-const getSources = (config: Config): IOConfig[] => {
-    return sync(config.source, { absolute: true })
-        .map(normalize)
-        .map(file => ({
-            input: file,
-            output: config.destination + file.replace(config.base, ""),
-        }));
-}
-
 const processSource = async (source: IOConfig, compilers: PreCompiler[], formatOptions: FormatOptions): Promise<void> => {
     const outputDir = dirname(source.output);
     if (!fs.existsSync(outputDir)) {
@@ -217,9 +208,18 @@ const processSource = async (source: IOConfig, compilers: PreCompiler[], formatO
     await save(source.output, outputAst, formatOptions);
 }
 
-export async function run(): Promise<void> {
+const getSources = (config: Config): IOConfig[] => {
+    return sync(config.source, { absolute: true })
+        .map(normalize)
+        .map(file => ({
+            input: file,
+            output: config.destination + file.replace(config.base, ""),
+        }));
+}
+
+export async function handler(argv: Config): Promise<void> {
     debug("run");
-    const config = parseConfig();
+    const config = prepareConfig(argv);
     debug("...config: %o", config);
 
     const compilers = loadCompilers(config.compilers);

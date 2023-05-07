@@ -1,7 +1,8 @@
-import { run, CLIConfig } from "../src/cli";
-import { Document, read } from "gherkin-io";
+import {run} from "../src/cli";
+import {CLIConfig} from "../src/cli/module/precompile";
+import {Document, read} from "gherkin-io";
 import * as fs from "fs";
-import { pruneID } from "gherkin-ast";
+import {pruneID} from "gherkin-ast";
 
 console.error = jest.fn();
 console.log = jest.fn();
@@ -27,11 +28,11 @@ describe("CLI", () => {
             clean: true,
             ...config,
         }
-        process.argv = Object.keys(config)
+        process.argv = ["node", "gherking", ...Object.keys(config)
             // @ts-ignore
             .filter(name => config[name] !== null)
             // @ts-ignore
-            .map(name => `--${name}=${config[name]}`);
+            .map(name => `--${name}=${config[name]}`)];
         return run();
     }
 
@@ -44,7 +45,7 @@ describe("CLI", () => {
     const deleteDirectory = (dir: string) => {
         dir = `tests/cli/data/${dir}`;
         if (fs.existsSync(dir)) {
-            (fs.rmSync ? fs.rmSync : fs.rmdirSync)(dir, { recursive: true });
+            (fs.rmSync ? fs.rmSync : fs.rmdirSync)(dir, {recursive: true});
         }
     };
 
