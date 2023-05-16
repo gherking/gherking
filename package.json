@@ -13,7 +13,7 @@
     "build": "npm run buildUpdate && npm test && npm run docs",
     "buildUpdate": "npm run clean && npm run compile && npm run copyToDist",
     "copyToDist": "copyfiles -f *.txt *.md package.json dist",
-    "docs": "typedoc --out ./docs ./src && copyfiles -f schema/*.json docs",
+    "docs": "typedoc --out ./docs ./src && copyfiles -f src/schema/*.json docs",
     "clean": "rimraf ./dist ./docs ./reports ./tests/cli/data/destination/* ./tests/cli/data/output/*",
     "test": "cross-env JEST_JUNIT_OUTPUT_DIR=./reports jest --coverage",
     "lint": "eslint . --ext .ts --fix",
@@ -72,7 +72,7 @@
     "typescript": "4.4.4"
   },
   "dependencies": {
-    "debug": "^4.3.3",
+    "debug": "^4.3.4",
     "gherkin-ast": "^3.3.0",
     "gherkin-io": "^1.1.2",
     "glob": "^7.2.0",

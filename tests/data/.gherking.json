@@ -1,5 +1,5 @@
 {
-  "$schema": "../../schema/gherking.schema.json",
+  "$schema": "../../src/schema/gherking.schema.json",
   "base": "base path",
   "destination": "destination path",
   "source": "source path",
