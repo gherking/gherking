@@ -1,6 +1,6 @@
 {
   "name": "gherking",
-  "version": "2.3.0",
+  "version": "2.3.1",
   "description": "GherKing is a tool to make Gherkin smarter! It allows you to handle Cucumber/Gherkin feature files programmatically, in your JavaScript/TypeScript code.",
   "main": "index.js",
   "types": "index.d.ts",
