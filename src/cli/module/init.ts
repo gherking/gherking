@@ -18,8 +18,8 @@ inquirer.registerPrompt("fuzzypath", fuzzyPath);
  8. Which precompilers to use? (schema.definitions.gpc*)
  */
 
-const makeQuestion = (description: string): string => {
-    return `Please specify ${description.slice(0, 1).toLowerCase()}${description.slice(1)}`;
+const makeQuestion = (description: string, message = "Please specify"): string => {
+    return `${message} ${description.slice(0, 1).toLowerCase()}${description.slice(1)}`;
 }
 
 const excludePath = (nodePath: string) =>
@@ -31,25 +31,20 @@ const QUESTION_CONFIG_FILE_NAME: inquirer.InputQuestion = {
     name: "configFileName",
     message: "Please specify the name of GherKing configuration file.",
     default: ".gherking.json",
-    validate(input: string) {
-        return /\.json$/.test(input);
-    },
+    validate: (input: string) => /\.json$/.test(input),
 };
 const QUESTION_BASE_PATH: fuzzyPath.FuzzyPathQuestionOptions = {
     type: "fuzzypath",
-    name: "baseFolder",
-    message: makeQuestion(schema.properties.base.description),
+    name: "basePath",
+    message: makeQuestion(schema.properties.base.description, "Please select or set"),
     excludePath,
     excludeFilter,
     default: schema.properties.base.default,
     itemType: "directory",
     rootPath: ".",
-    suggestOnly: false,
+    suggestOnly: true,
     depthLimit: 3,
-    validate(input: any, answers?: any) {
-        console.log({input, answers});
-        return true;
-    }
+    validate: (input: string) => input.trim().length > 0,
 };
 const QUESTIONS: inquirer.Question[] = [
     QUESTION_CONFIG_FILE_NAME,
