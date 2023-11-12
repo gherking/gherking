@@ -245,7 +245,7 @@ const processSource = async (source: IOConfig, compilers: PreCompiler[], formatO
         fs.mkdirSync(outputDir, { recursive: true });
     }
 
-    const documents: Document[] = await load(source.input);
+    const documents: Document[] = await load(source.input, { tagFormat: formatOptions?.tagFormat });
     const document = documents[0];
     document.targetFolder = outputDir;
     const outputAst = await processAst(document, ...compilers);

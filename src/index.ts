@@ -1,6 +1,6 @@
 import { PreCompiler } from "./PreCompiler";
 import { read, write, FormatOptions } from "gherkin-io";
-import { Document } from "gherkin-ast";
+import { Document, ParseConfig } from "gherkin-ast";
 import { DocumentProcessor } from "./DocumentProcessor";
 import { getDebugger } from "./debug";
 
@@ -10,10 +10,10 @@ export * from "./PreCompiler";
 export * from "gherkin-ast";
 export { FormatOptions } from "gherkin-io";
 
-export const load = (pattern: string): Promise<Document[]> => {
-    debug("load(pattern: %s)", pattern);
+export const load = (pattern: string, config?: ParseConfig): Promise<Document[]> => {
+    debug("load(pattern: %s, config: %o)", pattern, config);
     // @ts-ignore
-    return read(pattern) as Document[];
+    return read(pattern, config) as Document[];
 }
 
 export const process = async (ast: Document, ...preCompilers: PreCompiler[]): Promise<Document[]> => {
