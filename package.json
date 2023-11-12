@@ -14,7 +14,7 @@
     "buildUpdate": "npm run clean && npm run compile && npm run copyToDist",
     "copyToDist": "copyfiles -f *.txt *.md package.json dist",
     "docs": "typedoc --out ./docs ./src && copyfiles -f schema/*.json docs",
-    "clean": "rimraf ./dist ./docs ./reports ./tests/cli/data/destination/* ./tests/cli/data/output/*",
+    "clean": "rimraf --glob ./dist ./docs ./reports ./tests/cli/data/destination/* ./tests/cli/data/output/*",
     "test": "dotenv-ng --var JEST_JUNIT_OUTPUT_DIR=./reports -- jest --coverage",
     "lint": "eslint . --ext .ts --fix",
     "compile": "tsc && npm run lint"
