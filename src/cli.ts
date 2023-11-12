@@ -1,14 +1,14 @@
-import { hasMagic, sync } from "glob";
+import {hasMagic, sync} from "glob";
 import * as fs from "fs";
-import { join, resolve, dirname, normalize } from "path";
+import {dirname, join, normalize, resolve} from "path";
+import {getDebugger} from "./debug";
+import {PreCompiler} from "./PreCompiler";
+import {load, process as processAst, save} from ".";
+import {Document, TagFormat} from "gherkin-ast";
+import {FormatOptions} from "gherkin-io";
 import yargs = require("yargs/yargs");
 // @ts-ignore
 import lazy = require("lazy-require");
-import { getDebugger } from "./debug";
-import { PreCompiler } from "./PreCompiler";
-import { process as processAst, load, save } from ".";
-import { Document } from "gherkin-ast";
-import { FormatOptions } from "gherkin-io";
 
 const debug = getDebugger("cli");
 
@@ -35,7 +35,7 @@ export interface CLIConfig {
     install?: boolean;
 }
 
-interface Config extends CLIConfig {
+export interface Config extends CLIConfig {
     compilers: CompilerConfig[];
     formatOptions?: FormatOptions;
 }
@@ -181,6 +181,14 @@ const prepareConfig = (argv: Config): Config => {
     }
     if (argv.verbose) {
         console.log("Configuration:", JSON.stringify(argv, null, 2));
+    }
+    if (typeof argv.formatOptions?.tagFormat === "string") {
+        const format = (argv.formatOptions.tagFormat as string).toUpperCase();
+        if (!(format in TagFormat)) {
+            throw new Error(`Tag Format is not supported: ${format}!`);
+        }
+        // @ts-ignore
+        argv.formatOptions.tagFormat = TagFormat[format];
     }
     return argv;
 }

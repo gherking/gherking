@@ -1,6 +1,6 @@
 # gherking
 
-![Downloads](https://img.shields.io/npm/dw/gherking?style=flat-square) ![Version@npm](https://img.shields.io/npm/v/gherking?label=version%40npm&style=flat-square) ![Version@git](https://img.shields.io/github/package-json/v/gherking/gherking/master?label=version%40git&style=flat-square) ![CI](https://img.shields.io/github/workflow/status/gherking/gherking/CI/master?label=ci&style=flat-square) ![Docs](https://img.shields.io/github/workflow/status/gherking/gherking/Docs/master?label=docs&style=flat-square)
+![Downloads](https://img.shields.io/npm/dw/gherking?style=flat-square) ![Version@npm](https://img.shields.io/npm/v/gherking?label=version%40npm&style=flat-square) ![Version@git](https://img.shields.io/github/package-json/v/gherking/gherking/master?label=version%40git&style=flat-square) ![CI](https://img.shields.io/github/actions/workflow/status/gherking/gherking/ci.yml?branch=master&label=ci&style=flat-square) ![Docs](https://img.shields.io/github/actions/workflow/status/gherking/gherking/docs.yml?branch=master&label=docs&style=flat-square)
 
 > **IMPORTANT** The `gherking` package - and the `gpc-*` ones - are placements of the original `gherkin-precompiler` package and are not compatible with any code written in it because of the changed API.
 

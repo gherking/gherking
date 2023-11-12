@@ -573,6 +573,11 @@
           "type": "string",
           "description": "The indentation character(s).",
           "default": "  "
+        },
+        "tagFormat": {
+          "enum": ["FUNCTIONAL", "ASSIGNMENT", "UNDERSCORE", "PARAMETERLESS"],
+          "description": "The parametrized tag format.",
+          "default": "FUNCTIONAL"
         }
       },
       "additionalProperties": false
