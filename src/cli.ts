@@ -4,7 +4,7 @@ import {dirname, join, normalize, resolve} from "path";
 import {getDebugger} from "./debug";
 import {PreCompiler} from "./PreCompiler";
 import {load, process as processAst, save} from ".";
-import {Document, TagFormat} from "gherkin-ast";
+import {Document, ParseConfig, TagFormat} from "gherkin-ast";
 import {FormatOptions} from "gherkin-io";
 import yargs = require("yargs/yargs");
 // @ts-ignore
@@ -38,6 +38,7 @@ export interface CLIConfig {
 export interface Config extends CLIConfig {
     compilers: CompilerConfig[];
     formatOptions?: FormatOptions;
+    parseConfig?: ParseConfig;
 }
 
 const isPackage = (name: string): boolean => {
@@ -182,13 +183,29 @@ const prepareConfig = (argv: Config): Config => {
     if (argv.verbose) {
         console.log("Configuration:", JSON.stringify(argv, null, 2));
     }
-    if (typeof argv.formatOptions?.tagFormat === "string") {
+    if (!argv.parseConfig)  {
+        // @ts-ignore
+        argv.parseConfig = {};
+    } else if (typeof argv.parseConfig.tagFormat === "string") {
+        const format = (argv.parseConfig.tagFormat as string).toUpperCase();
+        if (!(format in TagFormat)) {
+            throw new Error(`Input tag format is not supported: ${format}!`);
+        }
+        // @ts-ignore
+        argv.parseConfig.tagFormat = TagFormat[format];
+    }
+    if (!argv.formatOptions) {
+        argv.formatOptions = {};
+    } else if (typeof argv.formatOptions.tagFormat === "string") {
         const format = (argv.formatOptions.tagFormat as string).toUpperCase();
         if (!(format in TagFormat)) {
-            throw new Error(`Tag Format is not supported: ${format}!`);
+            throw new Error(`Output tag format is not supported: ${format}!`);
         }
         // @ts-ignore
         argv.formatOptions.tagFormat = TagFormat[format];
+    }
+    if (!argv.formatOptions?.tagFormat) {
+        argv.formatOptions.tagFormat = argv.parseConfig.tagFormat;
     }
     return argv;
 }
@@ -239,13 +256,13 @@ const getSources = (config: Config): IOConfig[] => {
         });
 }
 
-const processSource = async (source: IOConfig, compilers: PreCompiler[], formatOptions: FormatOptions): Promise<void> => {
+const processSource = async (source: IOConfig, compilers: PreCompiler[], parseConfig: ParseConfig, formatOptions: FormatOptions): Promise<void> => {
     const outputDir = dirname(source.output);
     if (!fs.existsSync(outputDir)) {
         fs.mkdirSync(outputDir, { recursive: true });
     }
 
-    const documents: Document[] = await load(source.input, { tagFormat: formatOptions?.tagFormat });
+    const documents: Document[] = await load(source.input, parseConfig);
     const document = documents[0];
     document.targetFolder = outputDir;
     const outputAst = await processAst(document, ...compilers);
@@ -281,7 +298,7 @@ export async function run(): Promise<void> {
     for (const source of sources) {
         debug("...processing: %o", source);
         config.verbose && console.log(`Processing ${source.input}`);
-        await processSource(source, compilers, config.formatOptions);
+        await processSource(source, compilers, config.parseConfig, config.formatOptions);
         config.verbose && console.log(`Processed file written out ${source.output}`);
     }
 }
