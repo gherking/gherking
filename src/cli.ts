@@ -204,7 +204,7 @@ const prepareConfig = (argv: Config): Config => {
         // @ts-ignore
         argv.formatOptions.tagFormat = TagFormat[format];
     }
-    if (!argv.formatOptions?.tagFormat) {
+    if (!argv.formatOptions.tagFormat) {
         argv.formatOptions.tagFormat = argv.parseConfig.tagFormat;
     }
     return argv;
