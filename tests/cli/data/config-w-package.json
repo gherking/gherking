@@ -6,5 +6,8 @@
                 "name": "PACKAGE"
             }
         }
-    ]
+    ],
+    "parseConfig": {
+        "tagFormat": 1
+    }
 }

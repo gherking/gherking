@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.4.0
+
+### Added
+
+- Added support for latest `gherkin-ast`, `gherkin-io`, and `gherkin-formatter` and tag formats.
+
 ## 2.3.0
 
 ### Added

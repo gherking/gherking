@@ -293,4 +293,16 @@ describe("CLI", () => {
         const results: Document[] = await getResult();
         expect(results).toHaveLength(2);
     });
+
+    test("should fail if parseConfig.tagFormat is not correct", async () => {
+        await expect(() => runWithArgs({
+            config: "tests/cli/data/config-w-invalid-parse-tagformat.json",
+        })).rejects.toThrow("Input tag format is not supported: INVALID!");
+    })
+
+    test("should fail if formatOptions.tagFormat is not correct", async () => {
+        await expect(() => runWithArgs({
+            config: "tests/cli/data/config-w-invalid-format-tagformat.json",
+        })).rejects.toThrow("Output tag format is not supported: INVALID!");
+    })
 });
