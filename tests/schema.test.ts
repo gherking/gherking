@@ -4,7 +4,7 @@ import { matchers } from "jest-json-schema";
 expect.extend(matchers);
 
 const readJSON = (p: string) => JSON.parse(readFileSync(join(__dirname, p), "utf-8"));
-const schema = readJSON("../schema/gherking.schema.json");
+const schema = readJSON("../src/schema/gherking.schema.json");
 
 describe(".gherking.json schema", () => {
   test("should handle valid .gherking.json", () => {

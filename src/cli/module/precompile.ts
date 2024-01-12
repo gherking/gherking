@@ -1,15 +1,14 @@
 import {hasMagic, sync} from "glob";
-import type {Argv} from "yargs";
 import {dirname, join, normalize, resolve} from "path";
 import * as fs from "fs";
-import {getDebugger} from "./debug";
-import {PreCompiler} from "./PreCompiler";
+import {getDebugger} from "../../debug";
+import {PreCompiler} from "../../PreCompiler";
 import {Document, ParseConfig, TagFormat} from "gherkin-ast";
 import {FormatOptions} from "gherkin-io";
-import yargs = require("yargs/yargs");
 // @ts-ignore
 import lazy = require("lazy-require");
 import {load, process as processAst, save} from "../../index";
+import {Argv} from "yargs";
 
 const debug = getDebugger("cli:precompile");
 
@@ -71,67 +70,6 @@ const isFile = (path: string): boolean => {
     } catch (e) {
         return false;
     }
-}
-
-const resolvePath = (path: string): string => path ? resolve(path) : null;
-
-const parseConfig = (): Config => {
-    debug("parseConfig %o", process.argv);
-    return yargs(process.argv)
-        .usage("Usage: gherking --config <path> [options]")
-        .option("config", {
-            type: "string",
-            alias: "c",
-            coerce: resolvePath,
-            default: "./.gherking.json",
-            description: "The path of the configuration file which contains the precompilers and their configurations.",
-            normalize: true,
-            config: true,
-            configParser: path => require(path)
-        })
-        .option("source", {
-            type: "string",
-            alias: "s",
-            description: "The pattern or path of feature files which needs to be precompiled.",
-            normalize: true
-        })
-        .option("base", {
-            type: "string",
-            alias: "b",
-            description: "The base directory of feature files.",
-            normalize: true
-        })
-        .option("destination", {
-            type: "string",
-            alias: "d",
-            description: "The destination directory of precompiled feature files.",
-            normalize: true
-        })
-        .option("install", {
-            type: "boolean",
-            description: "Whether the missing precompilers (gpc-* packages) should be installed and save to the package.json. "
-                + "Packages will be installed in the current folder, and package.json created if it is not there yet.",
-            default: false,
-        })
-        .option("verbose", {
-            type: "boolean",
-            description: "Whether some information should be displayed on the screen.",
-            default: false,
-        })
-        .option("clean", {
-            type: "boolean",
-            description: "Whether the destination directory should be clean in advance.",
-            default: false,
-        })
-        .check(argv => prepareConfig(argv as unknown as Config))
-        .help("help")
-        .locale("en")
-        .fail((msg, err, ya) => {
-            console.error(msg);
-            console.error(ya.help())
-            if (err) throw err;
-        })
-        .argv as unknown as Config;
 }
 
 const prepareConfig = (argv: Config): Config => {
@@ -214,12 +152,6 @@ const prepareConfig = (argv: Config): Config => {
     return argv;
 }
 
-export interface LoadOptions {
-    install?: boolean;
-}
-
-const loadCompilers = (compilers: CompilerConfig[], options: LoadOptions = {}): PreCompiler[] => {
-    debug("loadCompilers(compilers: %d, options: %o)", compilers.length, options);
 const resolvePath = (path: string): string => path ? resolve(path) : null;
 
 export function builder(yargs: Argv) {
@@ -255,6 +187,12 @@ export function builder(yargs: Argv) {
             description: "The destination directory of precompiled feature files.",
             normalize: true
         })
+        .option("install", {
+            type: "boolean",
+            description: "Whether the missing precompilers (gpc-* packages) should be installed and save to the package.json. "
+                + "Packages will be installed in the current folder, and package.json created if it is not there yet.",
+            default: false,
+        })
         .option("verbose", {
             type: "boolean",
         })
@@ -270,7 +208,12 @@ export function builder(yargs: Argv) {
         });
 }
 
-const loadCompilers = (compilers: CompilerConfig[]): PreCompiler[] => {
+export interface LoadOptions {
+    install?: boolean;
+}
+
+const loadCompilers = (compilers: CompilerConfig[], options: LoadOptions = {}): PreCompiler[] => {
+    debug("loadCompilers(compilers: %d, options: %o)", compilers.length, options);
     return compilers.map(compiler => {
         let preCompiler;
         if (isPackage(compiler.path)) {
@@ -326,7 +269,7 @@ const processSource = async (source: IOConfig, compilers: PreCompiler[], parseCo
 
 export async function handler(argv: Config): Promise<void> {
     debug("run");
-    const config = parseConfig();
+    const config = prepareConfig(argv);
     debug("...config: %s", JSON.stringify(config));
 
     lazy._installSync = lazy.installSync;

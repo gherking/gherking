@@ -113,25 +113,24 @@ Options:
 * `config` is a mandatory option since that is the only way to specify the precompilers
 * either a **source directory** or **base directory** must be specified either by command line or by configuration
 * if one of the location configurations is missing, it is set based on the given other locations, for example
-  + if only `base: "e2e/features"` set, then `source` will be `e2e/features/**/*.feature` and `destination` will be `e2e/features/dist`
-  + if only `source` directory is set, then `base` will be the source directory,  `destination` will be `{source}/dist` and `source` will be modified to a glob pattern: `{source}/**/*.feature`
-* the feature of installing the missing packages relies on the NPM used on the execution platform, thus whether the installed package is added to the package.json or not, depends on it
     + if only `base: "e2e/features"` set, then `source` will be `e2e/features/**/*.feature` and `destination` will
       be `e2e/features/dist`
     + if only `source` directory is set, then `base` will be the source directory,  `destination` will
-      be `{source}/dist`
-      and `source` will be modified to a glob pattern: `{source}/**/*.feature`
+      be `{source}/dist` and `source` will be modified to a glob pattern: `{source}/**/*.feature`
+* the feature of installing the missing packages relies on the NPM used on the execution platform, thus whether the
+  installed package is added to the package.json or not, depends on it
 
 ### Configuration
 
 The configuration **must** contain the precompilers configuration and optionally all options that command-line arguments
 could specify. It can be a JSON file or a JS file.
 
-> The configuration should be recognized by most of the IDE (as GherKing is added to the [schemastore](http://schemastore.org/)).
+> The configuration should be recognized by most of the IDE (as GherKing is added to
+> the [schemastore](http://schemastore.org/)).
 >  - IntelliJ Idea, WebStorm, etc: <https://www.jetbrains.com/help/webstorm/json.html#ws_json_using_schemas>
 >  - VSCode: use the following plugin: <https://marketplace.visualstudio.com/items?itemName=remcohaszing.schemastore>
 > If the schema is not recognized even after that, please update your IDE or add the `$schema` key to the configuration:
-> ```js
+> ```jsonc
 > // .gherking.json
 > {
 >    // you can set this schema, so that the IDE will help with the config
@@ -162,17 +161,17 @@ could specify. It can be a JSON file or a JS file.
         }
     ],
     // source can also be set here
-    "source": "e2e/features/src/**/*.feature",
+    "source" : "e2e/features/src/**/*.feature",
     // base can also be set here
-    "base": "e2e/features/src",
+    "base" : "e2e/features/src",
     // destination can also be set here
     "destination": "e2e/features/dist",
     // Config file can contain parsing options for
     // gherkin-ast, see documentation for more info:
     // https://github.com/gherking/gherkin-ast
     "parseConfig": {
-        "tagFormat": "functional"    
-    }  
+        "tagFormat": "functional"
+    },
     // Config file can contain formatting options for
     // gherkin-formatter, see documentation for more info:
     // https://github.com/gherking/gherkin-formatter

@@ -5,14 +5,15 @@ import * as fs from "fs";
 import * as rimraf from "rimraf";
 import { pruneID } from "gherkin-ast";
 // @ts-ignore
-import * as retry from "jest-retries";
+// import * as retry from "jest-retries";
 
 jest.mock("lazy-require");
 
-const DEFAULT_RETRY = 5;
+// const DEFAULT_RETRY = 5;
 
 const retryTest = (name: string, fn: () => Promise<void>): void => {
-    retry(name, DEFAULT_RETRY, fn);
+    // retry(name, DEFAULT_RETRY, fn);
+    test(name, fn);
 };
 
 describe("CLI", () => {
@@ -218,7 +219,7 @@ describe("CLI", () => {
     retryTest("should fail if package as compiler cannot be found", async () => {
         await expect(() => runWithArgs({
             config: "tests/cli/data/config-w-non-existing-package.json",
-        })).rejects.toThrow("Cannot find module 'gpc-no-such-package' from 'src/cli.ts'");
+        })).rejects.toThrow("Cannot find module 'gpc-no-such-package' from 'src/cli/module/precompile.ts'");
         expect(lazyRequire).not.toHaveBeenCalled();
     });
 

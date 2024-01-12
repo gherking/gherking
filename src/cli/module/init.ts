@@ -1,5 +1,6 @@
 import * as inquirer from "inquirer";
 import fuzzyPath = require("inquirer-fuzzy-path")
+import {Argv} from "yargs";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const schema = require("../../schema/gherking.schema.json");
@@ -56,7 +57,7 @@ export const description = "Initializes a GherKing project";
 
 export const builder = {};
 
-export async function handler(argv: any): Promise<void> {
+export async function handler(argv: Argv): Promise<void> {
     const answers = await inquirer.prompt(QUESTIONS);
     console.log({argv, answers});
 }
