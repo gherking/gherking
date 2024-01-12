@@ -1,13 +1,10 @@
 {
     "compilers": [
         {
-            "path": "gpc-test",
+            "path": "custom-precompiler",
             "configuration": {
                 "name": "PACKAGE"
             }
         }
-    ],
-    "parseConfig": {
-        "tagFormat": 1
-    }
+    ]
 }

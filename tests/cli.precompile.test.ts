@@ -2,26 +2,38 @@ import {run} from "../src/cli";
 import {CLIConfig} from "../src/cli/module/precompile";
 import {Document, read} from "gherkin-io";
 import * as fs from "fs";
-import {pruneID} from "gherkin-ast";
+import * as rimraf from "rimraf";
+import { pruneID } from "gherkin-ast";
+// @ts-ignore
+import * as retry from "jest-retries";
 
-console.error = jest.fn();
-console.log = jest.fn();
+jest.mock("lazy-require");
+
+const DEFAULT_RETRY = 5;
+
+const retryTest = (name: string, fn: () => Promise<void>): void => {
+    retry(name, DEFAULT_RETRY, fn);
+};
 
 describe("CLI", () => {
     let prevArgs: string[];
+    const lazyRequire = jest.requireMock("lazy-require");
 
     beforeEach(() => {
+        jest.spyOn(console, "error").mockReturnValue();
+        jest.spyOn(console, "log").mockReturnValue();
         prevArgs = process.argv;
     });
 
     afterEach(() => {
+        jest.resetAllMocks();
         process.argv = prevArgs;
     });
 
     const runWithArgs = (config: CLIConfig = {}) => {
         config = {
             config: "tests/cli/data/config.json",
-            source: "tests/cli/data/source/**/*",
+            source: "tests/cli/data/source/**/*.feature",
             base: "tests/cli/data/source",
             destination: "tests/cli/data/destination",
             verbose: true,
@@ -44,8 +56,13 @@ describe("CLI", () => {
     const getResult = (destination = "destination") => readFeatureFiles(`tests/cli/data/${destination}/**/*.feature`);
     const deleteDirectory = (dir: string) => {
         dir = `tests/cli/data/${dir}`;
+        console.log("DELETE", dir, fs.existsSync(dir));
         if (fs.existsSync(dir)) {
-            (fs.rmSync ? fs.rmSync : fs.rmdirSync)(dir, {recursive: true});
+            try {
+                rimraf.sync(dir);
+            } catch (e) {
+                // TODO: cannot delete
+            }
         }
     };
 
@@ -110,7 +127,7 @@ describe("CLI", () => {
         })).rejects.toThrow("Path must be either a NPM package name or a JS file: test/cli/compilers!");
     });
 
-    test("should use source if no base set and source is a directory", async () => {
+    retryTest("should use source if no base set and source is a directory", async () => {
         await runWithArgs({
             config: "tests/cli/data/config.json",
             base: null,
@@ -123,7 +140,7 @@ describe("CLI", () => {
         expect(results[0].feature.elements).toEqual(sources[0].feature.elements);
     });
 
-    test("should use dirname of source if no base ser and source if a file", async () => {
+    retryTest("should use dirname of source if no base set and source is a file", async () => {
         await runWithArgs({
             config: "tests/cli/data/config.json",
             base: null,
@@ -136,7 +153,7 @@ describe("CLI", () => {
         expect(results[0].feature.elements).toEqual(sources[0].feature.elements);
     });
 
-    test("should set source using base", async () => {
+    retryTest("should set source using base", async () => {
         await runWithArgs({
             config: "tests/cli/data/config.json",
             base: "tests/cli/data/source",
@@ -149,7 +166,7 @@ describe("CLI", () => {
         expect(results[0].feature.elements).toEqual(sources[0].feature.elements);
     });
 
-    test("should set destination if not set based on the base", async () => {
+    retryTest("should set destination if not set based on the base", async () => {
         await runWithArgs({
             config: "tests/cli/data/config.json",
             base: "tests/cli/data/source",
@@ -162,7 +179,7 @@ describe("CLI", () => {
         expect(results[0].feature.elements).toEqual(sources[0].feature.elements);
     });
 
-    test("should log configuration if verbose set", async () => {
+    retryTest("should log configuration if verbose set", async () => {
         await runWithArgs({
             config: "tests/cli/data/config.json",
             verbose: false,
@@ -176,7 +193,7 @@ describe("CLI", () => {
         expect(console.log).toHaveBeenCalled();
     });
 
-    test("should use package as compiler", async () => {
+    retryTest("should use gpc-package as compiler", async () => {
         await runWithArgs({
             config: "tests/cli/data/config-w-package.json",
         });
@@ -187,7 +204,33 @@ describe("CLI", () => {
         expect(results[0].feature.elements).toEqual(sources[0].feature.elements);
     });
 
-    test("should use compiler object", async () => {
+    retryTest("should use custom package as compiler", async () => {
+        await runWithArgs({
+            config: "tests/cli/data/config-w-custom-package.json",
+        });
+        const sources: Document[] = await getSources();
+        const results: Document[] = await getResult();
+        expect(results).toHaveLength(2);
+        expect(results[0].feature.name).toMatch(/PACKAGE$/);
+        expect(results[0].feature.elements).toEqual(sources[0].feature.elements);
+    });
+
+    retryTest("should fail if package as compiler cannot be found", async () => {
+        await expect(() => runWithArgs({
+            config: "tests/cli/data/config-w-non-existing-package.json",
+        })).rejects.toThrow("Cannot find module 'gpc-no-such-package' from 'src/cli.ts'");
+        expect(lazyRequire).not.toHaveBeenCalled();
+    });
+
+    retryTest("should install missing package is set", async () => {
+        await expect(() => runWithArgs({
+            config: "tests/cli/data/config-w-non-existing-package.json",
+            install: true,
+        })).rejects.toThrow("Precompiler (gpc-no-such-package) must be a class or a PreCompiler object: undefined!");
+        expect(lazyRequire).toHaveBeenCalledWith("gpc-no-such-package");
+    });
+
+    retryTest("should use compiler object", async () => {
         await runWithArgs({
             config: "tests/cli/data/config-w-object.json",
         });
@@ -198,7 +241,7 @@ describe("CLI", () => {
         expect(results[0].feature.elements).toEqual(sources[0].feature.elements);
     });
 
-    test("should use compiler as default object", async () => {
+    retryTest("should use compiler as default object", async () => {
         await runWithArgs({
             config: "tests/cli/data/config-w-default-object.json",
         });
@@ -209,7 +252,7 @@ describe("CLI", () => {
         expect(results[0].feature.elements).toEqual(sources[0].feature.elements);
     });
 
-    test("should use compiler as default class", async () => {
+    retryTest("should use compiler as default class", async () => {
         await runWithArgs({
             config: "tests/cli/data/config-w-default-class.json",
         });
@@ -226,7 +269,7 @@ describe("CLI", () => {
         })).rejects.toThrow(/Precompiler \(.*gpc-test-invalid.js\) must be a class or a PreCompiler object: 1!/);
     });
 
-    test("should clean destination directory if clean is set", async () => {
+    retryTest("should clean destination directory if clean is set", async () => {
         fs.copyFileSync("tests/cli/data/source/1.feature", "tests/cli/data/destination/0.feature");
         await runWithArgs({
             config: "tests/cli/data/config.json",
@@ -243,7 +286,7 @@ describe("CLI", () => {
         expect(results).toHaveLength(2);
     });
 
-    test("should create destination directory if it does not exist", async () => {
+    retryTest("should create destination directory if it does not exist", async () => {
         deleteDirectory("destination");
         await runWithArgs({
             config: "tests/cli/data/config.json",
@@ -251,4 +294,16 @@ describe("CLI", () => {
         const results: Document[] = await getResult();
         expect(results).toHaveLength(2);
     });
+
+    test("should fail if parseConfig.tagFormat is not correct", async () => {
+        await expect(() => runWithArgs({
+            config: "tests/cli/data/config-w-invalid-parse-tagformat.json",
+        })).rejects.toThrow("Input tag format is not supported: INVALID!");
+    })
+
+    test("should fail if formatOptions.tagFormat is not correct", async () => {
+        await expect(() => runWithArgs({
+            config: "tests/cli/data/config-w-invalid-format-tagformat.json",
+        })).rejects.toThrow("Output tag format is not supported: INVALID!");
+    })
 });

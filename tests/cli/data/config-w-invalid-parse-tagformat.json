@@ -5,9 +5,6 @@
         }
     ],
     "parseConfig": {
-        "tagFormat": "functional"
-    },
-    "formatOptions": {
-        "tagFormat": "functional"
+        "tagFormat": "INVALID"
     }
 }

@@ -1,5 +1,24 @@
 # Changelog
 
+## 2.4.0
+
+### Added
+
+- Added support for latest `gherkin-ast`, `gherkin-io`, and `gherkin-formatter` and tag formats.
+
+## 2.3.0
+
+### Added
+
+- Added feature to install the missing `gpc-*` precompilers. It can be controlled with the `install` option.
+
+## 2.2.0
+
+### BREAKING CHANGE
+
+**As the main intended use-case of this tool is to use it as a CLI tool, the major version did not change, as from CLI point of view, nothing has change.**
+The `process` function is async from now on to support new async precompilers. 
+
 ## 2.1.2
 
 ### Changed

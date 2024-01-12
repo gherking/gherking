@@ -14,13 +14,13 @@ describe("ExampleProcessor", () => {
         scenarioOutline.examples = examples;
     })
 
-    test("should work if no pre/post-filter or event handler is set", () => {
+    test("should work if no pre/post-filter or event handler is set", async () => {
         const examplesProcessor = new ExamplesProcessor();
-        const result = examplesProcessor.execute(examples, scenarioOutline);
+        const result = await examplesProcessor.execute(examples, scenarioOutline);
         expect(result).toEqual(examples);
     });
 
-    test("should filter by pre-filter", () => {
+    test("should filter by pre-filter", async () => {
         const onExamples = jest.fn();
         const examplesProcessor = new ExamplesProcessor({
             preExamples(e: Examples): boolean {
@@ -28,12 +28,12 @@ describe("ExampleProcessor", () => {
             },
             onExamples
         });
-        const result = examplesProcessor.execute(examples, scenarioOutline);
+        const result = await examplesProcessor.execute(examples, scenarioOutline);
         expect(result).toEqual([examples[1]]);
         expect(onExamples).toHaveBeenCalledTimes(1);
     });
 
-    test("should filter by post-filter", () => {
+    test("should filter by post-filter", async () => {
         const onExamples = jest.fn();
         const examplesProcessor = new ExamplesProcessor({
             postExamples(e: Examples): boolean {
@@ -41,12 +41,12 @@ describe("ExampleProcessor", () => {
             },
             onExamples
         });
-        const result = examplesProcessor.execute(examples, scenarioOutline);
+        const result = await examplesProcessor.execute(examples, scenarioOutline);
         expect(result).toEqual([examples[0]]);
         expect(onExamples).toHaveBeenCalledTimes(2);
     });
 
-    test("should process array of steps with event handler", () => {
+    test("should process array of steps with event handler", async () => {
         const exampleProcessor = new ExamplesProcessor({
             onExamples(e: Examples): Array<Examples> {
                 const c = e.clone();
@@ -54,7 +54,7 @@ describe("ExampleProcessor", () => {
                 return [c, c];
             },
         });
-        const results = exampleProcessor.execute(examples, scenarioOutline);
+        const results = await exampleProcessor.execute(examples, scenarioOutline);
 
         const names = results.map(s => s.name)
 
@@ -62,7 +62,7 @@ describe("ExampleProcessor", () => {
         expect(names).toEqual(["n1", "n1", "k1", "k1"]);
     });
 
-    test("should process header", () => {
+    test("should process header", async () => {
         const exampleProcessor = new ExamplesProcessor({
             onExamples(e: Examples) {
                 e.name += "PROCESSED";
@@ -80,7 +80,7 @@ describe("ExampleProcessor", () => {
             new TableCell("1"),
         ])];
 
-        const results = exampleProcessor.execute(examples, scenarioOutline);
+        const results = await exampleProcessor.execute(examples, scenarioOutline);
         expect(results[0].name).toContain("PROCESSED");
         expect(results[0].header.cells[0].value).toContain("PROCESSED");
         expect(results[0].body[0].cells[0].value).toContain("PROCESSED");

@@ -13,12 +13,11 @@ It is based on the AST what is provided by [gherkin-ast](https://www.npmjs.com/p
 ## Usage
 
 ```javascript
-'use strict';
 const compiler = require('gherking');
 const Replacer = require('gpc-replacer');
 
 let ast = await compiler.load('./features/src/login.feature');
-ast = compiler.process(
+ast = await compiler.process(
     ast,
     new Replacer({
         name: 'Hello'
@@ -30,12 +29,11 @@ await compiler.save('./features/dist/login.feature', ast, {
 ```
 
 ```typescript
-'use strict';
 import {load, process, save} from "gherking";
 import Replacer = require("gpc-replacer");
 
 let ast = await load("./features/src/login.feature");
-ast = process(
+ast = await process(
     ast,
     new Replacer({
         name: 'Hello'
@@ -86,20 +84,28 @@ gherking --config .gherking.json --base e2e/features/src --destination e2e/featu
 ### Arguments
 
 ```shell
+Usage: gherking --config <path> [options]
+
 Options:
       --version      Show version number                               [boolean]
   -c, --config       The path of the configuration file which contains the
                      precompilers and their configurations.
-                                        [string] [default: "./.gherking.json"]
-  -s, --source       The pattern or path of feature files that need to be
+                                          [string] [default: "./.gherking.json"]
+  -s, --source       The pattern or path of feature files which needs to be
                      precompiled.                                       [string]
   -b, --base         The base directory of feature files.               [string]
   -d, --destination  The destination directory of precompiled feature files.
                                                                         [string]
-      --verbose                                                        [boolean]
+      --install      Whether the missing precompilers (gpc-* packages) should be
+                     installed and save to the package.json. Packages will be
+                     installed in the current folder, and package.json created
+                     if it is not there yet.          [boolean] [default: false]
+      --verbose      Whether some information should be displayed on the screen.
+                                                      [boolean] [default: false]
       --clean        Whether the destination directory should be clean in
-                     advance.                                          [boolean]
+                     advance.                         [boolean] [default: false]
       --help         Show help                                         [boolean]
+
 ```
 
 #### Important
@@ -107,6 +113,9 @@ Options:
 * `config` is a mandatory option since that is the only way to specify the precompilers
 * either a **source directory** or **base directory** must be specified either by command line or by configuration
 * if one of the location configurations is missing, it is set based on the given other locations, for example
+  + if only `base: "e2e/features"` set, then `source` will be `e2e/features/**/*.feature` and `destination` will be `e2e/features/dist`
+  + if only `source` directory is set, then `base` will be the source directory,  `destination` will be `{source}/dist` and `source` will be modified to a glob pattern: `{source}/**/*.feature`
+* the feature of installing the missing packages relies on the NPM used on the execution platform, thus whether the installed package is added to the package.json or not, depends on it
     + if only `base: "e2e/features"` set, then `source` will be `e2e/features/**/*.feature` and `destination` will
       be `e2e/features/dist`
     + if only `source` directory is set, then `base` will be the source directory,  `destination` will
@@ -118,10 +127,11 @@ Options:
 The configuration **must** contain the precompilers configuration and optionally all options that command-line arguments
 could specify. It can be a JSON file or a JS file.
 
-> The configuration should be recognized by most of the IDE (as GherKing is added to
-> the [schemastore](http://schemastore.org/)), but if it is not recognized, please update your IDE or add the `$schema`
-> key to the configuration:
-> ```json
+> The configuration should be recognized by most of the IDE (as GherKing is added to the [schemastore](http://schemastore.org/)).
+>  - IntelliJ Idea, WebStorm, etc: <https://www.jetbrains.com/help/webstorm/json.html#ws_json_using_schemas>
+>  - VSCode: use the following plugin: <https://marketplace.visualstudio.com/items?itemName=remcohaszing.schemastore>
+> If the schema is not recognized even after that, please update your IDE or add the `$schema` key to the configuration:
+> ```js
 > // .gherking.json
 > {
 >    // you can set this schema, so that the IDE will help with the config
@@ -130,45 +140,53 @@ could specify. It can be a JSON file or a JS file.
 > }
 > ```
 
-```json
+```js
 // .gherking.json
 {
-  // compilers should be an array of precompiler configurations
-  "compilers": [
-    // one option is to use precompiler packages,
-    {
-      // by setting the package
-      "path": "gpc-replacer",
-      // any by setting the configuration which
-      // is passed to the constructor
-      "configuration": {
-        "user": "ta.user1@example.com"
-      }
-    },
-    // other option is to set precompiler object
-    {
-      // by setting the path to the JS file
-      "path": "e2e/utils/myCompiler.js"
+    // compilers should be an array of precompiler configurations
+    "compilers": [
+        // one option is to use precompiler packages,
+        {
+            // by setting the package
+            "path": "gpc-replacer",
+            // any by setting the configuration which
+            // is passed to the constructor
+            "configuration": {
+                "user": "ta.user1@example.com"
+            }
+        },
+        // other option is to set precompiler object
+        {
+            // by setting the path to the JS file
+            "path": "e2e/utils/myCompiler.js"
+        }
+    ],
+    // source can also be set here
+    "source": "e2e/features/src/**/*.feature",
+    // base can also be set here
+    "base": "e2e/features/src",
+    // destination can also be set here
+    "destination": "e2e/features/dist",
+    // Config file can contain parsing options for
+    // gherkin-ast, see documentation for more info:
+    // https://github.com/gherking/gherkin-ast
+    "parseConfig": {
+        "tagFormat": "functional"    
+    }  
+    // Config file can contain formatting options for
+    // gherkin-formatter, see documentation for more info:
+    // https://github.com/gherking/gherkin-formatter
+    "formatOptions": {
+        "compact": true,
+        "tagFormat": "assignment"
     }
-  ],
-  // source can also be set here
-  "source": "e2e/features/src/**/*.feature",
-  // base can also be set here
-  "base": "e2e/features/src",
-  // destination can also be set here
-  "destination": "e2e/features/dist",
-  // Config file can contain formatting options for
-  // gherkin-formatter, see documentation for more info:
-  // https://github.com/gherking/gherkin-formatter
-  "formatOptions": {
-    "compact": true
-  }
 }
 ```
 
 Note: command line arguments should also support setting `formatOptions` , via object arguments,
 see [Object@yargs](https://github.com/yargs/yargs/blob/main/docs/tricks.md#objects).
 
+<!--
 ## API
 
 ### `load`
@@ -199,10 +217,11 @@ Applies the given precompilers to the given AST.
 
 **Params:**
 
-* `{Document|Document[]} ast` - the AST needs to be processed
-* `{...PreCompiler} pre-compilers` - the pre-compilers needs to be applied to the given AST
-
-**Returns:** `{Document[]}` the processed AST
+ * `{Document|Document[]} ast` - the AST needs to be processed
+ * `{...PreCompiler} pre-compilers` - the pre-compilers needs to be applied to the given AST
+ 
+**Returns:** `{Promise<Document[]>}` the processed AST
+-->
 
 ## PreCompiler
 

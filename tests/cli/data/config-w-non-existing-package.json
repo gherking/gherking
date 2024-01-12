@@ -1,13 +1,10 @@
 {
     "compilers": [
         {
-            "path": "gpc-test",
+            "path": "gpc-no-such-package",
             "configuration": {
                 "name": "PACKAGE"
             }
         }
-    ],
-    "parseConfig": {
-        "tagFormat": 1
-    }
+    ]
 }

@@ -22,6 +22,21 @@
       "description": "The destination folder to put the output feature files.",
       "minLength": 1
     },
+    "clean": {
+      "type": "boolean",
+      "description": "Whether the destination directory should be clean in advance.",
+      "default": false
+    },
+    "verbose": {
+      "type": "boolean",
+      "description": "Whether some information should be displayed on the screen.",
+      "default": false
+    },
+    "install": {
+      "type": "boolean",
+      "description": "Whether the missing precompilers (gpc-* packages) should be installed and save to the package.json. Packages will be installed in the current folder, and package.json created if it is not there yet.",
+      "default": false
+    },
     "compilers": {
       "type": "array",
       "description": "The precompilers to use and their configuration.",
@@ -69,6 +84,9 @@
         ]
       },
       "minItems": 1
+    },
+    "parseConfig": {
+      "$ref": "#/definitions/parseConfig"
     },
     "formatOptions": {
       "$ref": "#/definitions/formatOptions"
@@ -522,8 +540,21 @@
         }
       },
       "required": [
-        "path"
+        "path",
+        "configuration"
       ],
+      "additionalProperties": false
+    },
+    "parseConfig": {
+      "type": "object",
+      "description": "Options to pass to gherkin-ast, on how to parse the input feature files.",
+      "properties": {
+        "tagFormat": {
+          "enum": ["FUNCTIONAL", "ASSIGNMENT", "UNDERSCORE", "PARAMETERLESS"],
+          "description": "The parametrized tag format.",
+          "default": "FUNCTIONAL"
+        }
+      },
       "additionalProperties": false
     },
     "formatOptions": {
@@ -557,6 +588,11 @@
           "type": "string",
           "description": "The indentation character(s).",
           "default": "  "
+        },
+        "tagFormat": {
+          "enum": ["FUNCTIONAL", "ASSIGNMENT", "UNDERSCORE", "PARAMETERLESS"],
+          "description": "The parametrized tag format.",
+          "default": "FUNCTIONAL"
         }
       },
       "additionalProperties": false

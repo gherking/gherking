@@ -31,50 +31,50 @@ describe("ScenarioProcessor", () => {
 
     })
 
-    test("should handle if no pre/post-filter or event handler is set", () => {
+    test("should handle if no pre/post-filter or event handler is set", async () => {
         const scenarioProcessor = new ScenarioProcessor<Feature>();
-        const results = scenarioProcessor.process(scenario1, feature, 1);
+        const results = await scenarioProcessor.process(scenario1, feature, 1);
         expect(results).toEqual(scenario1);
     });
 
-    test("should filter by pre-filter", () => {
+    test("should filter by pre-filter", async () => {
         const scenarioProcessor = new ScenarioProcessor<Feature>({
             preScenario(e: Scenario): boolean {
                 return e.name === "2"
             },
         });
-        const result1 = scenarioProcessor.preFilter(scenario1, feature, 1);
-        const result2 = scenarioProcessor.preFilter(scenario2, feature, 1);
+        const result1 = await scenarioProcessor.preFilter(scenario1, feature, 1);
+        const result2 = await scenarioProcessor.preFilter(scenario2, feature, 1);
         expect(result1).toBe(true);
         expect(result2).toBe(false);        
     });
     
-    test("should filter by post-filter", () => {
+    test("should filter by post-filter", async () => {
         const scenarioProcessor = new ScenarioProcessor<Feature>({
             postScenario(e: Scenario): boolean {
                 return e.keyword === "4"
             },
         });
-        const result1 = scenarioProcessor.postFilter(scenario1, feature, 1);
-        const result2 = scenarioProcessor.postFilter(scenario2, feature, 1);
+        const result1 = await scenarioProcessor.postFilter(scenario1, feature, 1);
+        const result2 = await scenarioProcessor.postFilter(scenario2, feature, 1);
         expect(result1).toBe(false);
         expect(result2).toBe(true);        
     });
     
-    test("should process scenarios", () => {
+    test("should process scenarios", async () => {
         const scenarioProcessor = new ScenarioProcessor<Feature>({
             onScenario(e: Scenario): Scenario {
                 e.description += "1"
                 return e;
             },
         });
-        const result1 = scenarioProcessor.process(scenario1, feature, 1) as Scenario;
-        const result2 = scenarioProcessor.process(scenario2, feature, 1) as Scenario;
+        const result1 = await scenarioProcessor.process(scenario1, feature, 1) as Scenario;
+        const result2 = await scenarioProcessor.process(scenario2, feature, 1) as Scenario;
         expect(result1.description).toBe("31");
         expect(result2.description).toBe("61");        
     });
     
-    test("should process array of steps with event handler", () => {
+    test("should process array of steps with event handler", async () => {
         const scenarioProcessor = new ScenarioProcessor<Feature>({
             onScenario(e: Scenario): Array<Scenario> {
                 const c = e.clone();
@@ -82,7 +82,7 @@ describe("ScenarioProcessor", () => {
                 return [c, c];
             },
         });
-        const results = scenarioProcessor.process(scenario1, feature, 1) as Scenario[];
+        const results = await scenarioProcessor.process(scenario1, feature, 1) as Scenario[];
 
         const keywords = results.map(s => s.keyword)
 
@@ -90,18 +90,18 @@ describe("ScenarioProcessor", () => {
         expect(keywords).toEqual(["11", "11"]);
     });
 
-    test("should handle null value", () => {
+    test("should handle null value", async () => {
         const scenarioProcessor = new ScenarioProcessor<Feature>({
             onScenario(): Array<Scenario> {
                 return null;
             },
         });
-        const results = scenarioProcessor.process(scenario1, feature, 1) as Scenario[];
+        const results = await scenarioProcessor.process(scenario1, feature, 1) as Scenario[];
 
         expect(results).toBeNull();
     });
 
-    test("should handle steps", () => {
+    test("should handle steps", async () => {
         const scenarioProcessor = new ScenarioProcessor<Feature>({
             onScenario(e: Scenario) {
                 e.name += "PROCESSED";
@@ -110,7 +110,7 @@ describe("ScenarioProcessor", () => {
                 e.text += "PROCESSED";
             }
         });
-        const result = scenarioProcessor.process(scenario1, feature, 0) as Scenario;
+        const result = await scenarioProcessor.process(scenario1, feature, 0) as Scenario;
         expect(result.name).toContain("PROCESSED");
         expect(result.steps).toHaveLength(3);
 
