@@ -7,4 +7,6 @@ on:
   workflow_dispatch:
 jobs:
   call_typedocs_pages:
+    permissions:
+      contents: write
     uses: szikszail/workflows/.github/workflows/typedocs-pages.yml@v1
