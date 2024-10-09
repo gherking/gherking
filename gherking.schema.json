@@ -92,9 +92,7 @@
       "$ref": "#/definitions/formatOptions"
     }
   },
-  "required": [
-    "compilers"
-  ],
+  "required": ["compilers"],
   "additionalProperties": false,
   "definitions": {
     "gpcCustom": {
@@ -112,9 +110,7 @@
           "description": "The configuration object, if necessary, to be passed to the custom precompiler class."
         }
       },
-      "required": [
-        "path"
-      ],
+      "required": ["path"],
       "additionalProperties": false
     },
     "gpcReplacer": {
@@ -131,20 +127,12 @@
           "minProperties": 1,
           "patternProperties": {
             "^[a-zA-Z0-9_-]+$": {
-              "type": [
-                "string",
-                "integer",
-                "boolean",
-                "number"
-              ]
+              "type": ["string", "integer", "boolean", "number"]
             }
           }
         }
       },
-      "required": [
-        "path",
-        "configuration"
-      ],
+      "required": ["path", "configuration"],
       "additionalProperties": false
     },
     "gpcFilter": {
@@ -164,9 +152,7 @@
           "$comment": "The pattern must contain at least one cucumber tag."
         }
       },
-      "required": [
-        "path"
-      ],
+      "required": ["path"],
       "additionalProperties": false
     },
     "gpcForLoop": {
@@ -184,6 +170,12 @@
               "type": "integer",
               "description": "Maximum value of iteration.",
               "default": 10,
+              "minimum": 0
+            },
+            "startIndex": {
+              "type": "integer",
+              "description": "Starting index of the iteration",
+              "default": 1,
               "minimum": 0
             },
             "tagName": {
@@ -211,14 +203,28 @@
               "type": "boolean",
               "description": "Whether higher iteration values than the max should be limited to the max or error should be thrown (false).",
               "default": true
+            },
+            "keepTag": {
+              "type": "boolean",
+              "description": "Whether the loop tags should be kept or removed (default).",
+              "default": false
+            },
+            "iterations": {
+              "type": "object",
+              "description": "An object of iteration name and values (named repeat values),",
+              "minProperties": 1,
+              "patternProperties": {
+                "^[a-zA-Z0-9_-]+$": {
+                  "type": "integer",
+                  "minimum": 0
+                }
+              }
             }
           },
           "additionalProperties": false
         }
       },
-      "required": [
-        "path"
-      ],
+      "required": ["path"],
       "additionalProperties": false
     },
     "gpcMacro": {
@@ -230,9 +236,7 @@
           "const": "gpc-macro"
         }
       },
-      "required": [
-        "path"
-      ],
+      "required": ["path"],
       "additionalProperties": false
     },
     "gpcRemoveComments": {
@@ -271,9 +275,7 @@
           "additionalProperties": false
         }
       },
-      "required": [
-        "path"
-      ],
+      "required": ["path"],
       "additionalProperties": false
     },
     "gpcRemoveDuplicates": {
@@ -301,9 +303,7 @@
           "additionalProperties": false
         }
       },
-      "required": [
-        "path"
-      ],
+      "required": ["path"],
       "additionalProperties": false
     },
     "gpcScenarioNumbering": {
@@ -335,9 +335,7 @@
           "additionalProperties": false
         }
       },
-      "required": [
-        "path"
-      ],
+      "required": ["path"],
       "additionalProperties": false
     },
     "gpcScenarioOutlineExpander": {
@@ -362,9 +360,7 @@
           "additionalProperties": false
         }
       },
-      "required": [
-        "path"
-      ],
+      "required": ["path"],
       "additionalProperties": false
     },
     "gpcScenarioOutlineNumbering": {
@@ -431,9 +427,7 @@
           "additionalProperties": false
         }
       },
-      "required": [
-        "path"
-      ],
+      "required": ["path"],
       "additionalProperties": false
     },
     "gpcStepGroups": {
@@ -445,9 +439,7 @@
           "const": "gpc-step-groups"
         }
       },
-      "required": [
-        "path"
-      ],
+      "required": ["path"],
       "additionalProperties": false
     },
     "gpcTestData": {
@@ -467,10 +459,7 @@
               "default": false
             },
             "defaultValue": {
-              "type": [
-                "string",
-                "number"
-              ],
+              "type": ["string", "number"],
               "description": "The default value to be added to the table if a column/value is not found.",
               "default": ""
             },
@@ -488,9 +477,7 @@
           "additionalProperties": false
         }
       },
-      "required": [
-        "path"
-      ],
+      "required": ["path"],
       "additionalProperties": false
     },
     "gpcLicense": {
@@ -517,32 +504,22 @@
             "placement": {
               "type": "string",
               "description": "The place to inject the license text, either in start or end comment.",
-              "enum": [
-                "start",
-                "end"
-              ]
+              "enum": ["start", "end"]
             }
           },
           "$comment": "Either licenseFile or licenseText must be set!",
           "additionalProperties": false,
           "anyOf": [
             {
-              "required": [
-                "licenseFile"
-              ]
+              "required": ["licenseFile"]
             },
             {
-              "required": [
-                "licenseText"
-              ]
+              "required": ["licenseText"]
             }
           ]
         }
       },
-      "required": [
-        "path",
-        "configuration"
-      ],
+      "required": ["path", "configuration"],
       "additionalProperties": false
     },
     "parseConfig": {
@@ -577,10 +554,7 @@
           "default": false
         },
         "lineBreak": {
-          "type": [
-            "string",
-            "null"
-          ],
+          "type": ["string", "null"],
           "description": "The line break character(s).",
           "default": null
         },
