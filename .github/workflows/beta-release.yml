@@ -2,9 +2,12 @@ name: Beta Release
 on:
   push:
     branches:
-      - 'beta/**'
+      - "beta/**"
 jobs:
   call_npm_beta_release:
+    permissions:
+      contents: read
+      id-token: write
     uses: szikszail/workflows/.github/workflows/npm-beta-release.yml@v1
     secrets:
       npm_token: ${{ secrets.npm_token }}

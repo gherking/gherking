@@ -2,4 +2,8 @@ name: Pull requests
 on: [pull_request]
 jobs:
   call_npm_package_build:
+    permissions:
+      contents: read
+      pull-requests: write
+      statuses: write
     uses: szikszail/workflows/.github/workflows/npm-package-build.yml@v1
